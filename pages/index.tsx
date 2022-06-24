@@ -42,6 +42,9 @@ const Blog: React.FC<Props> = (props) => {
 
   console.log(props.fixtures[0])
 
+  const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1)
+  console.log(gameweek)
+
   return (
     <Layout>
       <div className="flex flex-col place-content-center">
@@ -49,13 +52,29 @@ const Blog: React.FC<Props> = (props) => {
           <button
             onClick={() => setGameweek(gameweek - 1)}
             disabled={gameweek === 1}
+            className="text-xl"
           >
             Previous
           </button>
-          <h1 className="text-3xl font-bold">Gameweek {gameweek}</h1>
+          <h1 className="text-2xl font-bold">
+            <select
+              name="gameweek"
+              id="gameweek-select"
+              onChange={(event) =>
+                setGameweek(parseInt(event.target.value) + 1)
+              }
+            >
+              {gameweeks.map((gw, idx) => (
+                <option key={idx + 1} value={idx + 1}>
+                  Gameweek {idx + 1}
+                </option>
+              ))}
+            </select>
+          </h1>
           <button
             onClick={() => setGameweek(gameweek + 1)}
             disabled={gameweek === 38}
+            className="text-xl"
           >
             Next
           </button>

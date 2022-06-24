@@ -11,9 +11,19 @@ const Header: React.FC = () => {
 
   let left = (
     <div className="left">
+      <Link href="/leaderboard">
+        <a className="text-xl" data-active={isActive('/')}>
+          🏆 Table
+        </a>
+      </Link>
+    </div>
+  )
+
+  let center = (
+    <div className="right">
       <Link href="/">
         <a className="text-xl" data-active={isActive('/')}>
-          Survivor
+          🏠 Home
         </a>
       </Link>
     </div>
@@ -23,15 +33,16 @@ const Header: React.FC = () => {
     <div className="right">
       <Link href="/login">
         <a className="text-xl" data-active={isActive('/')}>
-          Login
+          🔑 Login
         </a>
       </Link>
     </div>
   )
 
   return (
-    <nav className="flex flex-row place-content-between px-4 pt-2">
+    <nav className="flex flex-row place-content-between px-4 py-2 bg-green-200">
       {left}
+      {center}
       {right}
     </nav>
   )
