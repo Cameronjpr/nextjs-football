@@ -63,8 +63,8 @@ const Leaderboard: React.FC<Props> = (props) => {
             className="flex flex-col gap-1"
           >
             {props.leaderboard
-              .sort((a, b) => a.score <= b.score)
-              .map((player) => (
+              .sort((a: any, b: any) => a.score <= b.score)
+              .map((player: any) => (
                 <div
                   key={player.id}
                   className="flex place-content-between border-b-2 text-xl"
