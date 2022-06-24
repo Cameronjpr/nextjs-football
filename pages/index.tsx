@@ -57,6 +57,9 @@ const Blog: React.FC<Props> = (props) => {
             Previous
           </button>
           <h1 className="text-2xl font-bold">
+            <label className="hidden" htmlFor="gameweek-select">
+              Select a gameweek
+            </label>
             <select
               name="gameweek"
               id="gameweek-select"
