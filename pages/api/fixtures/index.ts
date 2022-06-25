@@ -13,8 +13,5 @@ export default async function handle(
   })
 
   res.json(fixtures)
-
-  console.log(fixtures)
-
   
 }

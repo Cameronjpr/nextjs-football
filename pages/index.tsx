@@ -9,25 +9,7 @@ import { format } from 'date-fns'
 import prisma from '../lib/prisma'
 import { useSession } from 'next-auth/react'
 import router from 'next/router'
-
-export const getStaticProps: GetStaticProps = async () => {
-  const fixtures = await axios
-    .get('https://fantasy.premierleague.com/api/fixtures/')
-    .catch((error) => {
-      console.log(error)
-    })
-
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      score: true,
-      selection: true,
-    },
-  })
-
-  return { props: { fixtures: fixtures?.data, users }, revalidate: 1800 }
-}
+import { tallyUserSelections } from '../util'
 
 type Gameweek = {
   date: string
@@ -46,7 +28,6 @@ enum Status {
 
 const Home = ({ fixtures, users }: HomeProps) => {
   const { data: session, status } = useSession()
-  console.log(status)
   const [gameweek, setGameweek] = useState(1)
   const [selectedTeam, setSelectedTeam] = useState<undefined | string>(
     undefined
@@ -61,9 +42,6 @@ const Home = ({ fixtures, users }: HomeProps) => {
       },
     },
   }
-
-  console.log(fixtures[0])
-  console.log(users)
 
   const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1)
   const groupedFixtures: Gameweek[] = groupFixturesByDate(
@@ -83,16 +61,12 @@ const Home = ({ fixtures, users }: HomeProps) => {
       })
       .then((response) => {
         setSelectedTeam(id)
-        console.log(response, selectedTeam)
+        console.log(response)
       })
       .catch((error) => {
         console.log(error)
       })
   }
-
-  useEffect(() => {
-    console.log(selectedTeam)
-  }, [selectedTeam])
 
   return (
     <Layout>
@@ -107,7 +81,6 @@ const Home = ({ fixtures, users }: HomeProps) => {
               id="gameweek-select"
               className="w-full"
               onChange={(event) => {
-                console.log(event.target.value)
                 setGameweek(parseInt(event.target.value))
               }}
             >
@@ -128,7 +101,7 @@ const Home = ({ fixtures, users }: HomeProps) => {
           >
             {groupedFixtures.map((date, idx) => (
               <section key={idx}>
-                <h2 className="my-2 px-2 rounded-sm text-lg text-slate-800 font-bold bg-green-100 w-full">
+                <h2 className="my-2 p-2 px-4 rounded-full text-lg text-slate-800 font-bold bg-green-100 w-full">
                   {format(new Date(date.date), 'PPPP')}
                 </h2>
                 {date.fixtures.map((f: Fixture) => (
@@ -167,6 +140,48 @@ const groupFixturesByDate = (fixtures: Fixture[]): Gameweek[] => {
   })
 
   return dates
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const fixtures = await axios
+    .get('https://fantasy.premierleague.com/api/fixtures/')
+    .catch((error) => {
+      console.log(error)
+    })
+
+  const teams = await prisma.team.findMany()
+
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      score: true,
+      selection: true,
+    },
+  })
+
+  const talliedSelections = tallyUserSelections(users)
+
+  const enrichedFixtures = fixtures?.data.map((f: any, idx: number) => {
+    return {
+      ...f,
+      team_h: {
+        basic_id: f.team_h,
+        ...teams[f.team_h - 1],
+        selectedBy: talliedSelections[f.team_h - 1],
+      },
+      team_a: {
+        basic_id: f.team_a,
+        ...teams[f.team_a - 1],
+        selectedBy: talliedSelections[f.team_a - 1],
+      },
+    }
+  })
+
+  return {
+    props: { fixtures: enrichedFixtures, users },
+    revalidate: 1800,
+  }
 }
 
 export default Home
