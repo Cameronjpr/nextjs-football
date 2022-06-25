@@ -16,11 +16,6 @@ const options = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || ''
     })
   ],
-  theme: {
-    colorScheme: "auto", // "auto" | "dark" | "light"
-    brandColor: "4CB963", // Hex color code
-    logo: "https://nextjs-football-eight.vercel.app/assets/soccer_ball.gif" // Absolute URL to image
-  },
   adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
   
