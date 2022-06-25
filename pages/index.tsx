@@ -29,6 +29,7 @@ enum Status {
 const Home = ({ fixtures, users }: HomeProps) => {
   const { data: session, status } = useSession()
   const [gameweek, setGameweek] = useState(1)
+  const [prevGameweek, setPrevGameweek] = useState(1)
   const [selectedTeam, setSelectedTeam] = useState<undefined | string>(
     undefined
   )
@@ -40,6 +41,19 @@ const Home = ({ fixtures, users }: HomeProps) => {
       transition: {
         delayChildren: 0.5,
       },
+    },
+  }
+
+  const list = {
+    visible: { opacity: 1 },
+    hidden: { opacity: 0 },
+  }
+
+  const item = {
+    visible: { opacity: 1, x: 0 },
+    hidden: {
+      opacity: 0,
+      x: (gameweek - prevGameweek) * 50,
     },
   }
 
@@ -71,16 +85,19 @@ const Home = ({ fixtures, users }: HomeProps) => {
   return (
     <Layout>
       <div className="flex flex-col place-content-center">
-        <section className="pb-5 sm:px-36 flex place-content-between">
-          <section className="text-xl font-bold w-full">
+        <section className="pb-5 w-full flex place-content-between">
+          <section className="flex flex-row place-content-between w-full text-xl font-bold">
+            <button onClick={() => setGameweek(gameweek - 1)}>Previous</button>
             <label className="hidden" htmlFor="gameweek-select">
               Select a gameweek
             </label>
             <select
               name="gameweek"
               id="gameweek-select"
-              className="w-full"
+              className=""
+              value={gameweek}
               onChange={(event) => {
+                setPrevGameweek(gameweek)
                 setGameweek(parseInt(event.target.value))
               }}
             >
@@ -90,9 +107,10 @@ const Home = ({ fixtures, users }: HomeProps) => {
                 </option>
               ))}
             </select>
+            <button onClick={() => setGameweek(gameweek + 1)}>Next</button>
           </section>
         </section>
-        <main className="sm:px-36">
+        <main className="">
           <motion.div
             variants={container}
             initial="hidden"
@@ -100,20 +118,25 @@ const Home = ({ fixtures, users }: HomeProps) => {
             className="flex flex-col gap-1"
           >
             {groupedFixtures.map((date, idx) => (
-              <section key={idx}>
+              <motion.ul
+                initial="hidden"
+                animate="visible"
+                variants={list}
+                key={idx}
+              >
                 <h2 className="my-2 p-2 px-4 rounded-full text-lg text-slate-800 font-bold bg-green-100 w-full">
                   {format(new Date(date.date), 'PPPP')}
                 </h2>
                 {date.fixtures.map((f: Fixture) => (
-                  <div key={f.id} className="">
+                  <motion.li variants={item} key={f.id} className="list-none">
                     <FixtureCard
                       fixture={f}
                       selectedTeam={selectedTeam}
                       handleSelection={handleTeamSelect}
                     />
-                  </div>
+                  </motion.li>
                 ))}
-              </section>
+              </motion.ul>
             ))}
           </motion.div>
         </main>
