@@ -7,6 +7,8 @@ import { Fixture } from '../components/Fixture.types'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import prisma from '../lib/prisma'
+import { useSession } from 'next-auth/react'
+import router from 'next/router'
 
 export const getStaticProps: GetStaticProps = async () => {
   // const feed = await prisma.fixture.findMany()
@@ -36,7 +38,14 @@ type HomeProps = {
   users: any
 }
 
+enum Status {
+  Unauthenticated = 'unauthenticated',
+  Authenticated = 'authenticated',
+}
+
 const Home = ({ fixtures, users }: HomeProps) => {
+  const { data: session, status } = useSession()
+  console.log(status)
   const [gameweek, setGameweek] = useState(1)
   const [selectedTeam, setSelectedTeam] = useState<undefined | string>(
     undefined
@@ -61,6 +70,12 @@ const Home = ({ fixtures, users }: HomeProps) => {
   )
 
   const handleTeamSelect = async (id: string) => {
+    if (status === Status.Unauthenticated) {
+      router.push(
+        encodeURI('/login?message=Please sign in to make a selection.')
+      )
+      return
+    }
     const res = await axios
       .post('/api/selection', {
         id: id,
