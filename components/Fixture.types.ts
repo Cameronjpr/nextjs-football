@@ -25,3 +25,9 @@ export type TeamNuggetProps = {
   isSelected: boolean
   handleSelection: (id: string) => void
 }
+
+export enum FixtureOutcomes {
+  Win = 'win',
+  Loss = 'loss',
+  Draw = 'draw',
+}

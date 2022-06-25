@@ -4,12 +4,9 @@ import Layout from '../../components/Layout'
 import { motion } from 'framer-motion'
 import { randomUUID } from 'crypto'
 import prisma from '../../lib/prisma'
+import classNames from 'classnames'
 
 export const getStaticProps: GetStaticProps = async () => {
-  const fixtures = await fetch(
-    'https://fantasy.premierleague.com/api/fixtures/'
-  ).then((res) => res.json())
-
   const users = await prisma.user.findMany({
     select: {
       name: true,
@@ -55,14 +52,17 @@ const Leaderboard = ({ users }: LeaderboardProps) => {
             className="flex flex-col gap-1"
           >
             {users
-              .sort((a: User, b: User) => a.score - b.score)
-              .map((player: User) => (
+              .sort((a: User, b: User) => b.score - a.score)
+              .map((player: User, idx) => (
                 <div
                   key={player.id}
-                  className="flex place-content-between border-b-2 text-xl"
+                  className={classNames(
+                    'px-2 flex flex-row place-content-between border-b-2 text-xl',
+                    idx ? 'bg-white' : 'bg-yellow-300'
+                  )}
                 >
                   <h2 className="">{player.name}</h2>
-                  <span>{player.score}</span>
+                  <span>{player.score ?? 0}</span>
                 </div>
               ))}
           </motion.div>

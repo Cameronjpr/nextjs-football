@@ -2,26 +2,23 @@ import React from 'react'
 import classNames from 'classnames'
 import { format } from 'date-fns'
 import { teams } from '../data/teams'
-import { Fixture, FixtureProps, TeamNuggetProps } from './Fixture.types'
+import {
+  Fixture,
+  FixtureOutcomes,
+  FixtureProps,
+  TeamNuggetProps,
+} from './Fixture.types'
 
-enum FixtureOutcomes {
-  Win = 'win',
-  Loss = 'loss',
-  Draw = 'draw',
-}
-
-const TeamNugget: React.FC<{ team: TeamNuggetProps }> = ({ team }) => {
-  const {
-    id,
-    club,
-    score,
-    isHome,
-    result,
-    isSelectable,
-    isSelected,
-    handleSelection,
-  } = team
-
+const TeamNugget = ({
+  id,
+  club,
+  score,
+  isHome,
+  result,
+  isSelectable,
+  isSelected,
+  handleSelection,
+}: TeamNuggetProps) => {
   let resultStyling
 
   switch (result) {
@@ -38,17 +35,18 @@ const TeamNugget: React.FC<{ team: TeamNuggetProps }> = ({ team }) => {
   return (
     <button
       className={classNames(
-        'p-2 w-52 flex place-content-between rounded-sm',
+        'p-2 w-full flex justify-end items-center rounded-sm',
         'hover:bg-yellow-100',
         isHome ? 'flex-row' : 'flex-row-reverse',
-        isSelected && 'bg-yellow-200',
-        resultStyling
+        isSelected && 'bg-yellow-200'
       )}
       onClick={() => handleSelection(String(id - 1))}
       disabled={!isSelectable}
     >
-      <span className="font-bold px-2">{club}</span>
-      <span>{score}</span>
+      <span className="font-medium px-2 truncate">{club}</span>
+      <span className={classNames('p-2 w-10 h-10 rounded-full', resultStyling)}>
+        {score}
+      </span>
     </button>
   )
 }
@@ -69,30 +67,26 @@ const FixtureCard = ({
   } = fixture
   return (
     <>
-      <div className="flex place-content-between gap-1">
+      <div className="grid grid-cols-2 gap-1">
         <TeamNugget
-          team={{
-            id: team_h,
-            club: teams[team_h - 1],
-            score: team_h_score,
-            isHome: true,
-            result: getResultFromScores(team_h_score, team_a_score),
-            isSelectable: started,
-            isSelected: team_h === Number(selectedTeam) + 1,
-            handleSelection,
-          }}
+          id={team_h}
+          club={teams[team_h - 1]}
+          score={team_h_score}
+          isHome={true}
+          result={getResultFromScores(team_h_score, team_a_score)}
+          isSelectable={started}
+          isSelected={team_h === Number(selectedTeam) + 1}
+          handleSelection={handleSelection}
         />
         <TeamNugget
-          team={{
-            id: team_a,
-            club: teams[team_a - 1],
-            score: team_a_score,
-            isHome: false,
-            result: getResultFromScores(team_a_score, team_h_score),
-            isSelectable: started,
-            isSelected: team_a === Number(selectedTeam) + 1,
-            handleSelection,
-          }}
+          id={team_a}
+          club={teams[team_a - 1]}
+          score={team_a_score}
+          isHome={false}
+          result={getResultFromScores(team_a_score, team_h_score)}
+          isSelectable={started}
+          isSelected={team_a === Number(selectedTeam) + 1}
+          handleSelection={handleSelection}
         />
       </div>
     </>

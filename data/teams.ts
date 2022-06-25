@@ -20,3 +20,5 @@ export const teams = [
   'West Ham United',
   'Wolves',
 ]
+
+const teams2 = [{ id: 1, longName: 'Arsenal', shortName: 'ARS', color: ''}, ]

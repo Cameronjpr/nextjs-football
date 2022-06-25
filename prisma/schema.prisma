@@ -55,6 +55,14 @@ model User {
   @@map(name: "users")
 }
 
+model Team {
+  id                    String    @id @default(cuid())
+  name                  String
+  shortName             String
+  primaryColor          String?
+  secondaryColor        String?
+}
+
 model VerificationToken {
   identifier String
   token      String   @unique

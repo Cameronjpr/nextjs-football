@@ -14,7 +14,7 @@ const Login = () => {
 
   return (
     <Layout>
-      <div className="page">
+      <div>
         <main>
           <h1 className="text-3xl mb-8">Login</h1>
           <div className="right">

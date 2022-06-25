@@ -11,10 +11,11 @@ import { useSession } from 'next-auth/react'
 import router from 'next/router'
 
 export const getStaticProps: GetStaticProps = async () => {
-  // const feed = await prisma.fixture.findMany()
-  const fixtures = await fetch(
-    'https://fantasy.premierleague.com/api/fixtures/'
-  ).then((res) => res.json())
+  const fixtures = await axios
+    .get('https://fantasy.premierleague.com/api/fixtures/')
+    .catch((error) => {
+      console.log(error)
+    })
 
   const users = await prisma.user.findMany({
     select: {
@@ -25,7 +26,7 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   })
 
-  return { props: { fixtures, users }, revalidate: 1800 }
+  return { props: { fixtures: fixtures?.data, users }, revalidate: 1800 }
 }
 
 type Gameweek = {
@@ -97,13 +98,14 @@ const Home = ({ fixtures, users }: HomeProps) => {
     <Layout>
       <div className="flex flex-col place-content-center">
         <section className="pb-5 sm:px-36 flex place-content-between">
-          <section className="text-xl font-bold">
+          <section className="text-xl font-bold w-full">
             <label className="hidden" htmlFor="gameweek-select">
               Select a gameweek
             </label>
             <select
               name="gameweek"
               id="gameweek-select"
+              className="w-full"
               onChange={(event) => {
                 console.log(event.target.value)
                 setGameweek(parseInt(event.target.value))
@@ -126,7 +128,9 @@ const Home = ({ fixtures, users }: HomeProps) => {
           >
             {groupedFixtures.map((date, idx) => (
               <section key={idx}>
-                <h2 className="my-2">{format(new Date(date.date), 'PPPP')}</h2>
+                <h2 className="my-2 px-2 rounded-sm text-lg text-slate-800 font-bold bg-green-100 w-full">
+                  {format(new Date(date.date), 'PPPP')}
+                </h2>
                 {date.fixtures.map((f: Fixture) => (
                   <div key={f.id} className="">
                     <FixtureCard

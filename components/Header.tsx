@@ -4,83 +4,44 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signOut, useSession } from 'next-auth/react'
 
-const Header: React.FC = () => {
+const Header = () => {
   const router = useRouter()
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname
 
   const { data: session, status } = useSession()
 
-  let left = (
-    <div className="left">
+  const authStuff = session ? (
+    <div className="flex flex-col text-right">
+      <button onClick={() => signOut()}>
+        <a>Log out</a>
+      </button>
+    </div>
+  ) : (
+    <div className="right">
+      <Link href="/api/auth/signin">
+        <a data-active={isActive('/signup')}>Log in</a>
+      </Link>
+    </div>
+  )
+
+  return (
+    <nav className="p-5 bg-green-600 text-white text-lg font-old flex flex-row place-content-between">
       <Link href="/">
         <a className="bold" data-active={isActive('/')}>
           Home
         </a>
       </Link>
-    </div>
-  )
-
-  let right = null
-
-  if (status === 'loading') {
-    left = (
-      <div className="left">
-        <Link href="/">
-          <a className="bold" data-active={isActive('/')}>
-            Feed
-          </a>
-        </Link>
-      </div>
-    )
-    right = (
-      <div className="right">
-        <p>Validating session ...</p>
-      </div>
-    )
-  }
-
-  if (!session) {
-    right = (
-      <div className="right">
-        <Link href="/api/auth/signin">
-          <a data-active={isActive('/signup')}>Log in</a>
-        </Link>
-      </div>
-    )
-  }
-
-  if (session) {
-    left = (
-      <div className="flex flex-col">
-        <Link href="/">
-          <a className="bold" data-active={isActive('/')}>
-            Home
-          </a>
-        </Link>
-        <Link href="/">
-          <a className="bold" data-active={isActive('/leaderboard')}>
-            Leaderboard
-          </a>
-        </Link>
-      </div>
-    )
-    right = (
-      <div className="flex flex-col text-right">
-        <p>👋 {session?.user?.name}</p>
-        <button onClick={() => signOut()}>
-          <a>Log out</a>
-        </button>
-      </div>
-    )
-  }
-
-  return (
-    <nav className="p-5 flex flex-row place-content-between">
-      {left}
-      {right}
+      <Link href="/leaderboard">
+        <a className="bold" data-active={isActive('/leaderboard')}>
+          Leaderboard
+        </a>
+      </Link>
+      {authStuff}
     </nav>
   )
 }
+
+// ;<p>👋 {session?.user?.name?.split(' ')[0]}</p>
 
 export default Header
