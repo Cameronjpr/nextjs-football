@@ -1,47 +1,8 @@
 import React from 'react'
-import Router from 'next/router'
 import classNames from 'classnames'
-
-export type FixtureProps = {
-  id: string
-  event: number
-  team_h: number
-  team_h_score: number
-  team_a: number
-  team_a_score: number
-  started: boolean
-}
-
-const teams = [
-  'Arsenal',
-  'Aston Villa',
-  'Brentford',
-  'Brighton',
-  'Burnley',
-  'Chelsea',
-  'Crystal Palace',
-  'Everton',
-  'Leeds United',
-  'Leicester City',
-  'Liverpool',
-  'Manchester City',
-  'Manchester United',
-  'Newcastle United',
-  'Norwich City',
-  'Southampton',
-  'Tottenham Hotspur',
-  'Watford',
-  'West Ham United',
-  'Wolves',
-]
-
-type TeamNuggetProps = {
-  club: string
-  score: number
-  isHome: boolean
-  result: string
-  isSelectable: boolean
-}
+import { format } from 'date-fns'
+import { teams } from '../data/teams'
+import { Fixture, FixtureProps, TeamNuggetProps } from './Fixture.types'
 
 enum FixtureOutcomes {
   Win = 'win',
@@ -50,7 +11,8 @@ enum FixtureOutcomes {
 }
 
 const TeamNugget: React.FC<{ team: TeamNuggetProps }> = ({ team }) => {
-  const { club, score, isHome, result, isSelectable } = team
+  const { id, club, score, isHome, result, isSelectable, handleSelection } =
+    team
 
   let resultStyling
 
@@ -73,7 +35,7 @@ const TeamNugget: React.FC<{ team: TeamNuggetProps }> = ({ team }) => {
         isHome ? 'flex-row' : 'flex-row-reverse',
         resultStyling
       )}
-      onClick={() => console.log(team)}
+      onClick={() => handleSelection(String(id - 1))}
       disabled={!isSelectable}
     >
       <span className="font-bold px-2">{club}</span>
@@ -82,29 +44,43 @@ const TeamNugget: React.FC<{ team: TeamNuggetProps }> = ({ team }) => {
   )
 }
 
-const Fixture: React.FC<{ fixture: FixtureProps }> = ({ fixture }) => {
-  const { id, team_h, team_h_score, team_a_score, team_a, started } = fixture
+const FixtureCard = ({ fixture, handleSelection }: FixtureProps) => {
+  const {
+    id,
+    team_h,
+    team_h_score,
+    team_a_score,
+    team_a,
+    started,
+    kickoff_time,
+  } = fixture
   return (
-    <div className="flex place-content-center gap-1">
-      <TeamNugget
-        team={{
-          club: teams[team_h - 1],
-          score: team_h_score,
-          isHome: true,
-          result: getResultFromScores(team_h_score, team_a_score),
-          isSelectable: !started,
-        }}
-      />
-      <TeamNugget
-        team={{
-          club: teams[team_a - 1],
-          score: team_a_score,
-          isHome: false,
-          result: getResultFromScores(team_a_score, team_h_score),
-          isSelectable: !started,
-        }}
-      />
-    </div>
+    <>
+      <div className="flex place-content-center gap-1">
+        <TeamNugget
+          team={{
+            id: team_h,
+            club: teams[team_h - 1],
+            score: team_h_score,
+            isHome: true,
+            result: getResultFromScores(team_h_score, team_a_score),
+            isSelectable: started,
+            handleSelection,
+          }}
+        />
+        <TeamNugget
+          team={{
+            id: team_a,
+            club: teams[team_a - 1],
+            score: team_a_score,
+            isHome: false,
+            result: getResultFromScores(team_a_score, team_h_score),
+            isSelectable: started,
+            handleSelection,
+          }}
+        />
+      </div>
+    </>
   )
 }
 
@@ -115,4 +91,4 @@ const getResultFromScores = (team: number, opponent: number): string => {
   return FixtureOutcomes.Draw
 }
 
-export default Fixture
+export default FixtureCard

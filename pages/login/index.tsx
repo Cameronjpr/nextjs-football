@@ -4,11 +4,10 @@ import Layout from '../../components/Layout'
 import { motion } from 'framer-motion'
 
 type Props = {
-  // feed: FixtureProps[]
   fixtures: any
 }
 
-const Blog: React.FC<Props> = (props) => {
+const Login: React.FC<Props> = (props) => {
   const [gameweek, setGameweek] = useState(1)
 
   return (
@@ -22,4 +21,4 @@ const Blog: React.FC<Props> = (props) => {
   )
 }
 
-export default Blog
+export default Login
