@@ -11,7 +11,7 @@ export type Fixture = {
 
 export type FixtureProps = {
   fixture: Fixture
-  selectedTeam: string
+  selectedTeam?: string
   handleSelection: (id: string) => void
 }
 
