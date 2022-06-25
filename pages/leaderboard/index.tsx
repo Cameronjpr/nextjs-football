@@ -3,41 +3,35 @@ import { GetServerSideProps, GetStaticProps } from 'next'
 import Layout from '../../components/Layout'
 import { motion } from 'framer-motion'
 import { randomUUID } from 'crypto'
+import prisma from '../../lib/prisma'
 
 export const getStaticProps: GetStaticProps = async () => {
-  const leaderboard = [
-    {
-      id: randomUUID(),
-      name: 'Cameron',
-      score: 1,
+  const fixtures = await fetch(
+    'https://fantasy.premierleague.com/api/fixtures/'
+  ).then((res) => res.json())
+
+  const users = await prisma.user.findMany({
+    select: {
+      name: true,
+      score: true,
+      selection: true,
     },
-    {
-      id: randomUUID(),
-      name: 'Amber',
-      score: 3,
-    },
-    {
-      id: randomUUID(),
-      name: 'Zelda',
-      score: 2,
-    },
-    {
-      id: randomUUID(),
-      name: 'Buster',
-      score: 0,
-    },
-  ]
-  // const fixtures = await fetch(
-  //   'https://fantasy.premierleague.com/api/fixtures/'
-  // ).then((res) => res.json())
-  return { props: { leaderboard }, revalidate: 1800 }
+  })
+  return { props: { users }, revalidate: 1800 }
 }
 
-type Props = {
-  leaderboard: any
+type User = {
+  id: string
+  name: string
+  score: number
+  selection: string
 }
 
-const Leaderboard: React.FC<Props> = (props) => {
+type LeaderboardProps = {
+  users: User[]
+}
+
+const Leaderboard = ({ users }: LeaderboardProps) => {
   const [gameweek, setGameweek] = useState(1)
 
   const container = {
@@ -50,8 +44,6 @@ const Leaderboard: React.FC<Props> = (props) => {
     },
   }
 
-  console.log(props.leaderboard)
-
   return (
     <Layout>
       <div className="flex flex-col place-content-center">
@@ -62,9 +54,9 @@ const Leaderboard: React.FC<Props> = (props) => {
             animate="show"
             className="flex flex-col gap-1"
           >
-            {props.leaderboard
-              .sort((a: any, b: any) => a.score <= b.score)
-              .map((player: any) => (
+            {users
+              .sort((a: User, b: User) => a.score - b.score)
+              .map((player: User) => (
                 <div
                   key={player.id}
                   className="flex place-content-between border-b-2 text-xl"

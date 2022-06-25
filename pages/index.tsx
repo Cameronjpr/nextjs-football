@@ -6,17 +6,24 @@ import FixtureCard from '../components/Fixture'
 import { Fixture } from '../components/Fixture.types'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
+import prisma from '../lib/prisma'
 
 export const getStaticProps: GetStaticProps = async () => {
   // const feed = await prisma.fixture.findMany()
   const fixtures = await fetch(
     'https://fantasy.premierleague.com/api/fixtures/'
   ).then((res) => res.json())
-  return { props: { fixtures }, revalidate: 1800 }
-}
 
-type Props = {
-  fixtures: any
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      score: true,
+      selection: true,
+    },
+  })
+
+  return { props: { fixtures, users }, revalidate: 1800 }
 }
 
 type Gameweek = {
@@ -24,8 +31,16 @@ type Gameweek = {
   fixtures: Fixture[]
 }
 
-const Home: React.FC<Props> = (props) => {
+type HomeProps = {
+  fixtures: Fixture[]
+  users: any
+}
+
+const Home = ({ fixtures, users }: HomeProps) => {
   const [gameweek, setGameweek] = useState(1)
+  const [selectedTeam, setSelectedTeam] = useState<undefined | string>(
+    undefined
+  )
 
   const container = {
     hidden: { opacity: 0 },
@@ -37,12 +52,12 @@ const Home: React.FC<Props> = (props) => {
     },
   }
 
-  console.log(props.fixtures[0])
+  console.log(fixtures[0])
+  console.log(users)
 
   const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1)
-  console.log(gameweek)
   const groupedFixtures: Gameweek[] = groupFixturesByDate(
-    props.fixtures.filter((f: Fixture) => f.event === gameweek)
+    fixtures.filter((f: Fixture) => f.event === gameweek)
   )
 
   const handleTeamSelect = async (id: string) => {
@@ -51,24 +66,22 @@ const Home: React.FC<Props> = (props) => {
         id: id,
       })
       .then((response) => {
-        console.log(response)
+        setSelectedTeam(id)
+        console.log(response, selectedTeam)
       })
       .catch((error) => {
         console.log(error)
       })
   }
 
+  useEffect(() => {
+    console.log(selectedTeam)
+  }, [selectedTeam])
+
   return (
     <Layout>
       <div className="flex flex-col place-content-center">
         <section className="pb-5 sm:px-36 flex place-content-between">
-          {/* <button
-            onClick={() => setGameweek(gameweek - 1)}
-            disabled={gameweek === 1}
-            className="text-xl"
-          >
-            Previous
-          </button> */}
           <section className="text-xl font-bold">
             <label className="hidden" htmlFor="gameweek-select">
               Select a gameweek
@@ -88,13 +101,6 @@ const Home: React.FC<Props> = (props) => {
               ))}
             </select>
           </section>
-          {/* <button
-            onClick={() => setGameweek(gameweek + 1)}
-            disabled={gameweek === 38}
-            className="text-xl"
-          >
-            Next
-          </button> */}
         </section>
         <main className="sm:px-36">
           <motion.div
@@ -110,6 +116,7 @@ const Home: React.FC<Props> = (props) => {
                   <div key={f.id} className="">
                     <FixtureCard
                       fixture={f}
+                      selectedTeam={selectedTeam}
                       handleSelection={handleTeamSelect}
                     />
                   </div>

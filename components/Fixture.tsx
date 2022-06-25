@@ -11,8 +11,16 @@ enum FixtureOutcomes {
 }
 
 const TeamNugget: React.FC<{ team: TeamNuggetProps }> = ({ team }) => {
-  const { id, club, score, isHome, result, isSelectable, handleSelection } =
-    team
+  const {
+    id,
+    club,
+    score,
+    isHome,
+    result,
+    isSelectable,
+    isSelected,
+    handleSelection,
+  } = team
 
   let resultStyling
 
@@ -31,8 +39,9 @@ const TeamNugget: React.FC<{ team: TeamNuggetProps }> = ({ team }) => {
     <button
       className={classNames(
         'p-2 w-52 flex place-content-between rounded-sm',
-        'hover:bg-sky-700',
+        'hover:bg-yellow-100',
         isHome ? 'flex-row' : 'flex-row-reverse',
+        isSelected && 'bg-yellow-200',
         resultStyling
       )}
       onClick={() => handleSelection(String(id - 1))}
@@ -44,7 +53,11 @@ const TeamNugget: React.FC<{ team: TeamNuggetProps }> = ({ team }) => {
   )
 }
 
-const FixtureCard = ({ fixture, handleSelection }: FixtureProps) => {
+const FixtureCard = ({
+  fixture,
+  handleSelection,
+  selectedTeam,
+}: FixtureProps) => {
   const {
     id,
     team_h,
@@ -56,7 +69,7 @@ const FixtureCard = ({ fixture, handleSelection }: FixtureProps) => {
   } = fixture
   return (
     <>
-      <div className="flex place-content-center gap-1">
+      <div className="flex place-content-between gap-1">
         <TeamNugget
           team={{
             id: team_h,
@@ -65,6 +78,7 @@ const FixtureCard = ({ fixture, handleSelection }: FixtureProps) => {
             isHome: true,
             result: getResultFromScores(team_h_score, team_a_score),
             isSelectable: started,
+            isSelected: team_h === Number(selectedTeam) + 1,
             handleSelection,
           }}
         />
@@ -76,6 +90,7 @@ const FixtureCard = ({ fixture, handleSelection }: FixtureProps) => {
             isHome: false,
             result: getResultFromScores(team_a_score, team_h_score),
             isSelectable: started,
+            isSelected: team_a === Number(selectedTeam) + 1,
             handleSelection,
           }}
         />

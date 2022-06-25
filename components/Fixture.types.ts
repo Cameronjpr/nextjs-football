@@ -11,6 +11,7 @@ export type Fixture = {
 
 export type FixtureProps = {
   fixture: Fixture
+  selectedTeam: string
   handleSelection: (id: string) => void
 }
 
@@ -21,5 +22,6 @@ export type TeamNuggetProps = {
   isHome: boolean
   result: string
   isSelectable: boolean
+  isSelected: boolean
   handleSelection: (id: string) => void
 }
