@@ -14,7 +14,7 @@ import { User } from '@prisma/client'
 import { teams } from '../../data/teams'
 import Image from 'next/image'
 
-export const getServerSideProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetStaticProps = async (context: any) => {
   const session = await getSession(context)
   const user = await prisma.user.findUnique({
     where: {
