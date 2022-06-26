@@ -9,7 +9,7 @@ import { getSession, useSession } from 'next-auth/react'
 import { Status } from '../../domains/account/types'
 import { useRouter } from 'next/router'
 import axios from 'axios'
-import { UserContext } from '..'
+import { CurrentGameweekContext, UserContext } from '..'
 import { User } from '@prisma/client'
 import { teams } from '../../data/teams'
 import Image from 'next/image'
@@ -34,14 +34,15 @@ export const getServerSideProps: GetStaticProps = async (context: any) => {
 const Profile = ({ user }: { user: User }) => {
   const { data: session, status } = useSession()
   const [isEditing, setIsEditing] = useState(false)
-  const [username, setUsername] = useState(user.username ?? 'You')
+  const [username, setUsername] = useState(user?.username ?? 'You')
   const [tempUsername, setTempUsername] = useState(username)
 
   const router = useRouter()
 
   const userData = useContext(UserContext)
+  const currentGameweek = useContext(CurrentGameweekContext)
 
-  console.log(session)
+  console.log(currentGameweek)
 
   if (status === Status.Unauthenticated) {
     router.push(
@@ -72,6 +73,43 @@ const Profile = ({ user }: { user: User }) => {
       })
   }
 
+  console.log(isEditing)
+
+  const EditButton = () => {
+    return isEditing ? (
+      <button
+        className="sm:p-3 w-16 h-16 sm:w-20 sm:h-20 rounded-full sm:text-md bg-green-400 text-slate-700"
+        onClick={() => {
+          setUsername(tempUsername)
+          setIsEditing(false)
+          updateProfile()
+        }}
+      >
+        Done
+      </button>
+    ) : (
+      <button
+        className="sm:p-3 w-16 h-16 sm:w-20 sm:h-20 rounded-full sm:text-md bg-slate-300 text-slate-700"
+        onClick={() => setIsEditing(true)}
+      >
+        Edit
+      </button>
+    )
+  }
+
+  const UsernameField = () => {
+    return isEditing ? (
+      <input
+        type="text"
+        className="w-full ml-5 p-2 rounded-md text-xl sm:text-2xl"
+        value={tempUsername}
+        onChange={(e) => setTempUsername(e.target.value)}
+      ></input>
+    ) : (
+      <h1 className="w-full ml-5 p-2 text-xl sm:text-2xl">{username}</h1>
+    )
+  }
+
   return (
     <Layout>
       <div className="flex flex-col place-content-center">
@@ -83,70 +121,32 @@ const Profile = ({ user }: { user: User }) => {
             className="flex flex-col gap-1"
           >
             <div className="w-full p-5 rounded-full bg-slate-100 flex place-content-between">
-              {isEditing ? (
-                <>
-                  {/* Refactor these two sections, they're almost identical */}
-                  <div className="flex flex-row gap-5 items-center">
+              <>
+                {/* Refactor these two sections, they're almost identical */}
+                <div className="w-full flex flex-row gap-5 place-content-between">
+                  <div className="w-full flex flex-row items-center">
                     {session?.user?.image && (
                       <Image
                         src={session?.user?.image || ''}
                         alt={`The player ${session?.user?.name}`}
                         width="80"
                         height="80"
-                        className="w-10 h-10 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-full"
+                        className="w-16 h-16 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-full"
                       />
                     )}
-
-                    <input
-                      type="text"
-                      className="p-2 rounded-md text-xl sm:text-3xl w-auto"
-                      value={tempUsername}
-                      onChange={(e) => setTempUsername(e.target.value)}
-                    ></input>
+                    {<UsernameField />}
                   </div>
                   <div className="flex flex-row place-content-end">
-                    <button
-                      className="sm:p-3 w-10 h-10 sm:w-20 sm:h-20 rounded-full sm:text-md bg-green-400 text-slate-700"
-                      onClick={() => {
-                        setUsername(tempUsername)
-                        setIsEditing(false)
-                        updateProfile()
-                      }}
-                    >
-                      Done
-                    </button>
+                    {<EditButton />}
                   </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex flex-row gap-5 items-center">
-                    {session?.user?.image && (
-                      <Image
-                        src={session?.user?.image || ''}
-                        alt={`The player ${session?.user?.name}`}
-                        width="80"
-                        height="80"
-                        className="w-10 h-10 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-full"
-                      />
-                    )}
-                    <h1 className="p-2 text-xl sm:text-3xl">{username}</h1>
-                  </div>
-                  <div className="flex flex-row place-content-end">
-                    <button
-                      className="sm:p-3 w-10 h-10 sm:w-20 sm:h-20 rounded-full sm:text-md bg-slate-300 text-slate-700"
-                      onClick={() => setIsEditing(true)}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </>
-              )}
+                </div>
+              </>
             </div>
             <section className="p-5">
-              <h2 className="text-xl">Your selection</h2>
+              <h2 className="text-xl mb-2">Your selection</h2>
               {user?.selection && (
                 <p>
-                  This week, you have selected{' '}
+                  You have selected{' '}
                   <strong className="font-semibold">
                     {teams[Number(user?.selection)]}
                   </strong>

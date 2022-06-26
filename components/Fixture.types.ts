@@ -1,6 +1,12 @@
 
-export type Gameweek = {
+export type Matchday = {
   date: string
+  gameweekId: number
+  fixtures: Fixture[]
+}
+
+export type Gameweek = {
+  id: number
   fixtures: Fixture[]
 }
 

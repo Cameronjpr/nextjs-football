@@ -15,7 +15,7 @@ export const getStaticProps: GetStaticProps = async () => {
       selection: true,
     },
   })
-  return { props: { users }, revalidate: 1800 }
+  return { props: { users }, revalidate: 300 }
 }
 
 type User = {
@@ -63,7 +63,12 @@ const Leaderboard = ({ users }: LeaderboardProps) => {
                     idx ? 'bg-white' : 'bg-yellow-300'
                   )}
                 >
-                  <h2 className="">{player?.username || player.name}</h2>
+                  <div>
+                    <span>{idx === 0 ? '👑' : idx + 1}</span>
+                    <h2 className={`${idx ? 'pl-5' : 'pl-3'} inline`}>
+                      {player?.username || player.name}
+                    </h2>
+                  </div>
                   <span>{player.score ?? 0}</span>
                 </div>
               ))}

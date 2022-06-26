@@ -11,11 +11,8 @@ const Header = () => {
 
   const { data: session, status } = useSession()
 
-  const authStuff = session ? (
-    <div className="flex flex-col text-right">
-      <Link href="/profile">
-        <a data-active={isActive('/profile')}>Profile</a>
-      </Link>
+  const Login = session ? (
+    <div className="flex flex-row text-right">
       <button onClick={() => signOut()}>
         <a>Log out</a>
       </button>
@@ -29,7 +26,7 @@ const Header = () => {
   )
 
   return (
-    <nav className="p-5 bg-green-600 text-white text-lg font-old flex flex-row place-content-between">
+    <nav className="p-5 bg-green-600 text-white text-md font-old flex flex-row place-content-between">
       <Link href="/">
         <a className="bold" data-active={isActive('/')}>
           Home
@@ -40,7 +37,12 @@ const Header = () => {
           Leaderboard
         </a>
       </Link>
-      {authStuff}
+      {session && (
+        <Link href="/profile">
+          <a data-active={isActive('/profile')}>Profile</a>
+        </Link>
+      )}
+      {Login}
     </nav>
   )
 }

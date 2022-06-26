@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react'
 import axios from 'axios'
 import { GetServerSideProps, GetStaticProps } from 'next'
 import Layout from '../components/Layout'
-import { Fixture, Gameweek } from '../components/Fixture.types'
+import { Fixture, Gameweek, Matchday } from '../components/Fixture.types'
 import prisma from '../lib/prisma'
 import { useSession } from 'next-auth/react'
 import { tallyUserSelections } from '../util/index'
@@ -26,9 +26,19 @@ export const UserContext = createContext<User>({
   status: Status.Unauthenticated,
 })
 
+export const CurrentGameweekContext = createContext<Gameweek>({
+  id: 1,
+  fixtures: [],
+})
+
 const Home = ({ fixtures, users }: HomeProps) => {
   const { data: session, status } = useSession()
-  const [gameweek, setGameweek] = useState(1)
+  const [selectedGameweek, setSelectedGameweek] = useState(1)
+  const [currentGameweek, setCurrentGameweek] = useState<Gameweek>({
+    id: selectedGameweek,
+    fixtures: [],
+  })
+
   const [user, setUser] = useState<User>({
     session,
     status,
@@ -41,46 +51,56 @@ const Home = ({ fixtures, users }: HomeProps) => {
     })
   }, [session, status])
 
+  useEffect(() => {}, [fixtures])
+
   const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1)
-  const groupedFixtures: Gameweek[] = groupFixturesByDate(
-    fixtures.filter((f: Fixture) => f.event === gameweek)
+  const groupedFixtures: Matchday[] = groupFixturesByDate(
+    fixtures.filter((f: Fixture) => f.event === selectedGameweek)
   )
 
   return (
     <UserContext.Provider value={user}>
-      <Layout>
-        <div className="flex flex-col place-content-center">
-          <section className="pb-5 w-full flex place-content-between">
-            <section className="flex flex-row place-content-between w-full text-xl font-bold">
-              <button onClick={() => setGameweek(gameweek - 1)}>
-                Previous
-              </button>
-              <label className="hidden" htmlFor="gameweek-select">
-                Select a gameweek
-              </label>
-              <select
-                name="gameweek"
-                id="gameweek-select"
-                className=""
-                value={gameweek}
-                onChange={(event) => {
-                  setGameweek(parseInt(event.target.value))
-                }}
-              >
-                {gameweeks.map((gw, idx) => (
-                  <option key={gw} value={gw}>
-                    Gameweek {gw}
-                  </option>
-                ))}
-              </select>
-              <button onClick={() => setGameweek(gameweek + 1)}>Next</button>
+      <CurrentGameweekContext.Provider value={currentGameweek}>
+        <Layout>
+          <div className="flex flex-col place-content-center">
+            <section className="pb-5 w-full flex place-content-between">
+              <section className="flex flex-row place-content-between w-full text-xl font-bold">
+                <button
+                  onClick={() => setSelectedGameweek(selectedGameweek - 1)}
+                >
+                  Previous
+                </button>
+                <label className="hidden" htmlFor="gameweek-select">
+                  Select a gameweek
+                </label>
+                <select
+                  name="gameweek"
+                  id="gameweek-select"
+                  className=""
+                  value={selectedGameweek}
+                  onChange={(event) => {
+                    setSelectedGameweek(parseInt(event.target.value))
+                  }}
+                >
+                  {gameweeks.map((gw, idx) => (
+                    <option key={gw} value={gw}>
+                      Gameweek {gw}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => setSelectedGameweek(selectedGameweek + 1)}
+                >
+                  Next
+                </button>
+              </section>
             </section>
-          </section>
-          <main className="">
-            <FixtureList groupedFixtures={groupedFixtures} />
-          </main>
-        </div>
-      </Layout>
+            <main className="">
+              <FixtureList groupedFixtures={groupedFixtures} />
+            </main>
+          </div>
+        </Layout>
+      </CurrentGameweekContext.Provider>
     </UserContext.Provider>
   )
 }
@@ -93,7 +113,6 @@ export const getStaticProps: GetStaticProps = async () => {
     })
 
   const teams = await prisma.team.findMany()
-
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -127,6 +146,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   })
 
+  console.log('fixture')
   console.log(fixtures?.data[0])
 
   return {
