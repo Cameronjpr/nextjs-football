@@ -45,6 +45,11 @@
   dependencies:
     "regenerator-runtime" "^0.12.0"
 
+"@emoji-mart/data@^1.0.2":
+  "integrity" "sha512-+ZdzBM4llDJJvjuCEsdOYVoSlNA16MMmxKG3oF5LARkwhx6N5clr6phzneWV1qIwJsywqwG7NaBjH8DV6yzjcA=="
+  "resolved" "https://registry.npmjs.org/@emoji-mart/data/-/data-1.0.2.tgz"
+  "version" "1.0.2"
+
 "@emotion/is-prop-valid@^0.8.2":
   "integrity" "sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA=="
   "resolved" "https://registry.npmjs.org/@emotion/is-prop-valid/-/is-prop-valid-0.8.8.tgz"

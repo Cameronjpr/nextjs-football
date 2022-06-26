@@ -1,39 +1,47 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { GetServerSideProps, GetStaticProps } from 'next'
 import Layout from '../../components/Layout'
 import { motion } from 'framer-motion'
 import { randomUUID } from 'crypto'
 import prisma from '../../lib/prisma'
 import classNames from 'classnames'
-import { useSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import { Status } from '../../domains/account/types'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import { UserContext } from '..'
+import { User } from '@prisma/client'
+import { teams } from '../../data/teams'
+import Image from 'next/image'
 
-export const getStaticProps: GetStaticProps = async () => {
-  const users = await prisma.user.findMany({
+export const getServerSideProps: GetStaticProps = async (context) => {
+  const session = await getSession(context)
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email || '',
+    },
     select: {
       name: true,
+      username: true,
       score: true,
       selection: true,
     },
   })
-  return { props: { users }, revalidate: 1800 }
+
+  return { props: { user } }
 }
 
-type User = {
-  id: string
-  name: string
-  score: number
-  selection: string
-}
-
-const Profile = () => {
+const Profile = ({ user }: { user: User }) => {
   const { data: session, status } = useSession()
   const [isEditing, setIsEditing] = useState(false)
-  const [username, setUsername] = useState(session?.user?.name || 'You')
+  const [username, setUsername] = useState(user.username ?? 'You')
   const [tempUsername, setTempUsername] = useState(username)
+
   const router = useRouter()
+
+  const userData = useContext(UserContext)
+
+  console.log(session)
 
   if (status === Status.Unauthenticated) {
     router.push(
@@ -79,9 +87,16 @@ const Profile = () => {
                 <>
                   {/* Refactor these two sections, they're almost identical */}
                   <div className="flex flex-row gap-5 items-center">
-                    <span className="text-center text-2xl sm:text-5xl leading-[1.5rem] sm:leading-[3.5rem] w-10 h-10 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-full bg-violet-300">
-                      🍉
-                    </span>
+                    {session?.user?.image && (
+                      <Image
+                        src={session?.user?.image || ''}
+                        alt={`The player ${session?.user?.name}`}
+                        width="80"
+                        height="80"
+                        className="w-10 h-10 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-full"
+                      />
+                    )}
+
                     <input
                       type="text"
                       className="p-2 rounded-md text-xl sm:text-3xl w-auto"
@@ -105,9 +120,15 @@ const Profile = () => {
               ) : (
                 <>
                   <div className="flex flex-row gap-5 items-center">
-                    <span className="text-center text-2xl sm:text-5xl leading-[1.5rem] sm:leading-[3.5rem] w-10 h-10 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-full bg-violet-300">
-                      🍉
-                    </span>
+                    {session?.user?.image && (
+                      <Image
+                        src={session?.user?.image || ''}
+                        alt={`The player ${session?.user?.name}`}
+                        width="80"
+                        height="80"
+                        className="w-10 h-10 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-full"
+                      />
+                    )}
                     <h1 className="p-2 text-xl sm:text-3xl">{username}</h1>
                   </div>
                   <div className="flex flex-row place-content-end">
@@ -123,10 +144,15 @@ const Profile = () => {
             </div>
             <section className="p-5">
               <h2 className="text-xl">Your selection</h2>
-              <p>
-                This week, you have selected{' '}
-                <strong className="font-semibold">Arsenal</strong>.
-              </p>
+              {user?.selection && (
+                <p>
+                  This week, you have selected{' '}
+                  <strong className="font-semibold">
+                    {teams[Number(user?.selection)]}
+                  </strong>
+                  .
+                </p>
+              )}
             </section>
           </motion.div>
         </main>

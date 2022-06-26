@@ -4,29 +4,22 @@ export type Gameweek = {
   fixtures: Fixture[]
 }
 
+export type Participant = {
+  basic_id: string
+  id: string
+  name: string
+  score: number
+  isHome: boolean
+  shortName: string
+  primaryColor: string
+  secondaryColor: string
+  selectedBy: number
+}
+
 export type Fixture = {
   id: string
   event: number
-  team_h: {
-    basic_id: string
-    id: string
-    name: string
-    shortName: string
-    primaryColor: string
-    secondaryColor: string
-    selectedBy: number
-  }
-  team_h_score: number
-  team_a: {
-    basic_id: string
-    id: string
-    name: string
-    shortName: string
-    primaryColor: string
-    secondaryColor: string
-    selectedBy: number
-  }
-  team_a_score: number
+  teams: Participant[]
   started: boolean
   kickoff_time: string
 }
@@ -34,6 +27,7 @@ export type Fixture = {
 export type FixtureProps = {
   fixture: Fixture
   selectedTeam?: string
+  isLoading: boolean
   handleSelection: (id: string) => void
 }
 
@@ -45,8 +39,8 @@ export type FixtureParticipantProps = {
   isHome: boolean
   result: string
   isSelectable: boolean
-  isSelected: boolean
   selectedBy: number
+  isLoading: boolean
   handleSelection: (id: string) => void
 }
 

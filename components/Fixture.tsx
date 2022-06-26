@@ -5,47 +5,30 @@ import { teams } from '../data/teams'
 import { Fixture, FixtureOutcomes, FixtureProps } from './Fixture.types'
 import { FixtureParticipant } from './FixtureParticipant'
 
-const FixtureCard = ({
-  fixture,
-  handleSelection,
-  selectedTeam,
-}: FixtureProps) => {
-  const {
-    id,
-    team_h,
-    team_h_score,
-    team_a_score,
-    team_a,
-    started,
-    kickoff_time,
-  } = fixture
+const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
+  const { id, teams, started, kickoff_time } = fixture
   return (
     <>
-      <div className="grid grid-cols-2 gap-1">
-        <FixtureParticipant
-          id={Number(team_h.basic_id)}
-          club={team_h.name}
-          shortName={team_h.shortName}
-          score={team_h_score}
-          isHome={true}
-          result={getResultFromScores(team_h_score, team_a_score)}
-          isSelectable={started}
-          isSelected={Number(team_h.basic_id) === Number(selectedTeam) + 1}
-          selectedBy={team_h.selectedBy}
-          handleSelection={handleSelection}
-        />
-        <FixtureParticipant
-          id={Number(team_a.basic_id)}
-          club={team_a.name}
-          shortName={team_a.shortName}
-          score={team_a_score}
-          isHome={false}
-          result={getResultFromScores(team_a_score, team_h_score)}
-          isSelectable={started}
-          isSelected={Number(team_a.basic_id) === Number(selectedTeam) + 1}
-          selectedBy={team_a.selectedBy}
-          handleSelection={handleSelection}
-        />
+      <div className={classNames('grid grid-cols-2 gap-1')}>
+        {teams.map((t, idx) => (
+          <FixtureParticipant
+            club={t.name}
+            shortName={t.shortName}
+            score={t.score}
+            selectedBy={t.selectedBy}
+            isHome={t.isHome}
+            key={idx}
+            id={Number(t.basic_id)}
+            result={
+              idx
+                ? getResultFromScores(teams[1].score, teams[0].score)
+                : getResultFromScores(teams[0].score, teams[1].score)
+            }
+            isSelectable={started}
+            isLoading={isLoading}
+            handleSelection={handleSelection}
+          />
+        ))}
       </div>
     </>
   )
