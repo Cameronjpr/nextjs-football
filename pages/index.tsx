@@ -3,27 +3,19 @@ import axios from 'axios'
 import { GetServerSideProps, GetStaticProps } from 'next'
 import Layout from '../components/Layout'
 import FixtureCard from '../components/Fixture'
-import { Fixture } from '../components/Fixture.types'
+import { Fixture, Gameweek } from '../components/Fixture.types'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import prisma from '../lib/prisma'
 import { useSession } from 'next-auth/react'
 import router from 'next/router'
-import { tallyUserSelections } from '../util'
-
-type Gameweek = {
-  date: string
-  fixtures: Fixture[]
-}
+import { tallyUserSelections } from '../util/index'
+import { groupFixturesByDate } from '../util/fixtures'
+import { Status } from '../domains/account/types'
 
 type HomeProps = {
   fixtures: Fixture[]
   users: any
-}
-
-enum Status {
-  Unauthenticated = 'unauthenticated',
-  Authenticated = 'authenticated',
 }
 
 const Home = ({ fixtures, users }: HomeProps) => {
@@ -143,26 +135,6 @@ const Home = ({ fixtures, users }: HomeProps) => {
       </div>
     </Layout>
   )
-}
-
-// { date: d, fixtures: [] }
-const groupFixturesByDate = (fixtures: Fixture[]): Gameweek[] => {
-  const dates: Gameweek[] = []
-
-  fixtures.forEach((f) => {
-    const date = format(new Date(f.kickoff_time), 'P')
-    const idx = dates.findIndex((d) => d.date === date)
-    if (idx >= 0) {
-      dates[idx].fixtures.push(f)
-    } else {
-      dates.push({
-        date: date,
-        fixtures: [f],
-      })
-    }
-  })
-
-  return dates
 }
 
 export const getStaticProps: GetStaticProps = async () => {

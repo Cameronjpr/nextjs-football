@@ -1,3 +1,9 @@
+
+export type Gameweek = {
+  date: string
+  fixtures: Fixture[]
+}
+
 export type Fixture = {
   id: string
   event: number

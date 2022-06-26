@@ -13,6 +13,9 @@ const Header = () => {
 
   const authStuff = session ? (
     <div className="flex flex-col text-right">
+      <Link href="/profile">
+        <a data-active={isActive('/profile')}>Profile</a>
+      </Link>
       <button onClick={() => signOut()}>
         <a>Log out</a>
       </button>

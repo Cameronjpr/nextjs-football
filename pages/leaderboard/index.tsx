@@ -10,6 +10,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const users = await prisma.user.findMany({
     select: {
       name: true,
+      username: true,
       score: true,
       selection: true,
     },
@@ -19,6 +20,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
 type User = {
   id: string
+  username?: string
   name: string
   score: number
   selection: string
@@ -61,7 +63,7 @@ const Leaderboard = ({ users }: LeaderboardProps) => {
                     idx ? 'bg-white' : 'bg-yellow-300'
                   )}
                 >
-                  <h2 className="">{player.name}</h2>
+                  <h2 className="">{player?.username || player.name}</h2>
                   <span>{player.score ?? 0}</span>
                 </div>
               ))}
