@@ -112,7 +112,10 @@ export const getStaticProps: GetStaticProps = async () => {
       console.log(error)
     })
 
-  const teams = await prisma.team.findMany()
+  const teams = await prisma.team.findMany({
+    orderBy: [{ order: 'asc' }],
+  })
+
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -145,9 +148,6 @@ export const getStaticProps: GetStaticProps = async () => {
       ],
     }
   })
-
-  console.log('fixture')
-  console.log(fixtures?.data[0])
 
   return {
     props: { fixtures: enrichedFixtures, users },

@@ -44,6 +44,7 @@ export const FixtureParticipant = ({
           selectedTeam === id && 'bg-yellow-200'
         )}
         onClick={() => {
+          console.log('clicked')
           setWasTapped(true)
           handleSelection(String(id))
         }}

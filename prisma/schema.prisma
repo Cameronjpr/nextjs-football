@@ -58,6 +58,7 @@ model User {
 
 model Team {
   id                    String    @id @default(cuid())
+  order                 Int?
   name                  String
   shortName             String
   primaryColor          String?
