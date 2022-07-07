@@ -102,7 +102,7 @@ export const getStaticProps: GetStaticProps = async () => {
           id: u?.id,
         },
         data: {
-          score: (u.score += points),
+          score: u.score ? (u.score += points) : points,
           calculated: true,
         },
       })
