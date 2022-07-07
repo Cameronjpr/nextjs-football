@@ -53,6 +53,7 @@ model User {
   sessions      Session[]
   selection     String?
   score         Int?
+  calculated    Boolean   @default(false)
   @@map(name: "users")
 }
 

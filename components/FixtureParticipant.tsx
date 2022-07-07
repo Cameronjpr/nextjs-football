@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { useContext, useEffect, useState } from 'react'
+import { UserContext } from '../pages'
 import { FixtureOutcomes, FixtureParticipantProps } from './Fixture.types'
 import { SelectionContext } from './FixtureList'
 
@@ -17,6 +18,7 @@ export const FixtureParticipant = ({
 }: FixtureParticipantProps) => {
   let resultStyling
   const [wasTapped, setWasTapped] = useState(false)
+  const user = useContext(UserContext)
   const selectedTeam = useContext(SelectionContext)
 
   switch (result) {

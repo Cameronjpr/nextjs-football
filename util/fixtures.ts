@@ -20,3 +20,27 @@ export const groupFixturesByDate = (fixtures: Fixture[]): Matchday[] => {
 
   return dates
 }
+
+export const getSelectionFixtureInGameweek = (gw: any, selection: number) => {
+  const fixture = gw.filter((f: any) => {
+    console.log(selection)
+    return f.team_a == selection || f.team_h == selection
+  })
+
+  return fixture
+}
+
+export const getResultFromFixture = (f: any, selection: number) => {
+  console.log(f.team_h_score > f.team_a_score)
+  if (f.team_h_score === f.team_a_score) return 'draw'
+
+  if (selection === f.team_h) {
+    if (f.team_h_score > f.team_a_score) return 'win'
+    else return 'loss'
+  } 
+
+  if (selection === f.team_a) {
+    if (f.team_a_score > f.team_h_score) return 'win'
+    else return 'loss'
+  }
+}

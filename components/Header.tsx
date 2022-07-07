@@ -32,8 +32,8 @@ const Header = () => {
           Home
         </a>
       </Link>
-      <Link href="/leaderboard">
-        <a className="bold" data-active={isActive('/leaderboard')}>
+      <Link href="/liveboard">
+        <a className="bold" data-active={isActive('/liveboard')}>
           Leaderboard
         </a>
       </Link>

@@ -1,3 +1,4 @@
+import prisma from '../../lib/prisma'
 import axios from 'axios'
 import { format } from 'date-fns'
 import { SessionProvider, useSession } from 'next-auth/react'

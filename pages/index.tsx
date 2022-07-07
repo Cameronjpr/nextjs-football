@@ -149,10 +149,18 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   })
 
+  console.log(enrichedFixtures)
+
   return {
     props: { fixtures: enrichedFixtures, users },
-    revalidate: 1800,
+    revalidate: 60 * 5,
   }
 }
 
 export default Home
+
+/* 
+
+Fixtures have ids
+
+*/

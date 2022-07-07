@@ -9,6 +9,8 @@ export default async function handle(
   const { id } = req.body
   const session = await getSession({ req })
 
+  console.log(id)
+
   if (!session?.user?.email) return
 
   const result = await prisma.user.update({
@@ -17,6 +19,7 @@ export default async function handle(
     },
     data: {
       selection: id,
+      calculated: false,
     },
   })
   res.json(result)
