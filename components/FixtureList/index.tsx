@@ -49,7 +49,7 @@ const FixtureList = ({ groupedFixtures }: any) => {
             </h2>
             {date.fixtures.map((f: Fixture) => (
               <li key={f.id} className="list-none">
-                {f.finished ? (
+                {f.finished || f.started ? (
                   <ResultCard
                     fixture={f}
                     isLoading={isLoading}

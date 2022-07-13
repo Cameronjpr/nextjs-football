@@ -15,9 +15,20 @@ const ResultCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
   return (
     <div className="p-2">
       <div className="grid grid-cols-3 text-center h-12">
-        <div className="order-2 flex place-items-center place-content-center font-bold gap-4">
-          <span className="p-3 rounded-md bg-slate-100">{teams[0].score}</span>
-          <span className="p-3 rounded-md bg-slate-100">{teams[1].score}</span>
+        <div>
+          <div className="order-2 flex place-items-center place-content-center font-bold gap-4">
+            <span className="p-3 rounded-md bg-slate-100">
+              {teams[0].score}
+            </span>
+            {started && (
+              <span className="text-xs text-red-500 font-extrabold antialiased -mx-2">
+                LIVE
+              </span>
+            )}
+            <span className="p-3 rounded-md bg-slate-100">
+              {teams[1].score}
+            </span>
+          </div>
         </div>
         {teams.map((t, idx) => {
           return (
