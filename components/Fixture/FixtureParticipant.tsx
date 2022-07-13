@@ -40,7 +40,7 @@ export const FixtureParticipant = ({
     <div className="flex flex-col">
       <button
         className={classNames(
-          'p-2 w-full flex justify-end items-center rounded-fullwd ',
+          'p-2 w-full flex justify-end items-center rounded-full',
           'hover:underline',
           isHome ? 'flex-row' : 'flex-row-reverse',
           selectedTeam === id && 'bg-yellow-200'
@@ -48,7 +48,7 @@ export const FixtureParticipant = ({
         onClick={() => {
           console.log('clicked')
           setWasTapped(true)
-          handleSelection(String(id))
+          handleSelection(id)
         }}
         disabled={!isSelectable}
       >

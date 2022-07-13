@@ -11,7 +11,7 @@ export type Gameweek = {
 }
 
 export type Participant = {
-  basic_id: string
+  basic_id: number
   id: string
   name: string
   score: number
@@ -27,6 +27,7 @@ export type Fixture = {
   event: number
   teams: Participant[]
   started: boolean
+  finished: boolean
   kickoff_time: string
 }
 
@@ -34,7 +35,7 @@ export type FixtureProps = {
   fixture: Fixture
   selectedTeam?: string
   isLoading: boolean
-  handleSelection: (id: string) => void
+  handleSelection: (id: number) => void
 }
 
 export type FixtureParticipantProps = {
@@ -47,7 +48,7 @@ export type FixtureParticipantProps = {
   isSelectable: boolean
   selectedBy: number
   isLoading: boolean
-  handleSelection: (id: string) => void
+  handleSelection: (id: number) => void
 }
 
 export enum FixtureOutcomes {

@@ -17,9 +17,7 @@ import Image from 'next/image'
 export const getServerSideProps: GetStaticProps = async (context: any) => {
   const d = new Date()
 
-  console.log(d.getSeconds())
   const session = await getSession(context)
-  console.log(d.getSeconds())
   const user = await prisma.user.findUnique({
     where: {
       email: session?.user?.email || '',
@@ -31,7 +29,6 @@ export const getServerSideProps: GetStaticProps = async (context: any) => {
       selection: true,
     },
   })
-  console.log(d.getSeconds())
 
   return { props: { user } }
 }
@@ -46,8 +43,6 @@ const Profile = ({ user }: { user: User }) => {
 
   const userData = useContext(UserContext)
   const currentGameweek = useContext(CurrentGameweekContext)
-
-  console.log(currentGameweek)
 
   if (status === Status.Unauthenticated) {
     router.push(
@@ -77,8 +72,6 @@ const Profile = ({ user }: { user: User }) => {
         console.log(error)
       })
   }
-
-  console.log(isEditing)
 
   const EditButton = () => {
     return isEditing ? (

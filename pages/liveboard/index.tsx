@@ -7,7 +7,7 @@ import prisma from '../../lib/prisma'
 import classNames from 'classnames'
 import axios from 'axios'
 import { parse, isBefore } from 'date-fns'
-import { fixtures } from '../../data/__mocks/gameweekfixtures'
+import { finished } from '../../data/__mocks/gameweekfixtures'
 import {
   getResultFromFixture,
   getSelectionFixtureInGameweek,
@@ -31,7 +31,7 @@ export const getStaticProps: GetStaticProps = async () => {
   //     console.log(error)
   //   })
 
-  const activeGameweekFixtures = fixtures?.data.filter(
+  const activeGameweekFixtures = finished?.data.filter(
     (f: any) => f.event === activeGameweek
   )
 

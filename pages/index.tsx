@@ -14,6 +14,7 @@ import { groupFixturesByDate } from '../util/fixtures'
 import { Status } from '../domains/account/types'
 import FixtureList from '../components/FixtureList'
 import { Session } from 'next-auth/core/types'
+import { finished, active } from '../data/__mocks/gameweekfixtures'
 
 type HomeProps = {
   fixtures: Fixture[]
@@ -54,8 +55,6 @@ const Home = ({ fixtures }: HomeProps) => {
       status,
     })
   }, [session, status])
-
-  useEffect(() => {}, [fixtures])
 
   const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1)
   const groupedFixtures: Matchday[] = groupFixturesByDate(
@@ -120,6 +119,11 @@ export const getStaticProps: GetStaticProps = async () => {
     orderBy: [{ order: 'asc' }],
   })
 
+  if (fixtures?.data) {
+    fixtures.data[0] = finished.data[0]
+    fixtures.data[1] = active.data[1]
+  }
+
   const enrichedFixtures = fixtures?.data.map((f: any, idx: number) => {
     return {
       ...f,
@@ -139,8 +143,6 @@ export const getStaticProps: GetStaticProps = async () => {
       ],
     }
   })
-
-  // console.log(enrichedFixtures)
 
   return {
     props: { fixtures: enrichedFixtures },

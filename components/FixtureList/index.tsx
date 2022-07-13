@@ -17,7 +17,7 @@ const FixtureList = ({ groupedFixtures }: any) => {
   )
   const { data: session, status } = useSession()
 
-  const handleTeamSelect = async (id: string) => {
+  const handleTeamSelect = async (id: number) => {
     if (status === Status.Unauthenticated) {
       router.push(
         encodeURI('/login?message=Please sign in to make a selection.')
@@ -30,7 +30,7 @@ const FixtureList = ({ groupedFixtures }: any) => {
         id: id,
       })
       .then((response) => {
-        setSelectedTeam(Number(id))
+        setSelectedTeam(id)
         setIsLoading(false)
       })
       .catch((error) => {
@@ -41,15 +41,15 @@ const FixtureList = ({ groupedFixtures }: any) => {
 
   return (
     <SelectionContext.Provider value={selectedTeam}>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-4">
         {groupedFixtures.map((date: any, idx: number) => (
-          <ul key={idx} className="border-t-2 border-black/20">
-            <h2 className="my-2 p-2 px-4 rounded-full text-lg text-center text-slate-800 font-bold w-full">
+          <ul key={idx} className="border-t-2 border-dashedborder-black/15">
+            <h2 className="p-2 px-4 rounded-full text-lg text-center text-slate-800 font-semibold w-full">
               {format(new Date(date.date), 'PPPP')}
             </h2>
             {date.fixtures.map((f: Fixture) => (
               <li key={f.id} className="list-none">
-                {f.started ? (
+                {f.finished ? (
                   <ResultCard
                     fixture={f}
                     isLoading={isLoading}

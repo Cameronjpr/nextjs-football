@@ -11,6 +11,11 @@ module.exports = {
       display: ['Oswald'],
       body: ['"Open Sans"'],
     },
+    teams: {
+      ars: {
+        primaryColor: '#EF0107',
+      },
+    },
     extends: {},
   },
   plugins: [],
