@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { GetServerSideProps, GetStaticProps } from 'next'
-import Layout from '../../components/Layout'
+import Layout from '../../components/Layout/Layout'
 import { motion } from 'framer-motion'
 import { randomUUID } from 'crypto'
 import prisma from '../../lib/prisma'
@@ -15,7 +15,11 @@ import { teams } from '../../data/teams'
 import Image from 'next/image'
 
 export const getServerSideProps: GetStaticProps = async (context: any) => {
+  const d = new Date()
+
+  console.log(d.getSeconds())
   const session = await getSession(context)
+  console.log(d.getSeconds())
   const user = await prisma.user.findUnique({
     where: {
       email: session?.user?.email || '',
@@ -27,6 +31,7 @@ export const getServerSideProps: GetStaticProps = async (context: any) => {
       selection: true,
     },
   })
+  console.log(d.getSeconds())
 
   return { props: { user } }
 }
@@ -112,13 +117,13 @@ const Profile = ({ user }: { user: User }) => {
 
   return (
     <Layout>
-      <div className="flex flex-col place-content-center">
+      <div className="flex flex-col place-content-center w-full">
         <main className="">
           <motion.div
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex flex-col gap-1"
+            className="flex flex-col gap-1 w-full"
           >
             <div className="w-full p-5 rounded-full bg-slate-100 flex place-content-between">
               <>

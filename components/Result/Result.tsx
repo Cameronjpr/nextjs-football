@@ -1,14 +1,18 @@
 import React from 'react'
 import classNames from 'classnames'
 import { format, parse } from 'date-fns'
-import { teams } from '../data/teams'
-import { Fixture, FixtureOutcomes, FixtureProps } from './Fixture.types'
-import { FixtureParticipant } from './FixtureParticipant'
+import { teams } from '../../data/teams'
+import {
+  Fixture,
+  FixtureOutcomes,
+  FixtureProps,
+} from '../Fixture/Fixture.types'
+import { FixtureParticipant } from '../Fixture/FixtureParticipant'
 
-const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
+const ResultCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
   const { id, teams, started, kickoff_time } = fixture
   return (
-    <div className="p-2 border-t-2">
+    <div className="p-2">
       <div className="flex place-content-center">
         <h2 className="p-2">{format(new Date(kickoff_time), 'HH:mm')}</h2>
       </div>
@@ -44,4 +48,4 @@ const getResultFromScores = (team: number, opponent: number): string => {
   return FixtureOutcomes.Draw
 }
 
-export default FixtureCard
+export default ResultCard

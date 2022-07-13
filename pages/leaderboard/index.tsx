@@ -1,22 +1,10 @@
 import React, { useState } from 'react'
 import { GetServerSideProps, GetStaticProps } from 'next'
-import Layout from '../../components/Layout'
+import Layout from '../../components/Layout/Layout'
 import { motion } from 'framer-motion'
 import { randomUUID } from 'crypto'
 import prisma from '../../lib/prisma'
 import classNames from 'classnames'
-
-export const getStaticProps: GetStaticProps = async () => {
-  const users = await prisma.user.findMany({
-    select: {
-      name: true,
-      username: true,
-      score: true,
-      selection: true,
-    },
-  })
-  return { props: { users }, revalidate: 300 }
-}
 
 type User = {
   id: string
@@ -77,6 +65,18 @@ const Leaderboard = ({ users }: LeaderboardProps) => {
       </div>
     </Layout>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const users = await prisma.user.findMany({
+    select: {
+      name: true,
+      username: true,
+      score: true,
+      selection: true,
+    },
+  })
+  return { props: { users }, revalidate: 60 }
 }
 
 export default Leaderboard

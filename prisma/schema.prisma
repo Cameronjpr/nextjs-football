@@ -1,11 +1,10 @@
-// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model Account {
@@ -23,8 +22,7 @@ model Account {
   session_state      String?
   oauth_token_secret String?
   oauth_token        String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -43,27 +41,28 @@ model Session {
 model User {
   id            String    @id @default(cuid())
   name          String?
-  username      String?
-  email         String   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  accounts      Account[]
-  sessions      Session[]
+  email         String    @unique
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
   selection     String?
   score         Int?
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  username      String?
   calculated    Boolean   @default(false)
-  @@map(name: "users")
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("users")
 }
 
 model Team {
-  id                    String    @id @default(cuid())
-  order                 Int?
-  name                  String
-  shortName             String
-  primaryColor          String?
-  secondaryColor        String?
+  id             String  @id @default(cuid())
+  name           String
+  shortName      String
+  primaryColor   String?
+  secondaryColor String?
+  order          Int?
 }
 
 model VerificationToken {

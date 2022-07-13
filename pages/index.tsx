@@ -1,8 +1,12 @@
 import React, { useState, useEffect, createContext } from 'react'
 import axios from 'axios'
 import { GetServerSideProps, GetStaticProps } from 'next'
-import Layout from '../components/Layout'
-import { Fixture, Gameweek, Matchday } from '../components/Fixture.types'
+import Layout from '../components/Layout/Layout'
+import {
+  Fixture,
+  Gameweek,
+  Matchday,
+} from '../components/Fixture/Fixture.types'
 import prisma from '../lib/prisma'
 import { useSession } from 'next-auth/react'
 import { tallyUserSelections } from '../util/index'
@@ -31,7 +35,7 @@ export const CurrentGameweekContext = createContext<Gameweek>({
   fixtures: [],
 })
 
-const Home = ({ fixtures, users }: HomeProps) => {
+const Home = ({ fixtures }: HomeProps) => {
   const { data: session, status } = useSession()
   const [selectedGameweek, setSelectedGameweek] = useState(1)
   const [currentGameweek, setCurrentGameweek] = useState<Gameweek>({
@@ -62,9 +66,9 @@ const Home = ({ fixtures, users }: HomeProps) => {
     <UserContext.Provider value={user}>
       <CurrentGameweekContext.Provider value={currentGameweek}>
         <Layout>
-          <div className="flex flex-col place-content-center">
+          <div className="flex flex-col place-content-center w-full sm:max-w-xl">
             <section className="pb-5 w-full flex place-content-between">
-              <section className="flex flex-row place-content-between w-full text-xl font-bold">
+              <ul className="flex flex-row place-content-between w-full text-md">
                 <button
                   onClick={() => setSelectedGameweek(selectedGameweek - 1)}
                 >
@@ -83,7 +87,7 @@ const Home = ({ fixtures, users }: HomeProps) => {
                   }}
                 >
                   {gameweeks.map((gw, idx) => (
-                    <option key={gw} value={gw}>
+                    <option key={idx} value={gw}>
                       Gameweek {gw}
                     </option>
                   ))}
@@ -93,7 +97,7 @@ const Home = ({ fixtures, users }: HomeProps) => {
                 >
                   Next
                 </button>
-              </section>
+              </ul>
             </section>
             <main className="">
               <FixtureList groupedFixtures={groupedFixtures} />
@@ -116,17 +120,6 @@ export const getStaticProps: GetStaticProps = async () => {
     orderBy: [{ order: 'asc' }],
   })
 
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      score: true,
-      selection: true,
-    },
-  })
-
-  const talliedSelections = tallyUserSelections(users)
-
   const enrichedFixtures = fixtures?.data.map((f: any, idx: number) => {
     return {
       ...f,
@@ -136,31 +129,23 @@ export const getStaticProps: GetStaticProps = async () => {
           score: f.team_h_score,
           ...teams[f.team_h - 1],
           isHome: true,
-          selectedBy: talliedSelections[f.team_h - 1],
         },
         {
           basic_id: f.team_a - 1,
           score: f.team_a_score,
           ...teams[f.team_a - 1],
           isHome: false,
-          selectedBy: talliedSelections[f.team_a - 1],
         },
       ],
     }
   })
 
-  console.log(enrichedFixtures)
+  // console.log(enrichedFixtures)
 
   return {
-    props: { fixtures: enrichedFixtures, users },
+    props: { fixtures: enrichedFixtures },
     revalidate: 60 * 5,
   }
 }
 
 export default Home
-
-/* 
-
-Fixtures have ids
-
-*/

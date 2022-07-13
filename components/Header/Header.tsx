@@ -26,23 +26,27 @@ const Header = () => {
   )
 
   return (
-    <nav className="p-5 bg-green-600 text-white text-md font-old flex flex-row place-content-between">
-      <Link href="/">
-        <a className="bold" data-active={isActive('/')}>
-          Home
-        </a>
-      </Link>
-      <Link href="/liveboard">
-        <a className="bold" data-active={isActive('/liveboard')}>
-          Leaderboard
-        </a>
-      </Link>
-      {session && (
-        <Link href="/profile">
-          <a data-active={isActive('/profile')}>Profile</a>
-        </Link>
+    <nav className="p-5 w-screen bg-black/10 text-md font-bold flex flex-row place-content-between h-16">
+      {status !== 'loading' && (
+        <>
+          <Link href="/">
+            <a className="bold" data-active={isActive('/')}>
+              Home
+            </a>
+          </Link>
+          <Link href="/liveboard">
+            <a className="bold" data-active={isActive('/liveboard')}>
+              Leaderboard
+            </a>
+          </Link>
+          {session && (
+            <Link href="/profile">
+              <a data-active={isActive('/profile')}>Profile</a>
+            </Link>
+          )}
+          {Login}
+        </>
       )}
-      {Login}
     </nav>
   )
 }
