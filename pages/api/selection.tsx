@@ -18,7 +18,7 @@ export default async function handle(
       email: session?.user?.email,
     },
     data: {
-      selection: id,
+      selection: String(id),
       calculated: false,
     },
   })

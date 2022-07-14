@@ -65,7 +65,7 @@ const Home = ({ fixtures }: HomeProps) => {
     <UserContext.Provider value={user}>
       <CurrentGameweekContext.Provider value={currentGameweek}>
         <Layout>
-          <div className="flex flex-col place-content-center w-full sm:max-w-xl">
+          <div className="flex flex-col place-content-center w-full sm:max-w-3xl">
             <section className="pb-5 w-full flex place-content-between">
               <ul className="flex flex-row place-content-between w-full text-md">
                 <button
@@ -101,6 +101,38 @@ const Home = ({ fixtures }: HomeProps) => {
             <main className="">
               <FixtureList groupedFixtures={groupedFixtures} />
             </main>
+            <section className="pt-5 w-full flex place-content-between">
+              <ul className="flex flex-row place-content-between w-full text-md">
+                <button
+                  onClick={() => setSelectedGameweek(selectedGameweek - 1)}
+                >
+                  Previous
+                </button>
+                <label className="hidden" htmlFor="gameweek-select">
+                  Select a gameweek
+                </label>
+                <select
+                  name="gameweek"
+                  id="gameweek-select"
+                  className=""
+                  value={selectedGameweek}
+                  onChange={(event) => {
+                    setSelectedGameweek(parseInt(event.target.value))
+                  }}
+                >
+                  {gameweeks.map((gw, idx) => (
+                    <option key={idx} value={gw}>
+                      Gameweek {gw}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => setSelectedGameweek(selectedGameweek + 1)}
+                >
+                  Next
+                </button>
+              </ul>
+            </section>
           </div>
         </Layout>
       </CurrentGameweekContext.Provider>

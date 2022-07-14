@@ -11,23 +11,24 @@ import { FixtureParticipant } from '../Fixture/FixtureParticipant'
 const ResultCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
   const { id, teams, started, finished, kickoff_time } = fixture
 
-  const disabled = started || finished
+  console.log(started, finished)
   return (
     <div className="p-2">
-      <div className="grid grid-cols-3 text-center h-12">
+      <div className="grid grid-cols-3 text-center h-12 gap-2">
         <div>
-          <div className="order-2 flex place-items-center place-content-center font-bold gap-4">
-            <span className="p-3 rounded-md bg-slate-100">
-              {teams[0].score}
-            </span>
-            {started && (
-              <span className="text-xs text-red-500 font-extrabold antialiased -mx-2">
+          <div className="order-2 flex place-items-center place-content-center font-bold gap-2 text-md">
+            <span className="p-2">{teams[0].score}</span>
+            {started && !finished && (
+              <span className="w-8 text-xs text-red-400 font-extrabold antialiased -mx-2">
                 LIVE
               </span>
             )}
-            <span className="p-3 rounded-md bg-slate-100">
-              {teams[1].score}
-            </span>
+            {finished && (
+              <span className="w-8 text-xs text-slate-400 font-extrabold antialiased -mx-2">
+                FT
+              </span>
+            )}
+            <span className="p-2">{teams[1].score}</span>
           </div>
         </div>
         {teams.map((t, idx) => {

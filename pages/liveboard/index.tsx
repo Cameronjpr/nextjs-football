@@ -163,8 +163,8 @@ const Leaderboard = ({ users }: LeaderboardProps) => {
                 )}
               >
                 <div>
-                  <span>{idx === 0 ? '👑' : idx + 1}</span>
-                  <h2 className={`${idx ? 'pl-5' : 'pl-3'} inline`}>
+                  <span>{idx + 1}</span>
+                  <h2 className="pl-3 inline">
                     {player?.username || player.name}
                   </h2>
                 </div>
