@@ -41,7 +41,7 @@ const Header = () => {
           </Link>
           {session && (
             <Link href="/profile">
-              <a data-active={isActive('/profile')}>Profile</a>
+              <a data-active={isActive('/profile')}>Account</a>
             </Link>
           )}
           {Login}
@@ -50,7 +50,5 @@ const Header = () => {
     </nav>
   )
 }
-
-// ;<p>👋 {session?.user?.name?.split(' ')[0]}</p>
 
 export default Header

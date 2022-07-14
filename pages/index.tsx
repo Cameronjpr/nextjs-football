@@ -61,14 +61,19 @@ const Home = ({ fixtures }: HomeProps) => {
     fixtures.filter((f: Fixture) => f.event === selectedGameweek)
   )
 
+  console.log(selectedGameweek)
+
   return (
     <UserContext.Provider value={user}>
       <CurrentGameweekContext.Provider value={currentGameweek}>
         <Layout>
+          <h1 className="text-4xl mb-10">Soccer Selector</h1>
           <div className="flex flex-col place-content-center w-full sm:max-w-3xl">
             <section className="pb-5 w-full flex place-content-between">
-              <ul className="flex flex-row place-content-between w-full text-md">
+              <ul className="flex flex-row place-content-between justify-between w-full text-md">
                 <button
+                  disabled={selectedGameweek <= 1}
+                  className={selectedGameweek <= 1 ? 'text-slate-500' : ''}
                   onClick={() => setSelectedGameweek(selectedGameweek - 1)}
                 >
                   Previous
@@ -92,6 +97,8 @@ const Home = ({ fixtures }: HomeProps) => {
                   ))}
                 </select>
                 <button
+                  disabled={selectedGameweek > 37}
+                  className={selectedGameweek > 37 ? 'text-slate-500' : ''}
                   onClick={() => setSelectedGameweek(selectedGameweek + 1)}
                 >
                   Next
@@ -101,38 +108,6 @@ const Home = ({ fixtures }: HomeProps) => {
             <main className="">
               <FixtureList groupedFixtures={groupedFixtures} />
             </main>
-            <section className="pt-5 w-full flex place-content-between">
-              <ul className="flex flex-row place-content-between w-full text-md">
-                <button
-                  onClick={() => setSelectedGameweek(selectedGameweek - 1)}
-                >
-                  Previous
-                </button>
-                <label className="hidden" htmlFor="gameweek-select">
-                  Select a gameweek
-                </label>
-                <select
-                  name="gameweek"
-                  id="gameweek-select"
-                  className=""
-                  value={selectedGameweek}
-                  onChange={(event) => {
-                    setSelectedGameweek(parseInt(event.target.value))
-                  }}
-                >
-                  {gameweeks.map((gw, idx) => (
-                    <option key={idx} value={gw}>
-                      Gameweek {gw}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  onClick={() => setSelectedGameweek(selectedGameweek + 1)}
-                >
-                  Next
-                </button>
-              </ul>
-            </section>
           </div>
         </Layout>
       </CurrentGameweekContext.Provider>

@@ -1,70 +1,36 @@
 import React from 'react'
 import classNames from 'classnames'
-import { teams } from '../../data/teams'
-import {
-  Fixture,
-  FixtureOutcomes,
-  FixtureProps,
-} from '../Fixture/Fixture.types'
-import { FixtureParticipant } from '../Fixture/FixtureParticipant'
+import { FixtureOutcomes, FixtureProps } from '../Fixture/Fixture.types'
 
-const ResultCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
-  const { id, teams, started, finished, kickoff_time } = fixture
+const ResultCard = ({ fixture }: FixtureProps) => {
+  const { id, teams, started, finished } = fixture
 
   console.log(started, finished)
   return (
-    <div className="p-2">
-      <div className="grid grid-cols-3 text-center h-12 gap-2">
-        <div>
-          <div className="order-2 flex place-items-center place-content-center font-bold gap-2 text-md">
-            <span className="p-2">{teams[0].score}</span>
-            {started && !finished && (
-              <span className="w-8 text-xs text-red-400 font-extrabold antialiased -mx-2">
-                LIVE
-              </span>
-            )}
-            {finished && (
-              <span className="w-8 text-xs text-slate-400 font-extrabold antialiased -mx-2">
-                FT
-              </span>
-            )}
-            <span className="p-2">{teams[1].score}</span>
-          </div>
+    <div className="p-2 w-full">
+      <div className="flex flex-row place-content-stretch justify-between text-center h-12 gap-4">
+        <div
+          className={classNames(
+            'order-2 flex items-center place-content-center font-semibold gap-2 text-md',
+            started && !finished ? 'text-red-700' : ''
+          )}
+        >
+          <span className="p-2">{teams[0].score}</span>
+          <span className="p-2">{teams[1].score}</span>
         </div>
         {teams.map((t, idx) => {
           return (
             <div
               key={idx}
               className={classNames(
-                'p-2 rounded-md bg-slate-100',
-                idx ? 'text-left order-first' : 'text-right order-last'
+                'p-2 rounded-md w-2/5 font-bold flex items-center',
+                idx ? 'justify-start order-first' : 'justify-end order-last'
               )}
             >
               <span className="hidden sm:inline">{t.name}</span>
               <span className="sm:hidden">{t.shortName}</span>
             </div>
           )
-          {
-            /* {teams.map((t, idx) => (
-            <FixtureParticipant
-              club={t.name}
-              shortName={t.shortName}
-              score={t.score}
-              selectedBy={t.selectedBy}
-              isHome={t.isHome}
-              key={idx}
-              id={Number(t.basic_id)}
-              result={
-                idx
-                  ? getResultFromScores(teams[1].score, teams[0].score)
-                  : getResultFromScores(teams[0].score, teams[1].score)
-              }
-              isSelectable={!started}
-              isLoading={isLoading}
-              handleSelection={handleSelection}
-            />
-          ))} */
-          }
         })}
       </div>
     </div>

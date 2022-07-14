@@ -8,24 +8,27 @@ import { SelectionContext } from '../FixtureList'
 const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
   const { id, teams, started, finished, kickoff_time } = fixture
   const selection = useContext(SelectionContext)
+  console.log(isLoading)
   return (
-    <div className="p-2">
-      <div className="flex place-content-center text-center"></div>
-      <div className="grid grid-cols-3 text-center h-12">
-        <h2 className="order-2 flex place-items-center place-content-center">
+    <div className={classNames('p-2 w-full', isLoading && 'animate-pulse')}>
+      <div className="w-full flex flex-row place-content-stretch justify-between text-center h-12 gap-4">
+        <h2 className="order-2 flex place-items-center place-content-center font-semibold">
           <time>{format(new Date(kickoff_time), 'HH:mm')}</time>
         </h2>
         {teams.map((t, idx) => {
           return (
             <button
               key={idx}
-              onClick={() => handleSelection(t.basic_id)}
+              onClick={() => !isLoading && handleSelection(t.basic_id)}
               className={classNames(
-                'p-2 rounded-md bg-slate-100 hover:bg-blue-100',
+                'w-2/5 p-1 flex place-items-center rounded-lg ',
                 t.basic_id === selection
                   ? 'bg-blue-100 outline outline-2 outline-blue-300 outline-offset-2'
                   : '',
-                idx ? 'text-left order-first' : 'text-right order-last'
+                !isLoading
+                  ? 'hover:bg-blue-100 hover:scale-105 click:scale-95'
+                  : '',
+                idx ? 'justify-start order-first' : 'justify-end order-last'
               )}
             >
               <span className="hidden sm:inline">{t.name}</span>

@@ -2,11 +2,13 @@ import axios from 'axios'
 import { format } from 'date-fns'
 import { useSession } from 'next-auth/react'
 import router from 'next/router'
-import React, { createContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Status } from '../../domains/account/types'
 import FixtureCard from '../Fixture/Fixture'
 import { Fixture } from '../Fixture/Fixture.types'
 import ResultCard from '../Result/Result'
+import { UserContext } from '../../pages'
+import prisma from '../../lib/prisma'
 
 export const SelectionContext = createContext<undefined | number>(undefined)
 
@@ -16,6 +18,20 @@ const FixtureList = ({ groupedFixtures }: any) => {
     undefined
   )
   const { data: session, status } = useSession()
+
+  const user = useContext(UserContext)
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      if (user?.session?.user?.email === null) return
+      const userInfo = await axios.get('/api/profile')
+
+      console.log(userInfo.data)
+      setSelectedTeam(Number(userInfo?.data?.selection))
+    }
+
+    getUserInfo()
+  }, [user])
 
   const handleTeamSelect = async (id: number) => {
     if (status === Status.Unauthenticated) {
@@ -43,8 +59,8 @@ const FixtureList = ({ groupedFixtures }: any) => {
     <SelectionContext.Provider value={selectedTeam}>
       <div className="flex flex-col gap-4">
         {groupedFixtures.map((date: any, idx: number) => (
-          <ul key={idx} className="border-t-2 border-dashedborder-black/15">
-            <h2 className="p-2 px-4 rounded-full text-lg text-center text-slate-800 font-semibold w-full">
+          <ul key={idx} className="border-t-2 border-dashed border-black/15">
+            <h2 className="p-2 px-4 rounded-full text-md text-center text-slate-800 font-semibold w-full">
               {format(new Date(date.date), 'PPPP')}
             </h2>
             {date.fixtures.map((f: Fixture) => (
