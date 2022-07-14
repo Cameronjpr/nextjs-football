@@ -23,7 +23,7 @@ const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
               className={classNames(
                 'w-2/5 p-1 flex place-items-center rounded-lg ',
                 t.basic_id === selection
-                  ? 'bg-blue-100 outline outline-2 outline-blue-300 outline-offset-2'
+                  ? 'bg-blue-100 border-2 border-blue-300'
                   : '',
                 !isLoading
                   ? 'hover:bg-blue-100 hover:scale-105 click:scale-95'

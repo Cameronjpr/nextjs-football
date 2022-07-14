@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { GetServerSideProps, GetStaticProps } from 'next'
 import Layout from '../../components/Layout/Layout'
 import { motion } from 'framer-motion'
@@ -14,35 +14,26 @@ import { User } from '@prisma/client'
 import { teams } from '../../data/teams'
 import Image from 'next/image'
 
-export const getServerSideProps: GetStaticProps = async (context: any) => {
-  const d = new Date()
-
-  const session = await getSession(context)
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session?.user?.email || '',
-    },
-    select: {
-      name: true,
-      username: true,
-      score: true,
-      selection: true,
-    },
-  })
-
-  return { props: { user } }
-}
-
 const Profile = ({ user }: { user: User }) => {
   const { data: session, status } = useSession()
   const [isEditing, setIsEditing] = useState(false)
   const [username, setUsername] = useState(user?.username ?? 'You')
   const [tempUsername, setTempUsername] = useState(username)
+  const [userInfo, setUserInfo] = useState<any>(undefined)
 
   const router = useRouter()
 
-  const userData = useContext(UserContext)
-  const currentGameweek = useContext(CurrentGameweekContext)
+  useEffect(() => {
+    const getUserInfo = async () => {
+      if (session?.user?.email === null) return
+      const userInfo = await axios.get('/api/profile')
+
+      setUserInfo(userInfo?.data)
+      setTempUsername(userInfo?.data?.username)
+    }
+
+    getUserInfo()
+  }, [session])
 
   if (status === Status.Unauthenticated) {
     router.push(
@@ -64,10 +55,6 @@ const Profile = ({ user }: { user: User }) => {
       .post('/api/profile/update', {
         username: tempUsername,
       })
-      .then((response) => {
-        // setUsername(response.data)
-        console.log(response.data)
-      })
       .catch((error) => {
         console.log(error)
       })
@@ -76,7 +63,7 @@ const Profile = ({ user }: { user: User }) => {
   const EditButton = () => {
     return isEditing ? (
       <button
-        className="sm:p-3 w-16 h-16 sm:w-20 sm:h-20 rounded-full sm:text-md bg-green-400 text-slate-700"
+        className="sm:p-3 w-16 sm:w-20 sm:h-20 rounded-md sm:text-md text-slate-700"
         onClick={() => {
           setUsername(tempUsername)
           setIsEditing(false)
@@ -87,7 +74,7 @@ const Profile = ({ user }: { user: User }) => {
       </button>
     ) : (
       <button
-        className="sm:p-3 w-16 h-16 sm:w-20 sm:h-20 rounded-full sm:text-md bg-slate-300 text-slate-700"
+        className="sm:p-3 w-16 sm:w-20 sm:h-20 rounded-md sm:text-md text-slate-700"
         onClick={() => setIsEditing(true)}
       >
         Edit
@@ -104,7 +91,9 @@ const Profile = ({ user }: { user: User }) => {
         onChange={(e) => setTempUsername(e.target.value)}
       ></input>
     ) : (
-      <h1 className="w-full ml-5 p-2 text-xl sm:text-2xl">{username}</h1>
+      <h1 className="w-full ml-5 p-2 text-xl sm:text-2xl">
+        {userInfo?.username}
+      </h1>
     )
   }
 
@@ -118,7 +107,7 @@ const Profile = ({ user }: { user: User }) => {
             animate="show"
             className="flex flex-col gap-1 w-full"
           >
-            <div className="w-full p-5 rounded-full bg-slate-100 flex place-content-between">
+            <div className="w-full p-5 bg-slate-100 rounded-md flex place-content-between">
               <>
                 {/* Refactor these two sections, they're almost identical */}
                 <div className="w-full flex flex-row gap-5 place-content-between">
@@ -127,9 +116,10 @@ const Profile = ({ user }: { user: User }) => {
                       <Image
                         src={session?.user?.image || ''}
                         alt={`The player ${session?.user?.name}`}
+                        quality={80}
                         width="80"
                         height="80"
-                        className="w-16 h-16 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-full"
+                        className="w-16 h-16 sm:w-20 sm:h-20 p-2 sm:p-3 rounded-md"
                       />
                     )}
                     {<UsernameField />}
@@ -142,11 +132,11 @@ const Profile = ({ user }: { user: User }) => {
             </div>
             <section className="p-5">
               <h2 className="text-xl mb-2">Your selection</h2>
-              {user?.selection && (
+              {userInfo?.selection && (
                 <p>
                   You have selected{' '}
                   <strong className="font-semibold">
-                    {teams[Number(user?.selection)]}
+                    {teams[Number(userInfo?.selection)]}
                   </strong>
                   .
                 </p>
