@@ -28,7 +28,9 @@ const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
                 !isLoading
                   ? 'hover:bg-blue-100 hover:scale-105 click:scale-95'
                   : '',
-                idx ? 'justify-start order-first' : 'justify-end order-last'
+                t.isHome
+                  ? 'justify-start order-first'
+                  : 'justify-end order-last'
               )}
             >
               <span className="hidden sm:inline">{t.name}</span>
