@@ -12,9 +12,11 @@ if (typeof document !== 'undefined') {
 }
 
 const Layout: React.FC<Props> = (props) => (
-  <div>
+  <div className="m-auto w-full sm:max-w-2xl flex flex-col place-items-center p-3">
     <Header />
-    <div className="m-4 flex flex-col place-items-center">{props.children}</div>
+    <div className="w-full m-4 flex flex-col place-items-center">
+      {props.children}
+    </div>
   </div>
 )
 

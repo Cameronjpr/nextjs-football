@@ -19,61 +19,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
-  /* background: rgba(0, 0, 0, 0.05); */
-  --gradient-steps: 9;
-  --gradient-step-length: calc(360 / var(--gradient-steps));
-  --gradient-length: 46%;
-  
-  --gradient-step-1: 0;
-  --gradient-step-2: 72;
-  --gradient-step-3: 144;
-  --gradient-step-4: 216;
-  --gradient-step-5: 288;
-/*   --gradient-step-6: 260;
-  --gradient-step-7: 270;
-  --gradient-step-8: 290;
-  --gradient-step-9: 210; */
-  
-  height: 100%;
-  display: flex;
-  place-content: center;
-  
-  /* background: linear-gradient(
-    290deg,
-    hsl(var(--gradient-step-1) 100% 50% / 80%),
-    hsl(var(--gradient-step-1) 100% 50% / 0%)
-    var(--gradient-length)
-  ),
-    linear-gradient(
-    320deg,
-    hsl(var(--gradient-step-2) 100% 50% / 80%),
-    hsl(var(--gradient-step-2) 100% 50% / 0%)
-    var(--gradient-length)
-  ),
-    linear-gradient(
-    0deg,
-    hsl(var(--gradient-step-3) 100% 50% / 80%),
-    hsl(var(--gradient-step-3) 100% 50% / 0%)
-    var(--gradient-length)
-  ),
-    linear-gradient(
-    40deg,
-    hsl(var(--gradient-step-4) 100% 50% / 80%),
-    hsl(var(--gradient-step-4) 100% 50% / 0%)
-    var(--gradient-length)
-  ),
-    linear-gradient(
-    70deg,
-    hsl(var(--gradient-step-5) 100% 50% / 80%),
-    hsl(var(--gradient-step-5) 100% 50% / 0%)
-    var(--gradient-length)
-  ) */
-
-  /* background: linear-gradient(
-    10deg,
-    hsl(120 100% 50% / 30%),
-    hsl(120 100% 50% / 0%)
-    85%) */
 }
 
 input,

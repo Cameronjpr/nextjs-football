@@ -5,7 +5,6 @@ import { FixtureOutcomes, FixtureProps } from '../Fixture/Fixture.types'
 const ResultCard = ({ fixture }: FixtureProps) => {
   const { id, teams, started, finished } = fixture
 
-  console.log(started, finished)
   return (
     <div className="p-2 w-full">
       <div className="flex flex-row place-content-stretch justify-between text-center h-12 gap-4">
@@ -19,6 +18,7 @@ const ResultCard = ({ fixture }: FixtureProps) => {
           <span className="p-2">{teams[1].score}</span>
         </div>
         {teams.map((t, idx) => {
+          console.log(t.primaryColor, t)
           return (
             <div
               key={idx}
@@ -27,6 +27,14 @@ const ResultCard = ({ fixture }: FixtureProps) => {
                 idx ? 'justify-start order-first' : 'justify-end order-last'
               )}
             >
+              <div
+                style={{
+                  backgroundColor: t.primaryColor,
+                }}
+                className={`w-4 h-4 bg-slate-400 rounded-full m-2 ${
+                  idx ? '' : 'order-last'
+                }`}
+              ></div>
               <span className="hidden sm:inline">{t.name}</span>
               <span className="sm:hidden">{t.shortName}</span>
             </div>

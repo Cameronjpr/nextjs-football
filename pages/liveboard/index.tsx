@@ -12,6 +12,7 @@ import {
   getResultFromFixture,
   getSelectionFixtureInGameweek,
 } from '../../util/fixtures'
+import { teams } from '../../data/teams'
 
 export const getStaticProps: GetStaticProps = async () => {
   const general = await axios
@@ -150,31 +151,74 @@ const Leaderboard = ({ users }: LeaderboardProps) => {
 
   return (
     <Layout>
-      <main className="flex flex-col place-content-center w-full sm:max-w-3xl">
-        <div className="flex flex-col gap-1">
-          {users
-            .sort((a: User, b: User) => b.score - a.score)
-            .map((player: User, idx) => (
-              <div
-                key={player.id}
-                className={classNames(
-                  'px-2 flex flex-row place-content-between border-b-2 border-dashed text-xl',
-                  idx ? 'bg-white' : 'bg-yellow-300'
-                )}
-              >
-                <div>
-                  <span>{idx + 1}</span>
-                  <h2 className="pl-3 inline">
-                    {player?.username || player.name}
-                  </h2>
-                </div>
-                <span>{player.score ?? 0}</span>
-              </div>
-            ))}
-        </div>
+      <main className="flex flex-col w-full sm:max-w-3xl p-5 mx-4 bg-teal-800/5 place-content-start rounded-lg drop-shadow-md">
+        <table>
+          <caption className="mb-4 text-xl font-semibold p-2 drop-shadow-sm bg-teal-800/10 rounded-lg text-teal-900">
+            Current leaderboard
+          </caption>
+          <thead>
+            <tr className="border-b-2 text-left underline italic text-slate-600">
+              <th className="font-normal pl-2" colSpan={1}>
+                #
+              </th>
+              <th className="font-normal" colSpan={1}>
+                Player
+              </th>
+              <th className="font-normal" colSpan={1}>
+                Selection
+              </th>
+              <th className="font-normal" colSpan={1}>
+                Pts
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {users
+              .sort((a: User, b: User) => b.score - a.score)
+              .map(({ name, username, selection, score }: User, idx) => (
+                <tr
+                  key={idx}
+                  className={classNames(
+                    idx ? 'bg-white' : 'bg-yellow-300',
+                    'border-b-4 border-teal-800/5 h-12 rounded-sm'
+                  )}
+                >
+                  <td className="pl-3 w-10">{idx + 1}</td>
+                  <td className="font-semibold">{username ?? name}</td>
+                  <td>{teams[Number(selection) - 1] ?? ''}</td>
+                  <td>{score}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </main>
     </Layout>
   )
 }
 
 export default Leaderboard
+
+// {
+//   users
+//     .sort((a: User, b: User) => b.score - a.score)
+//     .map((player: User, idx) => (
+//       <div
+//         key={player.id}
+//         className={classNames(
+//           'px-2 flex flex-row place-content-between border-b-2 border-dashed text-lg',
+//           idx ? 'bg-white' : 'bg-yellow-300'
+//         )}
+//       >
+//         <div className="w-full flex flex-row gap-2">
+//           <span>{idx + 1}</span>
+//           <div className="w-full flex flex-row justify-between">
+//             <h2 className="pl-3 inline">{player?.username || player.name}</h2>
+//             <span className="text-slate-800 text-sm leading-7">
+//               {teams[Number(player?.selection) - 1] ?? ''}
+//             </span>
+//           </div>
+//           <span className="w-12 text-right">{player.score ?? 0}</span>
+//         </div>
+//       </div>
+//     ))
+// }

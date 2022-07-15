@@ -8,7 +8,6 @@ import FixtureCard from '../Fixture/Fixture'
 import { Fixture } from '../Fixture/Fixture.types'
 import ResultCard from '../Result/Result'
 import { UserContext } from '../../pages'
-import prisma from '../../lib/prisma'
 
 export const SelectionContext = createContext<undefined | number>(undefined)
 
@@ -63,23 +62,26 @@ const FixtureList = ({ groupedFixtures }: any) => {
             <h2 className="p-2 px-4 rounded-full text-md text-center text-slate-800 font-semibold w-full">
               {format(new Date(date.date), 'PPPP')}
             </h2>
-            {date.fixtures.map((f: Fixture) => (
-              <li key={f.id} className="list-none">
-                {f.finished || f.started ? (
-                  <ResultCard
-                    fixture={f}
-                    isLoading={isLoading}
-                    handleSelection={handleTeamSelect}
-                  />
-                ) : (
-                  <FixtureCard
-                    fixture={f}
-                    isLoading={isLoading}
-                    handleSelection={handleTeamSelect}
-                  />
-                )}
-              </li>
-            ))}
+            {date.fixtures.map((f: Fixture) => {
+              console.log(f.teams[0].name, f.teams[0].primaryColor)
+              return (
+                <li key={f.id} className="list-none">
+                  {f.finished || f.started ? (
+                    <ResultCard
+                      fixture={f}
+                      isLoading={isLoading}
+                      handleSelection={handleTeamSelect}
+                    />
+                  ) : (
+                    <FixtureCard
+                      fixture={f}
+                      isLoading={isLoading}
+                      handleSelection={handleTeamSelect}
+                    />
+                  )}
+                </li>
+              )
+            })}
           </ul>
         ))}
       </div>
