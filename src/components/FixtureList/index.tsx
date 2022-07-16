@@ -8,28 +8,36 @@ import FixtureCard from '../Fixture/Fixture'
 import { Fixture } from '../Fixture/Fixture.types'
 import ResultCard from '../Result/Result'
 import { UserContext } from '../../pages'
+import { trpc } from '@/utils/trpc'
 
-export const SelectionContext = createContext<undefined | number>(undefined)
+export const SelectionContext = createContext<null | undefined | number>(
+  undefined
+)
 
 const FixtureList = ({ groupedFixtures }: any) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedTeam, setSelectedTeam] = useState<undefined | number>(
+  const [selectedTeam, setSelectedTeam] = useState<null | undefined | number>(
     undefined
   )
+  const [error, setError] = useState('')
   const { data: session, status } = useSession()
 
   const user = useContext(UserContext)
+  const makeSelection = trpc.useMutation(['makeSelection'], {
+    onSuccess: (res) => {
+      setIsLoading(false)
+      setSelectedTeam(res?.user?.selection)
+    },
+    onError: (data) => {
+      setError(data.message)
+      setIsLoading(false)
+    },
+  })
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      if (user?.session?.user?.email === null) return
-      const userInfo = await axios.get('/api/profile')
-
-      setSelectedTeam(Number(userInfo?.data?.selection))
-    }
-
-    getUserInfo()
-  }, [user])
+  const userInfo = trpc.useQuery([
+    'getUser',
+    { email: user?.session?.user?.email ?? '' },
+  ])
 
   const handleTeamSelect = async (id: number) => {
     if (status === Status.Unauthenticated) {
@@ -39,18 +47,13 @@ const FixtureList = ({ groupedFixtures }: any) => {
       return
     }
     setIsLoading(true)
-    const res = await axios
-      .post('/api/selection', {
-        id: id,
-      })
-      .then((response) => {
-        setSelectedTeam(id)
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        setIsLoading(false)
-        console.log(error)
-      })
+
+    if (!session?.user?.email) return
+
+    makeSelection.mutate({
+      email: session?.user?.email,
+      selection: id,
+    })
   }
 
   return (

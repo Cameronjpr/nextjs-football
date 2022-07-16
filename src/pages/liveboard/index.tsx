@@ -1,83 +1,15 @@
 import React, { useState } from 'react'
-import { GetServerSideProps, GetStaticProps } from 'next'
 import Layout from '../../components/Layout/Layout'
-import { motion } from 'framer-motion'
-import { randomUUID } from 'crypto'
-import prisma from '../../../lib/prisma'
 import classNames from 'classnames'
-import axios from 'axios'
-import { parse, isBefore } from 'date-fns'
-import { finished } from '../../data/__mocks/gameweekfixtures'
 import { trpc } from '@/utils/trpc'
-import superjson from 'superjson'
-
-import { createSSGHelpers } from '@trpc/react/ssg'
-
-import {
-  getResultFromFixture,
-  getSelectionFixtureInGameweek,
-} from '../../utils/fixtures'
 import { teams } from '../../data/teams'
-import { appRouter } from '@/backend/router'
+import { Player } from '@/backend/router'
+import { User } from '@prisma/client'
 
-export const getStaticProps: GetStaticProps = async () => {
-  const general = await axios
-    .get('https://fantasy.premierleague.com/api/bootstrap-static/')
-    .catch((error) => {
-      console.log(error)
-    })
-
-  const ssg = await createSSGHelpers({
-    router: appRouter,
-    ctx: {},
-    transformer: superjson, // optional - adds superjson serialization
-  })
-
-  await ssg.fetchQuery('getUsers')
-
-  const activeGameweek = general?.data?.events?.filter(
-    (e: any) => e.is_current || e.is_next
-  )[0].id
-
-  const activeGameweekFixtures = finished?.data.filter(
-    (f: any) => f.event === activeGameweek
-  )
-
-  console.log(ssg.dehydrate())
-
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-    },
-    revalidate: 60,
-  }
-}
-
-type User = {
-  id: string
-  username?: string
-  name: string
-  score: number
-  selection: string
-  calculated: boolean
-}
-
-type LeaderboardProps = {
-  users: User[]
-}
-
-const Leaderboard = ({ users }: LeaderboardProps) => {
+const Leaderboard = () => {
   const [gameweek, setGameweek] = useState(1)
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.5,
-      },
-    },
-  }
+  const { isLoading, data } = trpc.useQuery(['getUsers'])
 
   return (
     <Layout>
@@ -103,22 +35,24 @@ const Leaderboard = ({ users }: LeaderboardProps) => {
             </tr>
           </thead>
           <tbody>
-            {users
-              .sort((a: User, b: User) => b.score - a.score)
-              .map(({ name, username, selection, score }: User, idx) => (
-                <tr
-                  key={idx}
-                  className={classNames(
-                    idx ? 'bg-white' : 'bg-yellow-300',
-                    'border-b-4 border-teal-800/5 h-12 rounded-sm'
-                  )}
-                >
-                  <td className="pl-3 w-10">{idx + 1}</td>
-                  <td className="font-semibold">{username ?? name}</td>
-                  <td>{teams[Number(selection) - 1] ?? ''}</td>
-                  <td>{score}</td>
-                </tr>
-              ))}
+            {!isLoading &&
+              data?.success &&
+              data.users
+                .sort((a: User, b: User) => (b.score ?? 0) - (a.score ?? 0))
+                .map(({ name, username, selection, score }: User, idx) => (
+                  <tr
+                    key={idx}
+                    className={classNames(
+                      idx ? 'bg-white' : 'bg-yellow-300',
+                      'border-b-4 border-teal-800/5 h-12 rounded-sm'
+                    )}
+                  >
+                    <td className="pl-3 w-10">{idx + 1}</td>
+                    <td className="font-semibold">{username ?? name}</td>
+                    <td>{teams[Number(selection) - 1] ?? ''}</td>
+                    <td>{score}</td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </main>

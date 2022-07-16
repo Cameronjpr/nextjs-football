@@ -3,21 +3,30 @@ import prisma from 'lib/prisma';
 import { useQuery } from 'react-query';
 import { z } from 'zod';
 
+
+export type Player = z.infer<typeof PlayerSchema>
+const PlayerSchema = z.object({
+        id: z.string(),
+        name: z.string(),
+        username: z.string().nullable(),
+        score: z.number(),
+        selection: z.number().nullable()
+      })
+
 export const appRouter = trpc
   .router()
   .query('getUsers', {
     async resolve() {
-      const users = prisma.user.findMany({
-        select: {
-          id: true,
-          name: true,
-          username: true,
-          score: true,
-          selection: true,
-        },
-      })
+      try {
 
-      return { success: true, users }
+        const users = await prisma.user.findMany({})
+        return { success: true, users }
+      } catch (e) {
+        throw new trpc.TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: "BAD_REQUEST"
+        })
+      }
     }
   })
   .query('getUser', {
@@ -45,7 +54,7 @@ export const appRouter = trpc
           email: input.email
         },
         data: {
-          selection: input.selection.toString()
+          selection: input.selection
         }
       })
 

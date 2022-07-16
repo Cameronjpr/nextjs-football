@@ -16,6 +16,7 @@ import FixtureList from '../components/FixtureList'
 import { Session } from 'next-auth/core/types'
 import { finished, active } from '../data/__mocks/gameweekfixtures'
 import { trpc } from '@/utils/trpc'
+import { richTeams } from '@/data/teams'
 
 type HomeProps = {
   fixtures: Fixture[]
@@ -45,12 +46,9 @@ const Home = ({ fixtures }: HomeProps) => {
     fixtures: [],
   })
 
-  const { isSuccess, data } = trpc.useQuery([
-    'getUser',
-    { email: 'cameronjpr@gmail.com' },
-  ])
+  const { isSuccess, data } = trpc.useQuery(['getUsers'])
 
-  if (isSuccess) console.log(data.user)
+  if (isSuccess) console.log(data)
 
   const [user, setUser] = useState<User>({
     session,
@@ -133,10 +131,6 @@ export const getStaticProps: GetStaticProps = async () => {
       console.log(error)
     })
 
-  const teams = await prisma.team.findMany({
-    orderBy: [{ order: 'asc' }],
-  })
-
   if (fixtures?.data) {
     fixtures.data[0] = finished.data[0]
     fixtures.data[1] = active.data[1]
@@ -149,13 +143,13 @@ export const getStaticProps: GetStaticProps = async () => {
         {
           basic_id: f.team_h - 1,
           score: f.team_h_score,
-          ...teams[f.team_h - 1],
+          ...richTeams[f.team_h - 1],
           isHome: true,
         },
         {
           basic_id: f.team_a - 1,
           score: f.team_a_score,
-          ...teams[f.team_a - 1],
+          ...richTeams[f.team_a - 1],
           isHome: false,
         },
       ],
