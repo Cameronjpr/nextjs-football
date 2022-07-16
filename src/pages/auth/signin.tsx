@@ -5,8 +5,6 @@ import { getProviders, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 const SignIn = ({ providers }: never) => {
-  const router = useRouter()
-  console.log(providers)
   return (
     <Layout>
       <div>
@@ -21,7 +19,15 @@ const SignIn = ({ providers }: never) => {
                       key={provider.name}
                       className="flex place-items-center p-2 border-2 border-slate-900 rounded-md font-medium bg-white text-lg"
                     >
-                      <button onClick={() => signIn(provider.id)}>
+                      <button
+                        onClick={() =>
+                          signIn(provider.id, {
+                            callbackUrl: process.env.NEXT_PUBLIC_VERCEL_URL
+                              ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/`
+                              : 'http://localhost:3000/',
+                          })
+                        }
+                      >
                         Sign in with {provider.name}
                       </button>
                     </div>
