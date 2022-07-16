@@ -13,13 +13,13 @@ const SignIn = ({ providers }: never) => {
         <main className="flex flex-col place-content-center place-items-center text-center gap-10">
           <div className="grid grid-cols-3 grid-flow-row gap-3 static top-0 z-0">
             {richTeams.map((t, idx) =>
-              idx === 10 ? (
+              idx === 7 ? (
                 <>
                   {' '}
                   {Object.values(providers).map((provider: any) => (
                     <div
                       key={provider.name}
-                      className="flex place-items-center p2-5 border-2 border-slate-900 rounded-md font-medium bg-white"
+                      className="flex place-items-center p-2 border-2 border-slate-900 rounded-md font-medium bg-white text-lg"
                     >
                       <button onClick={() => signIn(provider.id)}>
                         Sign in with {provider.name}
