@@ -39,6 +39,10 @@ const FixtureList = ({ groupedFixtures }: any) => {
     { email: user?.session?.user?.email ?? '' },
   ])
 
+  useEffect(() => {
+    setSelectedTeam(userInfo?.data?.user?.selection)
+  }, [userInfo])
+
   const handleTeamSelect = async (id: number) => {
     if (status === Status.Unauthenticated) {
       router.push(
