@@ -1,8 +1,6 @@
 import Layout from '@/components/Layout/Layout'
 import { richTeams } from '@/data/teams'
-import { Provider, ProviderType } from 'next-auth/providers'
 import { getProviders, signIn } from 'next-auth/react'
-import { useRouter } from 'next/router'
 
 const SignIn = ({ providers }: never) => {
   return (

@@ -1,21 +1,18 @@
 import React, { useState, useEffect, createContext } from 'react'
 import axios from 'axios'
-import { GetServerSideProps, GetStaticProps } from 'next'
+import { GetStaticProps } from 'next'
 import Layout from '../components/Layout/Layout'
 import {
   Fixture,
   Gameweek,
   Matchday,
 } from '../components/Fixture/Fixture.types'
-import prisma from '../../lib/prisma'
 import { useSession } from 'next-auth/react'
-import { tallyUserSelections } from '../utils/index'
 import { groupFixturesByDate } from '../utils/fixtures'
 import { Status } from '../account/types'
 import FixtureList from '../components/FixtureList'
 import { Session } from 'next-auth/core/types'
 import { finished, active } from '../data/__mocks/gameweekfixtures'
-import { trpc } from '@/utils/trpc'
 import { richTeams } from '@/data/teams'
 import Head from 'next/head'
 
@@ -46,10 +43,6 @@ const Home = ({ fixtures }: HomeProps) => {
     id: selectedGameweek,
     fixtures: [],
   })
-
-  const { isSuccess, data } = trpc.useQuery(['getUsers'])
-
-  if (isSuccess) console.log(data)
 
   const [user, setUser] = useState<User>({
     session,
