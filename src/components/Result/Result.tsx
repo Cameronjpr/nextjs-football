@@ -15,7 +15,7 @@ const ResultCard = ({ fixture }: FixtureProps) => {
           )}
         >
           {teams.map((t, idx) => (
-            <span key={idx} className="p-1 bg-slate-100">
+            <span key={idx} className={idx === 0 ? 'pr-2' : 'pl-2'}>
               {t.score}
             </span>
           ))}

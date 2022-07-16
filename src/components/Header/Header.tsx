@@ -19,14 +19,14 @@ const Header = () => {
     </div>
   ) : (
     <div className="text-right">
-      <Link href="/api/auth/signin">
+      <Link href="/auth/signin">
         <a data-active={isActive('/signup')}>Log in</a>
       </Link>
     </div>
   )
 
   return (
-    <nav className="w-full rounded-xl p-3 bg-green-700/10 text-emerald-900 grid grid-cols-3 place-content-between place-items-center">
+    <nav className="z-10 w-full rounded-xl p-3 bg-green-700/10 text-emerald-900 grid grid-cols-3 place-content-between place-items-center">
       <>
         <Link href="/">
           <a className="bold" data-active={isActive('/')}>
