@@ -1,4 +1,10 @@
 
+/*
+
+I feel like this file is a GIANT fucking mess
+
+*/
+
 export type Matchday = {
   date: string
   gameweekId: number
