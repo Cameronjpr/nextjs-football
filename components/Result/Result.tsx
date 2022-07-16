@@ -6,16 +6,19 @@ const ResultCard = ({ fixture }: FixtureProps) => {
   const { id, teams, started, finished } = fixture
 
   return (
-    <div className="p-2 w-full">
-      <div className="flex flex-row place-content-stretch justify-between text-center h-12 gap-4">
+    <div className="w-full">
+      <div className="flex flex-row place-content-stretch justify-between text-center h-14 gap-2">
         <div
           className={classNames(
-            'order-2 flex items-center place-content-center font-semibold gap-2 text-md',
+            'order-2 flex items-center place-content-center font-semibold text-md w-12',
             started && !finished ? 'text-red-700' : ''
           )}
         >
-          <span className="p-2">{teams[0].score}</span>
-          <span className="p-2">{teams[1].score}</span>
+          {teams.map((t, idx) => (
+            <span key={idx} className="p-1 bg-slate-100">
+              {t.score}
+            </span>
+          ))}
         </div>
         {teams.map((t, idx) => {
           console.log(t.primaryColor, t)
@@ -23,18 +26,16 @@ const ResultCard = ({ fixture }: FixtureProps) => {
             <div
               key={idx}
               className={classNames(
-                'p-2 rounded-md w-2/5 font-bold flex items-center',
-                idx ? 'justify-start order-first' : 'justify-end order-last'
+                'my-2 rounded-md w-36 sm:w-60 flex items-center border border-slate-200 text-slate-700',
+                t.isHome
+                  ? 'justify-start order-first'
+                  : 'justify-end order-last'
               )}
+              style={{
+                borderColor: t.primaryColor,
+              }}
             >
-              <div
-                style={{
-                  backgroundColor: t.primaryColor,
-                }}
-                className={`w-4 h-4 bg-slate-400 rounded-full m-2 ${
-                  idx ? '' : 'order-last'
-                }`}
-              ></div>
+              <TeamColorTab color={t.primaryColor} isHome={t.isHome} />
               <span className="hidden sm:inline">{t.name}</span>
               <span className="sm:hidden">{t.shortName}</span>
             </div>
@@ -42,6 +43,23 @@ const ResultCard = ({ fixture }: FixtureProps) => {
         })}
       </div>
     </div>
+  )
+}
+
+type TeamColorTabProps = {
+  color: string
+  isHome: boolean
+}
+export const TeamColorTab = ({ color, isHome }: TeamColorTabProps) => {
+  return (
+    <div
+      style={{
+        backgroundColor: color,
+      }}
+      className={`w-3 h-full ${
+        isHome ? 'mr-2 rounded-l-sm' : 'order-last ml-2 rounded-r-sm'
+      }`}
+    ></div>
   )
 }
 

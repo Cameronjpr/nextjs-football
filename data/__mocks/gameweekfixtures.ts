@@ -1,5 +1,5 @@
 export const finished = { data: [
-  {
+  { // Palace v Arsenal, Arsenal win 1:0
     code: 2292810,
     event: 1,
     finished: true,
@@ -18,7 +18,7 @@ export const finished = { data: [
     team_a_difficulty: 2,
     pulse_id: 74911
   },
-  {
+  { // Fulham vs Liverpool, Fulham win 2:1
     code: 2292813,
     event: 1,
     finished: true,

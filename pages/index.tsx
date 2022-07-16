@@ -67,15 +67,15 @@ const Home = ({ fixtures }: HomeProps) => {
     <UserContext.Provider value={user}>
       <CurrentGameweekContext.Provider value={currentGameweek}>
         <Layout>
-          <h1 className="text-4xl mb-2 italic text-teal-900">
-            Soccer Selector
+          <h1 className="text-4xl mb-2 italic text-teal-900 underline">
+            Soccer Survivor
           </h1>
-          <h2 className="mb-10 text-teal-800">
-            Pick a team from the list of fixtures below!
+          <h2 className="mb-10 text-slate-500 text-sm italic">
+            Premier League 2022/2023 season
           </h2>
           <div className="flex flex-col place-content-center w-full sm:w-xl">
             <section className="pb-2 w-full flex place-content-between">
-              <ul className="flex flex-row place-content-between justify-between w-full text-md">
+              <ul className="flex flex-row place-content-between justify-between w-full text-md px-2">
                 <button
                   disabled={selectedGameweek <= 1}
                   className={selectedGameweek <= 1 ? 'text-slate-500' : ''}

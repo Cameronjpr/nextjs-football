@@ -56,10 +56,10 @@ const FixtureList = ({ groupedFixtures }: any) => {
 
   return (
     <SelectionContext.Provider value={selectedTeam}>
-      <div className="flex flex-col gap-4">
+      <div className="border-y-2 border-slate-100 py-4 flex flex-col gap-4">
         {groupedFixtures.map((date: any, idx: number) => (
-          <ul key={idx} className="border-t-2 border-dashed border-black/15">
-            <h2 className="p-2 px-4 rounded-full text-md text-center text-slate-800 font-semibold w-full">
+          <ul key={idx} className="">
+            <h2 className="px-4 rounded-full text-md text-center text-slate-800 font-semibold w-full">
               {format(new Date(date.date), 'PPPP')}
             </h2>
             {date.fixtures.map((f: Fixture) => {

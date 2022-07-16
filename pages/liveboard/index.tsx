@@ -157,7 +157,7 @@ const Leaderboard = ({ users }: LeaderboardProps) => {
             Current leaderboard
           </caption>
           <thead>
-            <tr className="border-b-2 text-left underline italic text-slate-600">
+            <tr className="border-b-2 text-left underline italic text-slate-600 h-10">
               <th className="font-normal pl-2" colSpan={1}>
                 #
               </th>
