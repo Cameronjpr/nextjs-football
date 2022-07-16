@@ -21,7 +21,6 @@ const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
           <time>{format(new Date(kickoff_time), 'HH:mm')}</time>
         </h2>
         {teams.map((t, idx) => {
-          console.log(t.primaryColor)
           return (
             <button
               key={idx}

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Layout from '../../../components/Layout/Layout'
+import Layout from '../../components/Layout/Layout'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
-import { Status } from '../../../domains/account/types'
+import { Status } from '../../account/types'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { User } from '@prisma/client'
-import { teams } from '../../../data/teams'
+import { teams } from '../../data/teams'
 import Image from 'next/image'
 
 const Profile = ({ user }: { user: User }) => {

@@ -3,11 +3,11 @@ import { format } from 'date-fns'
 import { useSession } from 'next-auth/react'
 import router from 'next/router'
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { Status } from '../../domains/account/types'
+import { Status } from '../../account/types'
 import FixtureCard from '../Fixture/Fixture'
 import { Fixture } from '../Fixture/Fixture.types'
 import ResultCard from '../Result/Result'
-import { UserContext } from '../../src/pages'
+import { UserContext } from '../../pages'
 
 export const SelectionContext = createContext<undefined | number>(undefined)
 
@@ -25,7 +25,6 @@ const FixtureList = ({ groupedFixtures }: any) => {
       if (user?.session?.user?.email === null) return
       const userInfo = await axios.get('/api/profile')
 
-      console.log(userInfo.data)
       setSelectedTeam(Number(userInfo?.data?.selection))
     }
 
@@ -63,7 +62,6 @@ const FixtureList = ({ groupedFixtures }: any) => {
               {format(new Date(date.date), 'PPPP')}
             </h2>
             {date.fixtures.map((f: Fixture) => {
-              console.log(f.teams[0].name, f.teams[0].primaryColor)
               return (
                 <li key={f.id} className="list-none">
                   {f.finished || f.started ? (

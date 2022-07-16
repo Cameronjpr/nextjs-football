@@ -21,7 +21,6 @@ const ResultCard = ({ fixture }: FixtureProps) => {
           ))}
         </div>
         {teams.map((t, idx) => {
-          console.log(t.primaryColor, t)
           return (
             <div
               key={idx}

@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import { Fixture, Gameweek, Matchday } from "../../components/Fixture/Fixture.types"
+import { Fixture, Gameweek, Matchday } from "../components/Fixture/Fixture.types"
 
 export const groupFixturesByDate = (fixtures: Fixture[]): Matchday[] => {
   const dates: Matchday[] = []
@@ -23,7 +23,6 @@ export const groupFixturesByDate = (fixtures: Fixture[]): Matchday[] => {
 
 export const getSelectionFixtureInGameweek = (gw: any, selection: number) => {
   const fixture = gw.filter((f: any) => {
-    console.log(selection)
     return f.team_a == selection || f.team_h == selection
   })
 
@@ -31,7 +30,6 @@ export const getSelectionFixtureInGameweek = (gw: any, selection: number) => {
 }
 
 export const getResultFromFixture = (f: any, selection: number) => {
-  console.log(f.team_h_score > f.team_a_score)
   if (f.team_h_score === f.team_a_score) return 'draw'
 
   if (selection === f.team_h) {

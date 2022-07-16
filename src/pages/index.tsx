@@ -1,20 +1,20 @@
 import React, { useState, useEffect, createContext } from 'react'
 import axios from 'axios'
 import { GetServerSideProps, GetStaticProps } from 'next'
-import Layout from '../../components/Layout/Layout'
+import Layout from '../components/Layout/Layout'
 import {
   Fixture,
   Gameweek,
   Matchday,
-} from '../../components/Fixture/Fixture.types'
+} from '../components/Fixture/Fixture.types'
 import prisma from '../../lib/prisma'
 import { useSession } from 'next-auth/react'
 import { tallyUserSelections } from '../utils/index'
 import { groupFixturesByDate } from '../utils/fixtures'
-import { Status } from '../../domains/account/types'
-import FixtureList from '../../components/FixtureList'
+import { Status } from '../account/types'
+import FixtureList from '../components/FixtureList'
 import { Session } from 'next-auth/core/types'
-import { finished, active } from '../../data/__mocks/gameweekfixtures'
+import { finished, active } from '../data/__mocks/gameweekfixtures'
 import { trpc } from '@/utils/trpc'
 
 type HomeProps = {
@@ -44,7 +44,13 @@ const Home = ({ fixtures }: HomeProps) => {
     id: selectedGameweek,
     fixtures: [],
   })
-  const { data, isLoading } = trpc.useQuery(['hello', { text: 'cameron' }])
+
+  const { isSuccess, data } = trpc.useQuery([
+    'getUser',
+    { email: 'cameronjpr@gmail.com' },
+  ])
+
+  if (isSuccess) console.log(data.user)
 
   const [user, setUser] = useState<User>({
     session,
@@ -58,15 +64,10 @@ const Home = ({ fixtures }: HomeProps) => {
     })
   }, [session, status])
 
-  if (isLoading) return <div>Loading...</div>
-  if (data) return <div>{data.greeting}</div>
-
   const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1)
   const groupedFixtures: Matchday[] = groupFixturesByDate(
     fixtures.filter((f: Fixture) => f.event === selectedGameweek)
   )
-
-  console.log(selectedGameweek)
 
   return (
     <UserContext.Provider value={user}>

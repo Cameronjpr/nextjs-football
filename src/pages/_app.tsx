@@ -1,5 +1,5 @@
 import { SessionProvider } from 'next-auth/react'
-import '../styles/global.css'
+import '@/styles/global.css'
 import { withTRPC } from '@trpc/next'
 import { AppType } from 'next/dist/shared/lib/utils'
 import type { AppRouter } from '@/backend/router'
@@ -33,5 +33,5 @@ export default withTRPC<AppRouter>({
   /**
    * @link https://trpc.io/docs/ssr
    */
-  ssr: true,
+  ssr: false,
 })(MyApp)
