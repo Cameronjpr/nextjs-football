@@ -11,7 +11,7 @@ import { finished } from '../../../data/__mocks/gameweekfixtures'
 import {
   getResultFromFixture,
   getSelectionFixtureInGameweek,
-} from '../../util/fixtures'
+} from '../../utils/fixtures'
 import { teams } from '../../../data/teams'
 
 export const getStaticProps: GetStaticProps = async () => {

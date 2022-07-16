@@ -9,12 +9,13 @@ import {
 } from '../../components/Fixture/Fixture.types'
 import prisma from '../../lib/prisma'
 import { useSession } from 'next-auth/react'
-import { tallyUserSelections } from '../util/index'
-import { groupFixturesByDate } from '../util/fixtures'
+import { tallyUserSelections } from '../utils/index'
+import { groupFixturesByDate } from '../utils/fixtures'
 import { Status } from '../../domains/account/types'
 import FixtureList from '../../components/FixtureList'
 import { Session } from 'next-auth/core/types'
 import { finished, active } from '../../data/__mocks/gameweekfixtures'
+import { trpc } from '@/utils/trpc'
 
 type HomeProps = {
   fixtures: Fixture[]
@@ -43,6 +44,7 @@ const Home = ({ fixtures }: HomeProps) => {
     id: selectedGameweek,
     fixtures: [],
   })
+  const { data, isLoading } = trpc.useQuery(['hello', { text: 'cameron' }])
 
   const [user, setUser] = useState<User>({
     session,
@@ -55,6 +57,9 @@ const Home = ({ fixtures }: HomeProps) => {
       status,
     })
   }, [session, status])
+
+  if (isLoading) return <div>Loading...</div>
+  if (data) return <div>{data.greeting}</div>
 
   const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1)
   const groupedFixtures: Matchday[] = groupFixturesByDate(

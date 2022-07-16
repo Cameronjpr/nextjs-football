@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types'
 import { getSession } from 'next-auth/react'
 import axios from 'axios'
-import { groupFixturesByDate } from '../../../util/fixtures'
+import { groupFixturesByDate } from '../../../utils/fixtures'
 
 export default async function handle(
   req: NextApiRequest,
