@@ -1,22 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next/types'
 import { getSession } from 'next-auth/react'
-import prisma from '../../../../lib/prisma'
+import prisma from '../../../lib/prisma'
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { username } = req.body
+  const { id } = req.body
   const session = await getSession({ req })
 
-  if (!session?.user?.email || !username) return
+  console.log(id)
+
+  if (!session?.user?.email) return
 
   const result = await prisma.user.update({
     where: {
       email: session?.user?.email,
     },
     data: {
-      username: username,
+      selection: String(id),
+      calculated: false,
     },
   })
   res.json(result)

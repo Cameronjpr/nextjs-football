@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../../pages'
+import { UserContext } from '../../src/pages'
 import { FixtureOutcomes, FixtureParticipantProps } from './Fixture.types'
 import { SelectionContext } from '../FixtureList'
 

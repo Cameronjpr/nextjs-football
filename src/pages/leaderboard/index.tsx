@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { GetServerSideProps, GetStaticProps } from 'next'
-import Layout from '../../components/Layout/Layout'
+import Layout from '../../../components/Layout/Layout'
 import { motion } from 'framer-motion'
 import { randomUUID } from 'crypto'
-import prisma from '../../lib/prisma'
+import prisma from '../../../lib/prisma'
 import classNames from 'classnames'
 
 type User = {

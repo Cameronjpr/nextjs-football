@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import { Fixture, Gameweek, Matchday } from "../components/Fixture/Fixture.types"
+import { Fixture, Gameweek, Matchday } from "../../components/Fixture/Fixture.types"
 
 export const groupFixturesByDate = (fixtures: Fixture[]): Matchday[] => {
   const dates: Matchday[] = []

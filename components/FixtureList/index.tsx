@@ -7,7 +7,7 @@ import { Status } from '../../domains/account/types'
 import FixtureCard from '../Fixture/Fixture'
 import { Fixture } from '../Fixture/Fixture.types'
 import ResultCard from '../Result/Result'
-import { UserContext } from '../../pages'
+import { UserContext } from '../../src/pages'
 
 export const SelectionContext = createContext<undefined | number>(undefined)
 

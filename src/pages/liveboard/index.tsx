@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { GetServerSideProps, GetStaticProps } from 'next'
-import Layout from '../../components/Layout/Layout'
+import Layout from '../../../components/Layout/Layout'
 import { motion } from 'framer-motion'
 import { randomUUID } from 'crypto'
-import prisma from '../../lib/prisma'
+import prisma from '../../../lib/prisma'
 import classNames from 'classnames'
 import axios from 'axios'
 import { parse, isBefore } from 'date-fns'
-import { finished } from '../../data/__mocks/gameweekfixtures'
+import { finished } from '../../../data/__mocks/gameweekfixtures'
 import {
   getResultFromFixture,
   getSelectionFixtureInGameweek,
 } from '../../util/fixtures'
-import { teams } from '../../data/teams'
+import { teams } from '../../../data/teams'
 
 export const getStaticProps: GetStaticProps = async () => {
   const general = await axios

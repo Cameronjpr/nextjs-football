@@ -45,6 +45,7 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   selection     String?
+  selections    Selection[] 
   score         Int?
   emailVerified DateTime? @map("email_verified")
   image         String?
@@ -54,6 +55,22 @@ model User {
   sessions      Session[]
 
   @@map("users")
+} 
+
+model Selection {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  gameweek      Int
+  selection     Int
+  calculated    Boolean   @default(false)
+  result        Result?
+}
+
+enum Result {
+  WIN
+  LOSS
+  DRAW
 }
 
 model Team {

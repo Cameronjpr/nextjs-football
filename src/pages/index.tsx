@@ -1,20 +1,20 @@
 import React, { useState, useEffect, createContext } from 'react'
 import axios from 'axios'
 import { GetServerSideProps, GetStaticProps } from 'next'
-import Layout from '../components/Layout/Layout'
+import Layout from '../../components/Layout/Layout'
 import {
   Fixture,
   Gameweek,
   Matchday,
-} from '../components/Fixture/Fixture.types'
-import prisma from '../lib/prisma'
+} from '../../components/Fixture/Fixture.types'
+import prisma from '../../lib/prisma'
 import { useSession } from 'next-auth/react'
 import { tallyUserSelections } from '../util/index'
 import { groupFixturesByDate } from '../util/fixtures'
-import { Status } from '../domains/account/types'
-import FixtureList from '../components/FixtureList'
+import { Status } from '../../domains/account/types'
+import FixtureList from '../../components/FixtureList'
 import { Session } from 'next-auth/core/types'
-import { finished, active } from '../data/__mocks/gameweekfixtures'
+import { finished, active } from '../../data/__mocks/gameweekfixtures'
 
 type HomeProps = {
   fixtures: Fixture[]
