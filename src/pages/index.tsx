@@ -17,6 +17,7 @@ import { Session } from 'next-auth/core/types'
 import { finished, active } from '../data/__mocks/gameweekfixtures'
 import { trpc } from '@/utils/trpc'
 import { richTeams } from '@/data/teams'
+import Head from 'next/head'
 
 type HomeProps = {
   fixtures: Fixture[]
@@ -70,6 +71,15 @@ const Home = ({ fixtures }: HomeProps) => {
   return (
     <UserContext.Provider value={user}>
       <CurrentGameweekContext.Provider value={currentGameweek}>
+        <Head>
+          <title>Fixtures - Soccer Survivor</title>
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/images/favicon-16x16.png"
+          />
+        </Head>
         <Layout>
           <h1 className="text-4xl mb-2 italic text-teal-900 underline">
             Soccer Survivor

@@ -8,6 +8,7 @@ import axios from 'axios'
 import { User } from '@prisma/client'
 import { teams } from '../../data/teams'
 import Image from 'next/image'
+import Head from 'next/head'
 
 const Profile = ({ user }: { user: User }) => {
   const { data: session, status } = useSession()
@@ -94,6 +95,15 @@ const Profile = ({ user }: { user: User }) => {
 
   return (
     <Layout>
+      <Head>
+        <title>Profile - Soccer Survivor</title>
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/images/favicon-16x16.png"
+        />
+      </Head>
       <div className="flex flex-col place-content-center w-full">
         <main className="">
           <motion.div

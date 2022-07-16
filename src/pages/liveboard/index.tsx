@@ -5,6 +5,7 @@ import { trpc } from '@/utils/trpc'
 import { teams } from '../../data/teams'
 import { Player } from '@/backend/router'
 import { User } from '@prisma/client'
+import Head from 'next/head'
 
 const Leaderboard = () => {
   const [gameweek, setGameweek] = useState(1)
@@ -13,6 +14,15 @@ const Leaderboard = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Leaderboard - Soccer Survivor</title>
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/images/favicon-16x16.png"
+        />
+      </Head>
       <main className="flex flex-col w-full sm:max-w-3xl p-5 mx-4 bg-teal-800/5 place-content-start rounded-lg drop-shadow-md">
         <table>
           <caption className="mb-4 text-xl font-semibold p-2 drop-shadow-sm bg-teal-800/10 rounded-lg text-teal-900">
