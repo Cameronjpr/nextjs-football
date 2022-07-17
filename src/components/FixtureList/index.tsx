@@ -1,4 +1,3 @@
-import axios from "axios";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import router from "next/router";

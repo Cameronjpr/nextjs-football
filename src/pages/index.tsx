@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext } from "react";
-import axios from "axios";
 import { GetStaticProps } from "next";
 import Layout from "../components/Layout/Layout";
 import {
@@ -15,11 +14,8 @@ import { Session } from "next-auth/core/types";
 import { finished, active } from "../data/__mocks/gameweekfixtures";
 import { richTeams } from "@/data/teams";
 import Head from "next/head";
-
-type HomeProps = {
-  fixtures: Fixture[];
-  users: any;
-};
+import { dehydrate, QueryClient, useQuery } from "react-query";
+import { fetchFixtures, useFixtures } from "@/hooks/useFixtures";
 
 type User = {
   session: Session | null;
@@ -36,13 +32,50 @@ export const CurrentGameweekContext = createContext<Gameweek>({
   fixtures: [],
 });
 
-const Home = ({ fixtures }: HomeProps) => {
+const Home = () => {
+  const { error, isLoading, data } = useFixtures();
+
+  console.log(data);
   const { data: session, status } = useSession();
   const [selectedGameweek, setSelectedGameweek] = useState(1);
+  const [groupedFixtures, setGroupedFixtures] = useState<Matchday[]>([]);
   const [currentGameweek, setCurrentGameweek] = useState<Gameweek>({
     id: selectedGameweek,
     fixtures: [],
   });
+
+  if (data?.data) {
+    data.data[0] = finished.data[0];
+    data.data[1] = active.data[1];
+  }
+
+  useEffect(() => {
+    const fixtures = data?.map((f: any, idx: number) => {
+      return {
+        ...f,
+        teams: [
+          {
+            basic_id: f.team_h - 1,
+            score: f.team_h_score,
+            ...richTeams[f.team_h - 1],
+            isHome: true,
+          },
+          {
+            basic_id: f.team_a - 1,
+            score: f.team_a_score,
+            ...richTeams[f.team_a - 1],
+            isHome: false,
+          },
+        ],
+      };
+    });
+
+    setGroupedFixtures(
+      groupFixturesByDate(
+        fixtures.filter((f: Fixture) => f.event === selectedGameweek)
+      )
+    );
+  }, [data, selectedGameweek]);
 
   const [user, setUser] = useState<User>({
     session,
@@ -57,9 +90,6 @@ const Home = ({ fixtures }: HomeProps) => {
   }, [session, status]);
 
   const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1);
-  const groupedFixtures: Matchday[] = groupFixturesByDate(
-    fixtures.filter((f: Fixture) => f.event === selectedGameweek)
-  );
 
   return (
     <UserContext.Provider value={user}>
@@ -118,7 +148,9 @@ const Home = ({ fixtures }: HomeProps) => {
               </ul>
             </section>
             <main className="">
-              <FixtureList groupedFixtures={groupedFixtures} />
+              {groupedFixtures?.length && (
+                <FixtureList groupedFixtures={groupedFixtures} />
+              )}
             </main>
           </div>
         </Layout>
@@ -128,39 +160,16 @@ const Home = ({ fixtures }: HomeProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const fixtures = await axios
-    .get("https://fantasy.premierleague.com/api/fixtures/")
-    .catch((error) => {
-      console.log(error);
-    });
+  const queryClient = new QueryClient();
 
-  if (fixtures?.data) {
-    fixtures.data[0] = finished.data[0];
-    fixtures.data[1] = active.data[1];
-  }
+  await queryClient.prefetchQuery(["fixtures"], () => fetchFixtures());
 
-  const enrichedFixtures = fixtures?.data.map((f: any, idx: number) => {
-    return {
-      ...f,
-      teams: [
-        {
-          basic_id: f.team_h - 1,
-          score: f.team_h_score,
-          ...richTeams[f.team_h - 1],
-          isHome: true,
-        },
-        {
-          basic_id: f.team_a - 1,
-          score: f.team_a_score,
-          ...richTeams[f.team_a - 1],
-          isHome: false,
-        },
-      ],
-    };
-  });
+  console.log(dehydrate(queryClient));
 
   return {
-    props: { fixtures: enrichedFixtures },
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
     revalidate: 60 * 5,
   };
 };

@@ -3,12 +3,22 @@ import "@/styles/global.css";
 import { withTRPC } from "@trpc/next";
 import { AppType } from "next/dist/shared/lib/utils";
 import type { AppRouter } from "@/backend/router";
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { useState } from "react";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
-    <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <SessionProvider session={pageProps.session}>
+          <Component {...pageProps} />
+        </SessionProvider>
+      </Hydrate>
+      <ReactQueryDevtools initialIsOpen />
+    </QueryClientProvider>
   );
 };
 
