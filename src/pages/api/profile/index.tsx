@@ -1,16 +1,16 @@
-import { NextApiRequest, NextApiResponse } from 'next/types'
-import { getSession } from 'next-auth/react'
-import prisma from '../../../../lib/prisma'
+import { NextApiRequest, NextApiResponse } from "next/types";
+import { getSession } from "next-auth/react";
+import prisma from "../../../../lib/prisma";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req })
+  const session = await getSession({ req });
 
-  console.log(session)
+  console.log(session);
 
-  if (!session?.user?.email) return
+  if (!session?.user?.email) return;
 
   const result = await prisma.user.findUnique({
     where: {
@@ -22,6 +22,6 @@ export default async function handle(
       score: true,
       selection: true,
     },
-  })
-  res.json(result)
+  });
+  res.json(result);
 }

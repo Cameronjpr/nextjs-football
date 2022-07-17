@@ -1,65 +1,65 @@
-import React, { useState, useEffect, createContext } from 'react'
-import axios from 'axios'
-import { GetStaticProps } from 'next'
-import Layout from '../components/Layout/Layout'
+import React, { useState, useEffect, createContext } from "react";
+import axios from "axios";
+import { GetStaticProps } from "next";
+import Layout from "../components/Layout/Layout";
 import {
   Fixture,
   Gameweek,
   Matchday,
-} from '../components/Fixture/Fixture.types'
-import { useSession } from 'next-auth/react'
-import { groupFixturesByDate } from '../utils/fixtures'
-import { Status } from '../account/types'
-import FixtureList from '../components/FixtureList'
-import { Session } from 'next-auth/core/types'
-import { finished, active } from '../data/__mocks/gameweekfixtures'
-import { richTeams } from '@/data/teams'
-import Head from 'next/head'
+} from "../components/Fixture/Fixture.types";
+import { useSession } from "next-auth/react";
+import { groupFixturesByDate } from "../utils/fixtures";
+import { Status } from "../account/types";
+import FixtureList from "../components/FixtureList";
+import { Session } from "next-auth/core/types";
+import { finished, active } from "../data/__mocks/gameweekfixtures";
+import { richTeams } from "@/data/teams";
+import Head from "next/head";
 
 type HomeProps = {
-  fixtures: Fixture[]
-  users: any
-}
+  fixtures: Fixture[];
+  users: any;
+};
 
 type User = {
-  session: Session | null
-  status: string
-}
+  session: Session | null;
+  status: string;
+};
 
 export const UserContext = createContext<User>({
   session: null,
   status: Status.Unauthenticated,
-})
+});
 
 export const CurrentGameweekContext = createContext<Gameweek>({
   id: 1,
   fixtures: [],
-})
+});
 
 const Home = ({ fixtures }: HomeProps) => {
-  const { data: session, status } = useSession()
-  const [selectedGameweek, setSelectedGameweek] = useState(1)
+  const { data: session, status } = useSession();
+  const [selectedGameweek, setSelectedGameweek] = useState(1);
   const [currentGameweek, setCurrentGameweek] = useState<Gameweek>({
     id: selectedGameweek,
     fixtures: [],
-  })
+  });
 
   const [user, setUser] = useState<User>({
     session,
     status,
-  })
+  });
 
   useEffect(() => {
     setUser({
       session,
       status,
-    })
-  }, [session, status])
+    });
+  }, [session, status]);
 
-  const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1)
+  const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1);
   const groupedFixtures: Matchday[] = groupFixturesByDate(
     fixtures.filter((f: Fixture) => f.event === selectedGameweek)
-  )
+  );
 
   return (
     <UserContext.Provider value={user}>
@@ -74,18 +74,18 @@ const Home = ({ fixtures }: HomeProps) => {
           />
         </Head>
         <Layout>
-          <h1 className="text-4xl mb-2 italic text-teal-900 underline">
+          <h1 className="mb-2 text-4xl italic text-teal-900 underline">
             Soccer Survivor
           </h1>
-          <h2 className="mb-10 text-slate-500 text-sm italic">
+          <h2 className="mb-10 text-sm italic text-slate-500">
             Premier League 2022/2023 season
           </h2>
-          <div className="flex flex-col place-content-center w-full sm:w-xl">
-            <section className="pb-2 w-full flex place-content-between">
-              <ul className="flex flex-row place-content-between justify-between w-full text-md px-2">
+          <div className="sm:w-xl flex w-full flex-col place-content-center">
+            <section className="flex w-full place-content-between pb-2">
+              <ul className="text-md flex w-full flex-row place-content-between justify-between px-2">
                 <button
                   disabled={selectedGameweek <= 1}
-                  className={selectedGameweek <= 1 ? 'text-slate-500' : ''}
+                  className={selectedGameweek <= 1 ? "text-slate-500" : ""}
                   onClick={() => setSelectedGameweek(selectedGameweek - 1)}
                 >
                   Previous
@@ -99,7 +99,7 @@ const Home = ({ fixtures }: HomeProps) => {
                   className=""
                   value={selectedGameweek}
                   onChange={(event) => {
-                    setSelectedGameweek(parseInt(event.target.value))
+                    setSelectedGameweek(parseInt(event.target.value));
                   }}
                 >
                   {gameweeks.map((gw, idx) => (
@@ -110,7 +110,7 @@ const Home = ({ fixtures }: HomeProps) => {
                 </select>
                 <button
                   disabled={selectedGameweek > 37}
-                  className={selectedGameweek > 37 ? 'text-slate-500' : ''}
+                  className={selectedGameweek > 37 ? "text-slate-500" : ""}
                   onClick={() => setSelectedGameweek(selectedGameweek + 1)}
                 >
                   Next
@@ -124,19 +124,19 @@ const Home = ({ fixtures }: HomeProps) => {
         </Layout>
       </CurrentGameweekContext.Provider>
     </UserContext.Provider>
-  )
-}
+  );
+};
 
 export const getStaticProps: GetStaticProps = async () => {
   const fixtures = await axios
-    .get('https://fantasy.premierleague.com/api/fixtures/')
+    .get("https://fantasy.premierleague.com/api/fixtures/")
     .catch((error) => {
-      console.log(error)
-    })
+      console.log(error);
+    });
 
   if (fixtures?.data) {
-    fixtures.data[0] = finished.data[0]
-    fixtures.data[1] = active.data[1]
+    fixtures.data[0] = finished.data[0];
+    fixtures.data[1] = active.data[1];
   }
 
   const enrichedFixtures = fixtures?.data.map((f: any, idx: number) => {
@@ -156,13 +156,13 @@ export const getStaticProps: GetStaticProps = async () => {
           isHome: false,
         },
       ],
-    }
-  })
+    };
+  });
 
   return {
     props: { fixtures: enrichedFixtures },
     revalidate: 60 * 5,
-  }
-}
+  };
+};
 
-export default Home
+export default Home;

@@ -1,15 +1,15 @@
 // Header.tsx
-import React from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { signOut, useSession } from 'next-auth/react'
+import React from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { signOut, useSession } from "next-auth/react";
 
 const Header = () => {
-  const router = useRouter()
+  const router = useRouter();
   const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname
+    router.pathname === pathname;
 
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
 
   const Login = session ? (
     <div className="text-right">
@@ -20,21 +20,21 @@ const Header = () => {
   ) : (
     <div className="text-right">
       <Link href="/auth/signin">
-        <a data-active={isActive('/signup')}>Log in</a>
+        <a data-active={isActive("/signup")}>Log in</a>
       </Link>
     </div>
-  )
+  );
 
   return (
-    <nav className="z-10 w-full rounded-xl p-3 bg-green-700/10 text-emerald-900 grid grid-cols-3 place-content-between place-items-center">
+    <nav className="z-10 grid w-full grid-cols-3 place-content-between place-items-center rounded-xl bg-green-700/10 p-3 text-emerald-900">
       <>
         <Link href="/">
-          <a className="bold" data-active={isActive('/')}>
+          <a className="bold" data-active={isActive("/")}>
             Home
           </a>
         </Link>
         <Link href="/liveboard">
-          <a className="bold" data-active={isActive('/liveboard')}>
+          <a className="bold" data-active={isActive("/liveboard")}>
             Leaderboard
           </a>
         </Link>
@@ -43,10 +43,10 @@ const Header = () => {
             <a data-active={isActive('/profile')}>Account</a>
             </Link>
           )} */}
-        <div>{status !== 'loading' && <>{Login}</>}</div>
+        <div>{status !== "loading" && <>{Login}</>}</div>
       </>
     </nav>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

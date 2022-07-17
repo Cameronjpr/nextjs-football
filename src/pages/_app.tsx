@@ -1,16 +1,16 @@
-import { SessionProvider } from 'next-auth/react'
-import '@/styles/global.css'
-import { withTRPC } from '@trpc/next'
-import { AppType } from 'next/dist/shared/lib/utils'
-import type { AppRouter } from '@/backend/router'
+import { SessionProvider } from "next-auth/react";
+import "@/styles/global.css";
+import { withTRPC } from "@trpc/next";
+import { AppType } from "next/dist/shared/lib/utils";
+import type { AppRouter } from "@/backend/router";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
     </SessionProvider>
-  )
-}
+  );
+};
 
 export default withTRPC<AppRouter>({
   config({ ctx }) {
@@ -20,19 +20,19 @@ export default withTRPC<AppRouter>({
      */
     const url = process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/trpc`
-      : 'http://localhost:3000/api/trpc'
+      : "http://localhost:3000/api/trpc";
 
-    console.log(process.env.VERCEL_URL)
+    console.log(process.env.VERCEL_URL);
     return {
       url,
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
-    }
+    };
   },
   /**
    * @link https://trpc.io/docs/ssr
    */
   ssr: false,
-})(MyApp)
+})(MyApp);

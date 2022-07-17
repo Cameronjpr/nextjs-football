@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
-import Layout from '../../components/Layout/Layout'
-import classNames from 'classnames'
-import { trpc } from '@/utils/trpc'
-import { teams } from '../../data/teams'
-import { Player } from '@/backend/router'
-import { User } from '@prisma/client'
-import Head from 'next/head'
+import React, { useState } from "react";
+import Layout from "../../components/Layout/Layout";
+import classNames from "classnames";
+import { trpc } from "@/utils/trpc";
+import { teams } from "../../data/teams";
+import { Player } from "@/backend/router";
+import { User } from "@prisma/client";
+import Head from "next/head";
 
 const Leaderboard = () => {
-  const [gameweek, setGameweek] = useState(1)
+  const [gameweek, setGameweek] = useState(1);
 
-  const { isLoading, data } = trpc.useQuery(['getUsers'])
+  const { isLoading, data } = trpc.useQuery(["getUsers"]);
 
   return (
     <Layout>
@@ -23,14 +23,14 @@ const Leaderboard = () => {
           href="/images/favicon-16x16.png"
         />
       </Head>
-      <main className="flex flex-col w-full sm:max-w-3xl p-5 mx-4 bg-teal-800/5 place-content-start rounded-lg drop-shadow-md">
+      <main className="mx-4 flex w-full flex-col place-content-start rounded-lg bg-teal-800/5 p-5 drop-shadow-md sm:max-w-3xl">
         <table>
-          <caption className="mb-4 text-xl font-semibold p-2 drop-shadow-sm bg-teal-800/10 rounded-lg text-teal-900">
+          <caption className="mb-4 rounded-lg bg-teal-800/10 p-2 text-xl font-semibold text-teal-900 drop-shadow-sm">
             Current leaderboard
           </caption>
           <thead>
-            <tr className="border-b-2 text-left underline italic text-slate-600 h-10">
-              <th className="font-normal pl-2" colSpan={1}>
+            <tr className="h-10 border-b-2 text-left italic text-slate-600 underline">
+              <th className="pl-2 font-normal" colSpan={1}>
                 #
               </th>
               <th className="font-normal" colSpan={1}>
@@ -53,13 +53,13 @@ const Leaderboard = () => {
                   <tr
                     key={idx}
                     className={classNames(
-                      idx ? 'bg-white' : 'bg-yellow-300',
-                      'border-b-4 border-teal-800/5 h-12 rounded-sm'
+                      idx ? "bg-white" : "bg-yellow-300",
+                      "h-12 rounded-sm border-b-4 border-teal-800/5"
                     )}
                   >
-                    <td className="pl-3 w-10">{idx + 1}</td>
+                    <td className="w-10 pl-3">{idx + 1}</td>
                     <td className="font-semibold">{username ?? name}</td>
-                    <td>{teams[Number(selection) - 1] ?? ''}</td>
+                    <td>{teams[Number(selection) - 1] ?? ""}</td>
                     <td>{score}</td>
                   </tr>
                 ))}
@@ -67,7 +67,7 @@ const Leaderboard = () => {
         </table>
       </main>
     </Layout>
-  )
-}
+  );
+};
 
-export default Leaderboard
+export default Leaderboard;

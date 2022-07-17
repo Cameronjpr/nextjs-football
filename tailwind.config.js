@@ -1,22 +1,22 @@
 module.exports = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx}',
-    './src/components/**/*.{js,ts,jsx,tsx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     fontFamily: {
-      sans: ['ui-sans-serif', 'system-ui'],
-      serif: ['ui-serif', 'Georgia'],
-      mono: ['ui-monospace', 'SFMono-Regular'],
-      display: ['Oswald'],
+      sans: ["ui-sans-serif", "system-ui"],
+      serif: ["ui-serif", "Georgia"],
+      mono: ["ui-monospace", "SFMono-Regular"],
+      display: ["Oswald"],
       body: ['"Open Sans"'],
     },
     teams: {
       ars: {
-        primaryColor: '#EF0107',
+        primaryColor: "#EF0107",
       },
     },
     extends: {},
   },
   plugins: [],
-}
+};

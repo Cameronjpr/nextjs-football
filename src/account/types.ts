@@ -1,4 +1,4 @@
 export enum Status {
-  Unauthenticated = 'unauthenticated',
-  Authenticated = 'authenticated',
+  Unauthenticated = "unauthenticated",
+  Authenticated = "authenticated",
 }

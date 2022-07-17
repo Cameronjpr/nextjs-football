@@ -1,28 +1,28 @@
-import Layout from '@/components/Layout/Layout'
-import { richTeams } from '@/data/teams'
-import { getProviders, signIn } from 'next-auth/react'
+import Layout from "@/components/Layout/Layout";
+import { richTeams } from "@/data/teams";
+import { getProviders, signIn } from "next-auth/react";
 
 const SignIn = ({ providers }: never) => {
   return (
     <Layout>
       <div>
-        <main className="flex flex-col place-content-center place-items-center text-center gap-10">
-          <div className="grid grid-cols-3 grid-flow-row gap-3 static top-0 z-0">
+        <main className="flex flex-col place-content-center place-items-center gap-10 text-center">
+          <div className="static top-0 z-0 grid grid-flow-row grid-cols-3 gap-3">
             {richTeams.map((t, idx) =>
               idx === 7 ? (
                 <>
-                  {' '}
+                  {" "}
                   {Object.values(providers).map((provider: any) => (
                     <div
                       key={provider.name}
-                      className="flex place-items-center p-2 border-2 border-slate-900 rounded-md font-medium bg-white text-lg"
+                      className="flex place-items-center rounded-md border-2 border-slate-900 bg-white p-2 text-lg font-medium"
                     >
                       <button
                         onClick={() =>
                           signIn(provider.id, {
                             callbackUrl: process.env.NEXT_PUBLIC_VERCEL_URL
                               ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/`
-                              : 'http://localhost:3000/',
+                              : "http://localhost:3000/",
                           })
                         }
                       >
@@ -33,14 +33,14 @@ const SignIn = ({ providers }: never) => {
                   <div
                     key={t.id}
                     style={{ backgroundColor: t.primaryColor as string }}
-                    className={`w-full h-[10vh] rounded-md opacity-20`}
+                    className={`h-[10vh] w-full rounded-md opacity-20`}
                   ></div>
                 </>
               ) : (
                 <div
                   key={t.id}
                   style={{ backgroundColor: t.primaryColor as string }}
-                  className={`w-full h-[10vh] rounded-md opacity-20`}
+                  className={`h-[10vh] w-full rounded-md opacity-20`}
                 ></div>
               )
             )}
@@ -48,14 +48,14 @@ const SignIn = ({ providers }: never) => {
         </main>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
 export async function getServerSideProps(context: any) {
-  const providers = await getProviders()
+  const providers = await getProviders();
   return {
     props: { providers },
-  }
+  };
 }
 
-export default SignIn
+export default SignIn;
