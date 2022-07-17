@@ -1,8 +1,7 @@
-// Header.tsx
-import React from "react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/react";
+import React from "react";
 
 const Header = () => {
   const router = useRouter();

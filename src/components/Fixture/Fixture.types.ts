@@ -4,7 +4,7 @@ I feel like this file is a GIANT fucking mess
 
 */
 
-import { Fixture } from "@/backend/router";
+import { Fixture } from '@/backend/router';
 
 export type Matchday = {
   date: string;

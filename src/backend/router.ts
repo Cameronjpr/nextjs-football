@@ -1,16 +1,9 @@
-import { richTeams } from "@/data/teams";
-import { active, finished } from "@/data/__mocks/gameweekfixtures";
-import * as trpc from "@trpc/server";
-import prisma from "lib/prisma";
-import { useQuery } from "react-query";
-import { z } from "zod";
+import prisma from 'lib/prisma';
+import { z } from 'zod';
 
-// const SelectionSchema = z.object({
-//   id: z.string(),
-//   gameweek: z.number(),
-//   team: z.number(),
-// })
-// const SelectionsSchema = z.array(SelectionSchema)
+import { active, finished } from '@/data/__mocks/gameweekfixtures';
+import { richTeams } from '@/data/teams';
+import * as trpc from '@trpc/server';
 
 export type Player = z.infer<typeof PlayerSchema>;
 const PlayerSchema = z.object({

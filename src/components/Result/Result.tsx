@@ -9,18 +9,6 @@ const ResultCard = ({ fixture }: FixtureProps) => {
   return (
     <div className="w-full">
       <div className="flex h-14 flex-row place-content-stretch justify-between gap-2 text-center">
-        <div
-          className={classNames(
-            "text-md order-2 flex w-12 place-content-center items-center font-semibold",
-            started && !finished ? "text-red-700" : ""
-          )}
-        >
-          {teams.map((t, idx) => (
-            <span key={idx} className={idx === 0 ? "pr-2" : "pl-2"}>
-              {t.score}
-            </span>
-          ))}
-        </div>
         {teams.map((t, idx) => {
           const selectionOccurrences = selections.filter(
             (s) => s === t.basic_id

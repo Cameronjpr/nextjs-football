@@ -2,13 +2,14 @@ import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Status } from "../../account/types";
-import FixtureCard from "../Fixture/Fixture";
-import ResultCard from "../Result/Result";
-import { UserContext } from "../../pages";
-import { trpc } from "@/utils/trpc";
+
 import { Fixture } from "@/backend/router";
 import { groupFixturesByDate } from "@/utils/fixtures";
+import { trpc } from "@/utils/trpc";
+
+import { Status } from "../../account/types";
+import { UserContext } from "../../pages";
+import FixtureCard from "../Fixture/Fixture";
 import { Matchday } from "../Fixture/Fixture.types";
 
 export const SelectionContext = createContext<number[]>([]);
@@ -82,19 +83,11 @@ const FixtureList = ({
             {m.fixtures.map((f: Fixture) => {
               return (
                 <li key={f.id} className="list-none">
-                  {f.finished || f.started ? (
-                    <ResultCard
-                      fixture={f}
-                      isLoading={makeGameweekSpecificSelection.isLoading}
-                      handleSelection={handleTeamSelect}
-                    />
-                  ) : (
-                    <FixtureCard
-                      fixture={f}
-                      isLoading={makeGameweekSpecificSelection.isLoading}
-                      handleSelection={handleTeamSelect}
-                    />
-                  )}
+                  <FixtureCard
+                    fixture={f}
+                    isLoading={makeGameweekSpecificSelection.isLoading}
+                    handleSelection={handleTeamSelect}
+                  />
                 </li>
               );
             })}
