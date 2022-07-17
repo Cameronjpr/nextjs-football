@@ -8,30 +8,38 @@ import ResultCard from "../Result/Result";
 import { UserContext } from "../../pages";
 import { trpc } from "@/utils/trpc";
 import { Fixture } from "@/backend/router";
+import { groupFixturesByDate } from "@/utils/fixtures";
+import { Matchday } from "../Fixture/Fixture.types";
 
-export const SelectionContext = createContext<null | undefined | number>(
-  undefined
-);
+export const SelectionContext = createContext<number[]>([]);
 
-const FixtureList = ({ groupedFixtures }: any) => {
+const FixtureList = ({
+  fixtures,
+  selectedGameweek,
+}: {
+  fixtures: Fixture[];
+  selectedGameweek: number;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState<null | undefined | number>(
-    undefined
-  );
+  const [selections, setSelections] = useState<number[]>([]);
   const [error, setError] = useState("");
   const { data: session, status } = useSession();
 
   const user = useContext(UserContext);
-  const makeSelection = trpc.useMutation(["makeSelection"], {
-    onSuccess: (res) => {
-      setIsLoading(false);
-      setSelectedTeam(res?.user?.selection);
-    },
-    onError: (data) => {
-      setError(data.message);
-      setIsLoading(false);
-    },
-  });
+  const makeGameweekSpecificSelection = trpc.useMutation(
+    ["makeGameweekSpecificSelection"],
+    {
+      onSuccess: (res) => {
+        setIsLoading(false);
+        console.log(res?.selections.slice(0, 5));
+        setSelections(res?.selections);
+      },
+      onError: (data) => {
+        setError(data.message);
+        setIsLoading(false);
+      },
+    }
+  );
 
   const userInfo = trpc.useQuery([
     "getUser",
@@ -39,35 +47,39 @@ const FixtureList = ({ groupedFixtures }: any) => {
   ]);
 
   useEffect(() => {
-    setSelectedTeam(userInfo?.data?.user?.selection);
-  }, [userInfo]);
+    // this stops the userInfo stuff overwriting the selection but I hate it
+    if (!userInfo?.data?.user?.selections.length || selections.length) return;
+    setSelections(userInfo?.data?.user?.selections);
+  }, [userInfo, selections]);
 
   const handleTeamSelect = async (id: number) => {
     if (status === Status.Unauthenticated) {
-      router.push(
-        encodeURI("/login?message=Please sign in to make a selection.")
-      );
+      router.push(encodeURI("/auth/signin"));
       return;
     }
     setIsLoading(true);
 
     if (!session?.user?.email) return;
 
-    makeSelection.mutate({
+    makeGameweekSpecificSelection.mutate({
       email: session?.user?.email,
       selection: id,
+      selections: selections,
+      gameweek: selectedGameweek,
     });
   };
 
   return (
-    <SelectionContext.Provider value={selectedTeam}>
+    <SelectionContext.Provider value={selections}>
       <div className="flex flex-col gap-4 border-y-2 border-slate-100 py-4">
-        {groupedFixtures.map((date: any, idx: number) => (
+        {groupFixturesByDate(
+          fixtures.filter((f: Fixture) => f.event === selectedGameweek)
+        ).map((m: Matchday, idx: number) => (
           <ul key={idx} className="">
             <h2 className="text-md w-full rounded-full px-4 text-center font-semibold text-slate-800">
-              {format(new Date(date.date), "PPPP")}
+              {format(new Date(m.date), "PPPP")}
             </h2>
-            {date.fixtures.map((f: Fixture) => {
+            {m.fixtures.map((f: Fixture) => {
               return (
                 <li key={f.id} className="list-none">
                   {f.finished || f.started ? (

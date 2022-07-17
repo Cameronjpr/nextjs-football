@@ -18,6 +18,7 @@ const SignIn = ({ providers }: never) => {
                       className="flex place-items-center rounded-md border-2 border-slate-900 bg-white p-2 text-lg font-medium"
                     >
                       <button
+                        className="h-full w-full"
                         onClick={() =>
                           signIn(provider.id, {
                             callbackUrl: process.env.NEXT_PUBLIC_VERCEL_URL

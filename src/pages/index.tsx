@@ -1,20 +1,13 @@
 import React, { useState, useEffect, createContext } from "react";
-import { GetStaticProps, GetStaticPropsContext } from "next";
+import { GetStaticPropsContext } from "next";
 import { createSSGHelpers } from "@trpc/react/ssg";
 import Layout from "../components/Layout/Layout";
-import { Matchday } from "../components/Fixture/Fixture.types";
 import { useSession } from "next-auth/react";
-import { groupFixturesByDate } from "../utils/fixtures";
 import { Status } from "../account/types";
 import FixtureList from "../components/FixtureList";
 import { Session } from "next-auth/core/types";
-import { finished, active } from "../data/__mocks/gameweekfixtures";
-import { richTeams } from "@/data/teams";
-import { Fixture } from "@/backend/router";
 import Head from "next/head";
 import superjson from "superjson";
-import { dehydrate, QueryClient, useQuery } from "react-query";
-import { fetchFixtures, useFixtures } from "@/hooks/useFixtures";
 import { appRouter } from "@/backend/router";
 import { trpc } from "@/utils/trpc";
 
@@ -39,23 +32,7 @@ const Home = () => {
     status,
   });
   const [selectedGameweek, setSelectedGameweek] = useState(1);
-  const [groupedFixtures, setGroupedFixtures] = useState<Matchday[]>([]);
   const [activeGameweek, setActiveGameweek] = useState(1);
-
-  useEffect(() => {
-    if (fixturesData.isLoading) return;
-
-    // console.log(fixturesData?.data);
-    if (fixturesData?.data?.length) {
-      setGroupedFixtures(
-        groupFixturesByDate(
-          fixturesData?.data?.filter(
-            (f: Fixture) => f.event === selectedGameweek
-          )
-        )
-      );
-    }
-  }, [fixturesData, selectedGameweek]);
 
   useEffect(() => {
     setUser({
@@ -123,8 +100,11 @@ const Home = () => {
               </ul>
             </section>
             <main className="">
-              {groupedFixtures?.length && (
-                <FixtureList groupedFixtures={groupedFixtures} />
+              {fixturesData?.isSuccess && (
+                <FixtureList
+                  fixtures={fixturesData?.data}
+                  selectedGameweek={selectedGameweek}
+                />
               )}
             </main>
           </div>
@@ -148,7 +128,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     props: {
       trpcState: ssg.dehydrate(),
     },
-    revalidate: 1,
+    revalidate: 60,
   };
 }
 

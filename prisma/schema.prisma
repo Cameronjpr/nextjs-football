@@ -26,6 +26,14 @@ model Comment {
   comment String
 }
 
+model Selection {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  gameweek Int
+  team     Int
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   String? @db.ObjectId
+}
+
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
@@ -34,13 +42,15 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   selection     Int?
+  selections    Int[]     @default([])
   score         Int       @default(0)
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
 
-  Post Post[]
+  Post      Post[]
+  Selection Selection[]
   @@map("users")
 }
 
@@ -79,62 +89,3 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
-//   @@unique([identifier, token])
-//   @@map("verificationtokens")
-// }
-
-// generator client {
-//   provider = "prisma-client-js"
-// }
-
-// datasource db {
-//   provider = "mongodb"
-//   url      = env("DATABASE_URL")
-// }
-
-// model User {
-//   id            String    @id @default(cuid())
-//   name          String?
-//   email         String    @unique
-//   createdAt     DateTime  @default(now()) @map("created_at")
-//   updatedAt     DateTime  @updatedAt @map("updated_at")
-//   selection     String?
-//   selections    Selection[]
-//   score         Int?
-//   emailVerified DateTime? @map("email_verified")
-//   image         String?
-//   username      String?
-//   calculated    Boolean   @default(false)
-//   accounts      Account[]
-//   sessions      Session[]
-
-//   @@map("users")
-// }
-
-// model Selection {
-//   id            String    @id @default(cuid())
-//   userId        String
-//   user          User      @relation(fields: [userId], references: [id])
-//   gameweek      Int
-//   selection     Team      @relation(fields: [selectionId], references: [id])
-//   selectionId   String
-//   calculated    Boolean   @default(false)
-//   result        Result?
-// }
-
-// enum Result {
-//   WIN
-//   LOSS
-//   DRAW
-// }
-
-// model Team {
-//   id             String  @id @default(cuid())
-//   name           String
-//   shortName      String
-//   primaryColor   String?
-//   secondaryColor String?
-//   selections     Selection[]
-//   order          Int?
-// }

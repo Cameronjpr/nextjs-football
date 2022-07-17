@@ -5,6 +5,13 @@ import prisma from "lib/prisma";
 import { useQuery } from "react-query";
 import { z } from "zod";
 
+// const SelectionSchema = z.object({
+//   id: z.string(),
+//   gameweek: z.number(),
+//   team: z.number(),
+// })
+// const SelectionsSchema = z.array(SelectionSchema)
+
 export type Player = z.infer<typeof PlayerSchema>;
 const PlayerSchema = z.object({
   id: z.string(),
@@ -12,7 +19,9 @@ const PlayerSchema = z.object({
   username: z.string().nullable(),
   score: z.number(),
   selection: z.number().nullable(),
+  selections: z.array(z.number())
 });
+
 
 export type Team = z.infer<typeof TeamSchema>
 const TeamSchema = z.object({
@@ -111,24 +120,46 @@ export const appRouter = trpc
       return { success: true, user };
     },
   })
-  .mutation("makeSelection", {
+  .mutation("makeGameweekSpecificSelection", {
     input: z.object({
       selection: z.number(),
+      gameweek: z.number(),
+      selections: z.array(z.number()),
       email: z.string(),
     }),
     async resolve({ input }) {
+      let newSelections: number[] = []
+
+      console.log('input selections')
+      console.log(input.selections)
+
+      for (let i = 0; i < 38; i++) {
+        
+        if (i+1 === input.gameweek) {
+          console.log("User selected this week, changing value")
+          newSelections[i] = input.selection
+        } else {
+          console.log(input.selections[i])
+          newSelections[i] = input.selections[i]
+        }
+      }
+
+      console.log('new selections')
+      console.log(newSelections)
+
       const selectionSaved = await prisma.user.update({
         where: {
-          email: input.email,
+          email: input.email
         },
         data: {
-          selection: input.selection,
+          selections: {
+            set: newSelections
+          }
         },
-      });
-
-      return { success: true, user: selectionSaved };
-    },
-  });
+        // select: 
+      })
+      return selectionSaved;
+    }});
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

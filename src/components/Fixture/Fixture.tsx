@@ -7,8 +7,8 @@ import { SelectionContext } from "../FixtureList";
 import { TeamColorTab } from "../Result/Result";
 
 const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
-  const { id, teams, started, finished, kickoff_time } = fixture;
-  const selection = useContext(SelectionContext);
+  const { id, teams, started, finished, kickoff_time, event } = fixture;
+  const selections = useContext(SelectionContext);
   return (
     <div
       className={classNames(
@@ -27,7 +27,9 @@ const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
               onClick={() => !isLoading && handleSelection(t.basic_id)}
               className={classNames(
                 "my-2 flex w-36 items-center rounded-md border sm:w-60",
-                t.basic_id === selection ? "bg-yellow-300" : "",
+                selections?.length && t.basic_id === selections[event - 1]
+                  ? "bg-yellow-300"
+                  : "",
                 !isLoading
                   ? "click:scale-95 hover:scale-105 hover:bg-blue-100"
                   : "",
