@@ -9,6 +9,7 @@ import { TeamColorTab } from "../Result/Result";
 const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
   const { id, teams, started, finished, kickoff_time, event } = fixture;
   const selections = useContext(SelectionContext);
+
   return (
     <div
       className={classNames(
@@ -21,27 +22,43 @@ const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
           <time>{format(new Date(kickoff_time), "HH:mm")}</time>
         </h2>
         {teams.map((t, idx) => {
+          const selectionOccurrences = selections.filter(
+            (s) => s === t.basic_id
+          );
+
+          console.log(selectionOccurrences.length);
           return (
             <button
               key={idx}
-              onClick={() => !isLoading && handleSelection(t.basic_id)}
+              onClick={() =>
+                !isLoading &&
+                selectionOccurrences.length < 2 &&
+                handleSelection(t.basic_id)
+              }
               className={classNames(
                 "my-2 flex w-36 items-center rounded-md border sm:w-60",
                 selections?.length && t.basic_id === selections[event - 1]
                   ? "bg-yellow-300"
                   : "",
-                !isLoading
+                !isLoading && selectionOccurrences.length < 2
                   ? "click:scale-95 hover:scale-105 hover:bg-blue-100"
                   : "",
                 t.isHome
                   ? "order-first justify-start"
-                  : "order-last justify-end"
+                  : "order-last justify-end",
+                selectionOccurrences.length >= 2
+                  ? "cursor-default bg-slate-300 text-slate-700"
+                  : ""
               )}
               style={{
                 borderColor: t.primaryColor,
               }}
             >
-              <TeamColorTab color={t.primaryColor} isHome={t.isHome} />
+              <TeamColorTab
+                color={t.primaryColor}
+                isHome={t.isHome}
+                selectionOccurrences={selectionOccurrences.length}
+              />
               <span className="hidden sm:inline">{t.name}</span>
               <span className="sm:hidden">{t.shortName}</span>
             </button>

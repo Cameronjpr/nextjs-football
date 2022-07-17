@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import classNames from "classnames";
 import { FixtureOutcomes, FixtureProps } from "../Fixture/Fixture.types";
+import { SelectionContext } from "../FixtureList";
 
 const ResultCard = ({ fixture }: FixtureProps) => {
   const { id, teams, started, finished } = fixture;
-
+  const selections = useContext(SelectionContext);
   return (
     <div className="w-full">
       <div className="flex h-14 flex-row place-content-stretch justify-between gap-2 text-center">
@@ -21,23 +22,32 @@ const ResultCard = ({ fixture }: FixtureProps) => {
           ))}
         </div>
         {teams.map((t, idx) => {
+          const selectionOccurrences = selections.filter(
+            (s) => s === t.basic_id
+          );
           return (
-            <div
-              key={idx}
-              className={classNames(
-                "my-2 flex w-36 items-center rounded-md border border-slate-200 text-slate-700 sm:w-60",
-                t.isHome
-                  ? "order-first justify-start"
-                  : "order-last justify-end"
-              )}
-              style={{
-                borderColor: t.primaryColor,
-              }}
-            >
-              <TeamColorTab color={t.primaryColor} isHome={t.isHome} />
-              <span className="hidden sm:inline">{t.name}</span>
-              <span className="sm:hidden">{t.shortName}</span>
-            </div>
+            <>
+              <div
+                key={idx}
+                className={classNames(
+                  "my-2 flex w-36 items-center rounded-md border border-slate-200 text-slate-700 sm:w-60",
+                  t.isHome
+                    ? "order-first justify-start"
+                    : "order-last justify-end"
+                )}
+                style={{
+                  borderColor: t.primaryColor,
+                }}
+              >
+                <TeamColorTab
+                  color={t.primaryColor}
+                  isHome={t.isHome}
+                  selectionOccurrences={selectionOccurrences.length}
+                />
+                <span className="hidden sm:inline">{t.name}</span>
+                <span className="sm:hidden">{t.shortName}</span>
+              </div>
+            </>
           );
         })}
       </div>
@@ -48,16 +58,27 @@ const ResultCard = ({ fixture }: FixtureProps) => {
 type TeamColorTabProps = {
   color: string;
   isHome: boolean;
+  selectionOccurrences: number;
 };
-export const TeamColorTab = ({ color, isHome }: TeamColorTabProps) => {
+export const TeamColorTab = ({
+  color,
+  isHome,
+  selectionOccurrences,
+}: TeamColorTabProps) => {
   return (
     <div
       style={{
         backgroundColor: color,
       }}
-      className={`h-full w-3 ${
-        isHome ? "mr-2 rounded-l-sm" : "order-last ml-2 rounded-r-sm"
-      }`}
+      className={classNames(
+        "h-full w-3 place-self-start",
+        selectionOccurrences
+          ? selectionOccurrences >= 2
+            ? "h-0"
+            : "h-1/2"
+          : "",
+        isHome ? "mr-2" : "order-last ml-2"
+      )}
     ></div>
   );
 };

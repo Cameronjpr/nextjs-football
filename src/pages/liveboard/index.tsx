@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
 import classNames from "classnames";
 import { trpc } from "@/utils/trpc";
-import { teams } from "../../data/teams";
+import { richTeams, teams } from "../../data/teams";
 import { Player } from "@/backend/router";
 import { User } from "@prisma/client";
 import Head from "next/head";
@@ -49,20 +49,27 @@ const Leaderboard = () => {
               data?.success &&
               data.users
                 .sort((a: User, b: User) => (b.score ?? 0) - (a.score ?? 0))
-                .map(({ name, username, selection, score }: User, idx) => (
-                  <tr
-                    key={idx}
-                    className={classNames(
-                      idx ? "bg-white" : "bg-yellow-300",
-                      "h-12 rounded-sm border-b-4 border-teal-800/5"
-                    )}
-                  >
-                    <td className="w-10 pl-3">{idx + 1}</td>
-                    <td className="font-semibold">{username ?? name}</td>
-                    <td>{teams[Number(selection) - 1] ?? ""}</td>
-                    <td>{score}</td>
-                  </tr>
-                ))}
+                .map(
+                  (
+                    { name, username, selection, selections, score }: User,
+                    idx
+                  ) => (
+                    <tr
+                      key={idx}
+                      className={classNames(
+                        idx ? "bg-white" : "bg-yellow-300",
+                        "h-12 rounded-sm border-b-4 border-teal-800/5"
+                      )}
+                    >
+                      <td className="w-10 pl-3">{idx + 1}</td>
+                      <td className="font-semibold">{username ?? name}</td>
+                      <td>
+                        {richTeams[Number(selections[0])].shortName ?? ""}
+                      </td>
+                      <td>{score}</td>
+                    </tr>
+                  )
+                )}
           </tbody>
         </table>
       </main>
