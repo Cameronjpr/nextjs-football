@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 import {
   Fixture,
-  Gameweek,
   Matchday,
 } from "../components/Fixture/Fixture.types";
 
@@ -23,14 +22,6 @@ export const groupFixturesByDate = (fixtures: Fixture[]): Matchday[] => {
   });
 
   return dates;
-};
-
-export const getSelectionFixtureInGameweek = (gw: any, selection: number) => {
-  const fixture = gw.filter((f: any) => {
-    return f.team_a == selection || f.team_h == selection;
-  });
-
-  return fixture;
 };
 
 export const getResultFromFixture = (f: any, selection: number) => {

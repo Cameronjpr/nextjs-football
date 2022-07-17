@@ -1,11 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
-import { GetStaticProps } from "next";
+import { GetStaticProps, GetStaticPropsContext } from "next";
+import { createSSGHelpers } from "@trpc/react/ssg";
 import Layout from "../components/Layout/Layout";
-import {
-  Fixture,
-  Gameweek,
-  Matchday,
-} from "../components/Fixture/Fixture.types";
+import { Matchday } from "../components/Fixture/Fixture.types";
 import { useSession } from "next-auth/react";
 import { groupFixturesByDate } from "../utils/fixtures";
 import { Status } from "../account/types";
@@ -13,9 +10,13 @@ import FixtureList from "../components/FixtureList";
 import { Session } from "next-auth/core/types";
 import { finished, active } from "../data/__mocks/gameweekfixtures";
 import { richTeams } from "@/data/teams";
+import { Fixture } from "@/backend/router";
 import Head from "next/head";
+import superjson from "superjson";
 import { dehydrate, QueryClient, useQuery } from "react-query";
 import { fetchFixtures, useFixtures } from "@/hooks/useFixtures";
+import { appRouter } from "@/backend/router";
+import { trpc } from "@/utils/trpc";
 
 type User = {
   session: Session | null;
@@ -27,60 +28,34 @@ export const UserContext = createContext<User>({
   status: Status.Unauthenticated,
 });
 
-export const CurrentGameweekContext = createContext<Gameweek>({
-  id: 1,
-  fixtures: [],
-});
+export const ActiveGameweekContext = createContext<Number>(1);
 
 const Home = () => {
-  const { error, isLoading, data } = useFixtures();
+  const fixturesData = trpc.useQuery(["getFixtures"]);
 
-  console.log(data);
   const { data: session, status } = useSession();
-  const [selectedGameweek, setSelectedGameweek] = useState(1);
-  const [groupedFixtures, setGroupedFixtures] = useState<Matchday[]>([]);
-  const [currentGameweek, setCurrentGameweek] = useState<Gameweek>({
-    id: selectedGameweek,
-    fixtures: [],
-  });
-
-  if (data?.data) {
-    data.data[0] = finished.data[0];
-    data.data[1] = active.data[1];
-  }
-
-  useEffect(() => {
-    const fixtures = data?.map((f: any, idx: number) => {
-      return {
-        ...f,
-        teams: [
-          {
-            basic_id: f.team_h - 1,
-            score: f.team_h_score,
-            ...richTeams[f.team_h - 1],
-            isHome: true,
-          },
-          {
-            basic_id: f.team_a - 1,
-            score: f.team_a_score,
-            ...richTeams[f.team_a - 1],
-            isHome: false,
-          },
-        ],
-      };
-    });
-
-    setGroupedFixtures(
-      groupFixturesByDate(
-        fixtures.filter((f: Fixture) => f.event === selectedGameweek)
-      )
-    );
-  }, [data, selectedGameweek]);
-
   const [user, setUser] = useState<User>({
     session,
     status,
   });
+  const [selectedGameweek, setSelectedGameweek] = useState(1);
+  const [groupedFixtures, setGroupedFixtures] = useState<Matchday[]>([]);
+  const [activeGameweek, setActiveGameweek] = useState(1);
+
+  useEffect(() => {
+    if (fixturesData.isLoading) return;
+
+    // console.log(fixturesData?.data);
+    if (fixturesData?.data?.length) {
+      setGroupedFixtures(
+        groupFixturesByDate(
+          fixturesData?.data?.filter(
+            (f: Fixture) => f.event === selectedGameweek
+          )
+        )
+      );
+    }
+  }, [fixturesData, selectedGameweek]);
 
   useEffect(() => {
     setUser({
@@ -93,7 +68,7 @@ const Home = () => {
 
   return (
     <UserContext.Provider value={user}>
-      <CurrentGameweekContext.Provider value={currentGameweek}>
+      <ActiveGameweekContext.Provider value={activeGameweek}>
         <Head>
           <title>Fixtures - Soccer Survivor</title>
           <link
@@ -154,24 +129,42 @@ const Home = () => {
             </main>
           </div>
         </Layout>
-      </CurrentGameweekContext.Provider>
+      </ActiveGameweekContext.Provider>
     </UserContext.Provider>
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  const queryClient = new QueryClient();
+export async function getStaticProps(context: GetStaticPropsContext) {
+  const ssg = await createSSGHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: superjson, // optional - adds superjson serialization
+  });
 
-  await queryClient.prefetchQuery(["fixtures"], () => fetchFixtures());
-
-  console.log(dehydrate(queryClient));
+  // prefetch `post.byId`
+  await ssg.fetchQuery("getFixtures");
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      trpcState: ssg.dehydrate(),
     },
-    revalidate: 60 * 5,
+    revalidate: 1,
   };
-};
+}
+
+// export const getStaticProps: GetStaticProps = async () => {
+//   const queryClient = new QueryClient();
+
+//   await queryClient.prefetchQuery(["fixtures"], () => fetchFixtures());
+
+//   console.log(dehydrate(queryClient));
+
+//   return {
+//     props: {
+//       dehydratedState: dehydrate(queryClient),
+//     },
+//     revalidate: 60 * 5,
+//   };
+// };
 
 export default Home;

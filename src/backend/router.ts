@@ -1,3 +1,5 @@
+import { richTeams } from "@/data/teams";
+import { active, finished } from "@/data/__mocks/gameweekfixtures";
 import * as trpc from "@trpc/server";
 import prisma from "lib/prisma";
 import { useQuery } from "react-query";
@@ -12,8 +14,76 @@ const PlayerSchema = z.object({
   selection: z.number().nullable(),
 });
 
+export type Team = z.infer<typeof TeamSchema>
+const TeamSchema = z.object({
+  basic_id: z.number(),
+  id: z.string(),
+  isHome: z.boolean(),
+  name: z.string(),
+  order: z.number(),
+  score: z.number(),
+  primaryColor: z.string(),
+  secondaryColor: z.string().nullable(),
+  shortName: z.string()
+})
+
+export type Fixtures = z.infer<typeof FixturesSchema>
+export type Fixture = z.infer<typeof FixtureSchema>
+const FixtureSchema = z.object({
+      code: z.number(),
+      event: z.number(),
+      finished: z.boolean(),
+      finished_provisional: z.boolean(),
+      id: z.number(),
+      kickoff_time: z.string(),
+      pulse_id: z.number(),
+      started: z.boolean(),
+      stats: z.any(),
+      team_a: z.number(),
+      team_a_difficulty: z.number(),
+      team_a_score: z.number().nullable(),
+      team_h: z.number(),
+      team_h_difficulty: z.number(),
+      team_h_score: z.number().nullable(),
+      teams: z.array(TeamSchema)
+     })
+const FixturesSchema = z.array(FixtureSchema)
+
 export const appRouter = trpc
   .router()
+  .query("getFixtures", {
+    async resolve() {
+      const res = await fetch('https://fantasy.premierleague.com/api/fixtures/')
+      const fixtures = await res.json() as Fixtures
+
+      const formattedFixtures = fixtures.map((f: Fixture, idx: number) => {
+      if (idx === 0) {
+        f = {...f, ...finished.data[0]}
+      }
+      if (idx === 1) {
+        f = {...f, ...active.data[1]};
+      }
+      return {
+        ...f,
+        teams: [
+          {
+            basic_id: f.team_h - 1,
+            score: f.team_h_score,
+            ...richTeams[f.team_h - 1],
+            isHome: true,
+          },
+          {
+            basic_id: f.team_a - 1,
+            score: f.team_a_score,
+            ...richTeams[f.team_a - 1],
+            isHome: false,
+          },
+        ],
+      };
+    });
+      return formattedFixtures as Fixtures
+    }
+  })
   .query("getUsers", {
     async resolve() {
       try {

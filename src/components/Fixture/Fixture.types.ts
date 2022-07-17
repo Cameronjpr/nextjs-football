@@ -10,11 +10,6 @@ export type Matchday = {
   fixtures: Fixture[];
 };
 
-export type Gameweek = {
-  id: number;
-  fixtures: Fixture[];
-};
-
 export type Participant = {
   basic_id: number;
   id: string;
