@@ -17,7 +17,7 @@ const PlayerSchema = z.object({
 export type Team = z.infer<typeof TeamSchema>
 const TeamSchema = z.object({
   basic_id: z.number(),
-  id: z.string(),
+  id: z.number(),
   isHome: z.boolean(),
   name: z.string(),
   order: z.number(),

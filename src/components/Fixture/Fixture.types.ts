@@ -4,6 +4,8 @@ I feel like this file is a GIANT fucking mess
 
 */
 
+import { Fixture } from "@/backend/router";
+
 export type Matchday = {
   date: string;
   gameweekId: number;
@@ -20,15 +22,6 @@ export type Participant = {
   primaryColor: string;
   secondaryColor: string;
   selectedBy: number;
-};
-
-export type Fixture = {
-  id: string;
-  event: number;
-  teams: Participant[];
-  started: boolean;
-  finished: boolean;
-  kickoff_time: string;
 };
 
 export type FixtureProps = {

@@ -4,10 +4,10 @@ import router from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Status } from "../../account/types";
 import FixtureCard from "../Fixture/Fixture";
-import { Fixture } from "../Fixture/Fixture.types";
 import ResultCard from "../Result/Result";
 import { UserContext } from "../../pages";
 import { trpc } from "@/utils/trpc";
+import { Fixture } from "@/backend/router";
 
 export const SelectionContext = createContext<null | undefined | number>(
   undefined

@@ -1,6 +1,6 @@
+import { Fixture } from "@/backend/router";
 import { format } from "date-fns";
 import {
-  Fixture,
   Matchday,
 } from "../components/Fixture/Fixture.types";
 

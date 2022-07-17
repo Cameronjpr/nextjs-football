@@ -1,5 +1,5 @@
 export type Team = {
-  id: string;
+  id: number;
   name: String;
   shortName: String;
   primaryColor: String;
@@ -9,7 +9,7 @@ export type Team = {
 
 export const richTeams: Team[] = [
   {
-    id: "cl4u3efb900222vydszdw07bw",
+    id: 1,
     name: "Arsenal",
     shortName: "Arsenal",
     primaryColor: "#EF0107",
@@ -17,7 +17,7 @@ export const richTeams: Team[] = [
     order: 1,
   },
   {
-    id: "cl4u3efb900242vydng688n5j",
+    id: 2,
     name: "Aston Villa",
     shortName: "Aston Villa",
     primaryColor: "#670E36",
@@ -25,7 +25,7 @@ export const richTeams: Team[] = [
     order: 2,
   },
   {
-    id: "cl4u3efba00302vydej8lr0zs",
+    id: 3,
     name: "AFC Bournemouth",
     shortName: "Bournemouth",
     primaryColor: "#DA291C",
@@ -33,7 +33,7 @@ export const richTeams: Team[] = [
     order: 3,
   },
   {
-    id: "cl4u3efba00262vyddpd8h09d",
+    id: 4,
     name: "Brentford",
     shortName: "Brentford",
     primaryColor: "#fd0000",
@@ -41,7 +41,7 @@ export const richTeams: Team[] = [
     order: 4,
   },
   {
-    id: "cl4u3efba00282vydxg5tstnb",
+    id: 5,
     name: "Brighton",
     shortName: "Brighton",
     primaryColor: "#0057B8",
@@ -49,7 +49,7 @@ export const richTeams: Team[] = [
     order: 5,
   },
   {
-    id: "cl4u3efba00322vydw29j1lys",
+    id: 6,
     name: "Chelsea",
     shortName: "Chelsea",
     primaryColor: "#034694",
@@ -57,7 +57,7 @@ export const richTeams: Team[] = [
     order: 6,
   },
   {
-    id: "cl4u3efba00342vydeueysrew",
+    id: 7,
     name: "Crystal Palace",
     shortName: "Crystal Palace",
     primaryColor: "#1B458F",
@@ -65,7 +65,7 @@ export const richTeams: Team[] = [
     order: 7,
   },
   {
-    id: "cl4u3efba00362vyds2iohe8z",
+    id: 8,
     name: "Everton",
     shortName: "Everton",
     primaryColor: "#003399",
@@ -73,7 +73,7 @@ export const richTeams: Team[] = [
     order: 8,
   },
   {
-    id: "cl4u3efbb00502vyd1id2rsvn",
+    id: 9,
     name: "Fulham",
     shortName: "Fulham",
     primaryColor: "#000000",
@@ -81,7 +81,7 @@ export const richTeams: Team[] = [
     order: 9,
   },
   {
-    id: "cl4u3efba00382vyd48bx9bfp",
+    id: 10,
     name: "Leicester City",
     shortName: "Leicester",
     primaryColor: "#003090",
@@ -89,7 +89,7 @@ export const richTeams: Team[] = [
     order: 10,
   },
   {
-    id: "cl4u3efbb00402vydn504eper",
+    id: 11,
     name: "Leeds United",
     shortName: "Leeds",
     primaryColor: "#FFCD00",
@@ -97,7 +97,7 @@ export const richTeams: Team[] = [
     order: 11,
   },
   {
-    id: "cl4u3efbb00422vydbr2tsytq",
+    id: 12,
     name: "Liverpool",
     shortName: "Liverpool",
     primaryColor: "#C8102E",
@@ -105,7 +105,7 @@ export const richTeams: Team[] = [
     order: 12,
   },
   {
-    id: "cl4u3efbb00442vyd5ds5z84y",
+    id: 13,
     name: "Manchester City",
     shortName: "Man City",
     primaryColor: "#6CABDD",
@@ -113,7 +113,7 @@ export const richTeams: Team[] = [
     order: 13,
   },
   {
-    id: "cl4u3efbb00462vydjgb3g3tp",
+    id: 14,
     name: "Manchester United",
     shortName: "Man Utd",
     primaryColor: "#DA291C",
@@ -121,7 +121,7 @@ export const richTeams: Team[] = [
     order: 14,
   },
   {
-    id: "cl4u3efbb00482vyd2rmprw6o",
+    id: 15,
     name: "Newcastle United",
     shortName: "Newcastle",
     primaryColor: "#241F20",
@@ -129,7 +129,7 @@ export const richTeams: Team[] = [
     order: 15,
   },
   {
-    id: "cl4u3efbc00562vydz635fg7a",
+    id: 16,
     name: "Nottingham Forest",
     shortName: "Nottm Forest",
     primaryColor: "#DC0202",
@@ -137,7 +137,7 @@ export const richTeams: Team[] = [
     order: 16,
   },
   {
-    id: "cl4u3efbb00522vydp8rahtob",
+    id: 17,
     name: "Southampton",
     shortName: "Southampton",
     primaryColor: "#D71920",
@@ -145,7 +145,7 @@ export const richTeams: Team[] = [
     order: 17,
   },
   {
-    id: "cl4u3efbc00542vydx04lg4ij",
+    id: 18,
     name: "Tottenham Hotspur",
     shortName: "Tottenham",
     primaryColor: "#132257",
@@ -153,7 +153,7 @@ export const richTeams: Team[] = [
     order: 18,
   },
   {
-    id: "cl4u3efbc00582vydtp2u3p7p",
+    id: 19,
     name: "West Ham United",
     shortName: "West Ham",
     primaryColor: "#7A263A",
@@ -161,7 +161,7 @@ export const richTeams: Team[] = [
     order: 19,
   },
   {
-    id: "cl4u3efbc00602vyd7xbeblbx",
+    id: 20,
     name: "Wolverhampton Wanderers",
     shortName: "Wolves",
     primaryColor: "#FDB913",
