@@ -56,7 +56,7 @@ const Home = () => {
           />
         </Head>
         <Layout>
-          <h1 className="mb-2 text-4xl italic text-teal-900 underline">
+          <h1 className="mb-2 text-4xl italic text-emerald-900 underline">
             Soccer Survivor
           </h1>
           <h2 className="mb-10 text-sm italic text-slate-500">
@@ -64,10 +64,12 @@ const Home = () => {
           </h2>
           <div className="sm:w-xl flex w-full flex-col place-content-center">
             <section className="flex w-full place-content-between pb-2">
-              <ul className="text-md flex w-full flex-row place-content-between justify-between px-2">
+              <ul className="text-md flex w-full flex-row place-content-between justify-between">
                 <button
                   disabled={selectedGameweek <= 1}
-                  className={selectedGameweek <= 1 ? "text-slate-500" : ""}
+                  className={
+                    selectedGameweek <= 1 ? "w-20 text-slate-500" : "w-20 "
+                  }
                   onClick={() => setSelectedGameweek(selectedGameweek - 1)}
                 >
                   Previous
@@ -75,7 +77,7 @@ const Home = () => {
                 <label className="hidden" htmlFor="gameweek-select">
                   Select a gameweek
                 </label>
-                <select
+                {/* <select
                   name="gameweek"
                   id="gameweek-select"
                   className=""
@@ -89,10 +91,26 @@ const Home = () => {
                       Gameweek {gw}
                     </option>
                   ))}
-                </select>
+                </select> */}
+                <div>
+                  <h2 className="text-center text-xl font-bold text-emerald-800">
+                    Gameweek {selectedGameweek}
+                  </h2>
+                  {activeGameweek === selectedGameweek ? (
+                    <h3 className="w-full text-center text-sm italic text-red-700">
+                      Current gameweek
+                    </h3>
+                  ) : (
+                    <h3 className="w-full text-center text-sm italic text-red-700">
+                      Deadline in {5} days
+                    </h3>
+                  )}
+                </div>
                 <button
                   disabled={selectedGameweek > 37}
-                  className={selectedGameweek > 37 ? "text-slate-500" : ""}
+                  className={
+                    selectedGameweek > 37 ? "w-20 text-slate-500" : "w-20 "
+                  }
                   onClick={() => setSelectedGameweek(selectedGameweek + 1)}
                 >
                   Next
@@ -131,20 +149,5 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     revalidate: 60,
   };
 }
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   const queryClient = new QueryClient();
-
-//   await queryClient.prefetchQuery(["fixtures"], () => fetchFixtures());
-
-//   console.log(dehydrate(queryClient));
-
-//   return {
-//     props: {
-//       dehydratedState: dehydrate(queryClient),
-//     },
-//     revalidate: 60 * 5,
-//   };
-// };
 
 export default Home;

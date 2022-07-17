@@ -25,7 +25,7 @@ const Header = () => {
   );
 
   return (
-    <nav className="z-10 grid w-full grid-cols-3 place-content-between place-items-center rounded-xl bg-green-700/10 p-3 text-emerald-900">
+    <nav className="z-10 grid w-full grid-cols-3 place-content-between place-items-center rounded-xl border border-emerald-800 bg-green-700/10 p-3 text-emerald-900">
       <>
         <Link href="/">
           <a className="bold" data-active={isActive("/")}>

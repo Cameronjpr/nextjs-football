@@ -76,8 +76,8 @@ const FixtureList = ({
         {groupFixturesByDate(
           fixtures.filter((f: Fixture) => f.event === selectedGameweek)
         ).map((m: Matchday, idx: number) => (
-          <ul key={idx} className="">
-            <h2 className="text-md w-full rounded-full px-4 text-center font-semibold text-slate-800">
+          <ul key={idx} className="mb-1">
+            <h2 className="text-md mb-1 w-full rounded-full px-4 text-center font-medium text-slate-800 underline">
               {format(new Date(m.date), "PPPP")}
             </h2>
             {m.fixtures.map((f: Fixture) => {

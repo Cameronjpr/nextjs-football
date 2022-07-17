@@ -105,26 +105,6 @@ const Scoreboard = ({ teams, started, finished }: ScoreboardProps) => {
   );
 };
 
-type TeamColorTabProps = {
-  color: string;
-  isHome: boolean;
-  selectionOccurrences: number;
-};
-const TeamColorTab = ({
-  color,
-  isHome,
-  selectionOccurrences,
-}: TeamColorTabProps) => {
-  return (
-    <div
-      style={{
-        backgroundColor: color,
-      }}
-      className={classNames("h-3 w-3 place-self-start rounded-full p-1")}
-    ></div>
-  );
-};
-
 type SelectionOccurrenceIndicatorProps = {
   selectionOccurrences: number[];
   isHome: boolean;
@@ -143,12 +123,13 @@ const SelectionOccurrenceIndicator = ({
     )}
   >
     {selectionOccurrences.map((_o, idx) => (
-      <TeamColorTab
+      <div
         key={idx}
-        color={color}
-        isHome={isHome}
-        selectionOccurrences={selectionOccurrences.length}
-      />
+        style={{
+          backgroundColor: color,
+        }}
+        className={classNames("h-3 w-3 place-self-start rounded-full p-1")}
+      ></div>
     ))}
     <span className="sr-only">
       You have {2 - selectionOccurrences.length} seletions remaining for
