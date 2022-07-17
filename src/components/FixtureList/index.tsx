@@ -20,7 +20,6 @@ const FixtureList = ({
   fixtures: Fixture[];
   selectedGameweek: number;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [selections, setSelections] = useState<number[]>([]);
   const [error, setError] = useState("");
   const { data: session, status } = useSession();
@@ -30,13 +29,11 @@ const FixtureList = ({
     ["makeGameweekSpecificSelection"],
     {
       onSuccess: (res) => {
-        setIsLoading(false);
         console.log(res?.selections.slice(0, 5));
         setSelections(res?.selections);
       },
       onError: (data) => {
         setError(data.message);
-        setIsLoading(false);
       },
     }
   );
@@ -52,18 +49,21 @@ const FixtureList = ({
     setSelections(userInfo?.data?.user?.selections);
   }, [userInfo, selections]);
 
-  const handleTeamSelect = async (id: number) => {
+  const handleTeamSelect = async (id: number, deselect = false) => {
     if (status === Status.Unauthenticated) {
       router.push(encodeURI("/auth/signin"));
       return;
     }
-    setIsLoading(true);
 
     if (!session?.user?.email) return;
 
+    if (deselect) {
+      console.log("deselect!");
+    }
+
     makeGameweekSpecificSelection.mutate({
       email: session?.user?.email,
-      selection: id,
+      selection: deselect ? -1 : id,
       selections: selections,
       gameweek: selectedGameweek,
     });
@@ -85,13 +85,13 @@ const FixtureList = ({
                   {f.finished || f.started ? (
                     <ResultCard
                       fixture={f}
-                      isLoading={isLoading}
+                      isLoading={makeGameweekSpecificSelection.isLoading}
                       handleSelection={handleTeamSelect}
                     />
                   ) : (
                     <FixtureCard
                       fixture={f}
-                      isLoading={isLoading}
+                      isLoading={makeGameweekSpecificSelection.isLoading}
                       handleSelection={handleTeamSelect}
                     />
                   )}

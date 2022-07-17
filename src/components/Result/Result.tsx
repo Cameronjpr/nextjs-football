@@ -39,11 +39,21 @@ const ResultCard = ({ fixture }: FixtureProps) => {
                   borderColor: t.primaryColor,
                 }}
               >
-                <TeamColorTab
-                  color={t.primaryColor}
-                  isHome={t.isHome}
-                  selectionOccurrences={selectionOccurrences.length}
-                />
+                <div
+                  className={classNames(
+                    "space-between flex h-full flex-col gap-2 p-1",
+                    t.isHome ? "mr-2" : "order-last ml-2"
+                  )}
+                >
+                  {selectionOccurrences.map((o) => (
+                    <TeamColorTab
+                      key={o}
+                      color={t.primaryColor}
+                      isHome={t.isHome}
+                      selectionOccurrences={selectionOccurrences.length}
+                    />
+                  ))}
+                </div>
                 <span className="hidden sm:inline">{t.name}</span>
                 <span className="sm:hidden">{t.shortName}</span>
               </div>
@@ -70,15 +80,7 @@ export const TeamColorTab = ({
       style={{
         backgroundColor: color,
       }}
-      className={classNames(
-        "h-full w-3 place-self-start",
-        selectionOccurrences
-          ? selectionOccurrences >= 2
-            ? "h-0"
-            : "h-1/2"
-          : "",
-        isHome ? "mr-2" : "order-last ml-2"
-      )}
+      className={classNames("h-3 w-3 place-self-start rounded-full p-1")}
     ></div>
   );
 };

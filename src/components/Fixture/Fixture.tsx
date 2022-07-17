@@ -32,8 +32,7 @@ const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
               key={idx}
               onClick={() =>
                 !isLoading &&
-                selectionOccurrences.length < 2 &&
-                handleSelection(t.basic_id)
+                handleSelection(t.basic_id, selectionOccurrences.length >= 2)
               }
               className={classNames(
                 "my-2 flex w-36 items-center rounded-md border sm:w-60",
@@ -47,20 +46,30 @@ const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
                   ? "order-first justify-start"
                   : "order-last justify-end",
                 selectionOccurrences.length >= 2
-                  ? "cursor-default bg-slate-300 text-slate-700"
+                  ? "bg-slate-300 text-slate-700"
                   : ""
               )}
               style={{
                 borderColor: t.primaryColor,
               }}
             >
-              <TeamColorTab
-                color={t.primaryColor}
-                isHome={t.isHome}
-                selectionOccurrences={selectionOccurrences.length}
-              />
               <span className="hidden sm:inline">{t.name}</span>
               <span className="sm:hidden">{t.shortName}</span>
+              <div
+                className={classNames(
+                  "space-between flex h-full flex-col gap-2 p-1",
+                  t.isHome ? "order-first mr-2" : "order-last ml-2"
+                )}
+              >
+                {selectionOccurrences.map((o) => (
+                  <TeamColorTab
+                    key={o}
+                    color={t.primaryColor}
+                    isHome={t.isHome}
+                    selectionOccurrences={selectionOccurrences.length}
+                  />
+                ))}
+              </div>
             </button>
           );
         })}

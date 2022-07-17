@@ -28,7 +28,7 @@ export type FixtureProps = {
   fixture: Fixture;
   selectedTeam?: string;
   isLoading: boolean;
-  handleSelection: (id: number) => void;
+  handleSelection: (id: number, deselect: boolean) => void;
 };
 
 export type FixtureParticipantProps = {

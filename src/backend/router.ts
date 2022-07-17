@@ -130,22 +130,14 @@ export const appRouter = trpc
     async resolve({ input }) {
       let newSelections: number[] = []
 
-      console.log('input selections')
-      console.log(input.selections)
-
-      for (let i = 0; i < 38; i++) {
-        
+      for (let i = 0; i < 38; i++) {        
         if (i+1 === input.gameweek) {
-          console.log("User selected this week, changing value")
           newSelections[i] = input.selection
         } else {
           console.log(input.selections[i])
           newSelections[i] = input.selections[i]
         }
       }
-
-      console.log('new selections')
-      console.log(newSelections)
 
       const selectionSaved = await prisma.user.update({
         where: {
@@ -156,7 +148,6 @@ export const appRouter = trpc
             set: newSelections
           }
         },
-        // select: 
       })
       return selectionSaved;
     }});
