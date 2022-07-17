@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../components/Layout/Layout";
-import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { Status } from "../../account/types";
 import { useRouter } from "next/router";
@@ -106,12 +105,7 @@ const Profile = ({ user }: { user: User }) => {
       </Head>
       <div className="flex w-full flex-col place-content-center">
         <main className="">
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="flex w-full flex-col gap-1"
-          >
+          <div className="flex w-full flex-col gap-1">
             <div className="flex w-full place-content-between rounded-md bg-slate-100 p-5">
               <>
                 {/* Refactor these two sections, they're almost identical */}
@@ -147,7 +141,7 @@ const Profile = ({ user }: { user: User }) => {
                 </p>
               )}
             </section>
-          </motion.div>
+          </div>
         </main>
       </div>
     </Layout>
