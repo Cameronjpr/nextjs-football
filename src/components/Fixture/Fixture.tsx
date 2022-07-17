@@ -5,7 +5,6 @@ import React, { useContext } from "react";
 import { Team } from "@/backend/router";
 
 import { SelectionContext } from "../FixtureList";
-import { TeamColorTab } from "../Result/Result";
 import { FixtureProps } from "./Fixture.types";
 
 const FixtureCard = ({ fixture, handleSelection, isLoading }: FixtureProps) => {
@@ -103,6 +102,26 @@ const Scoreboard = ({ teams, started, finished }: ScoreboardProps) => {
         </span>
       ))}
     </div>
+  );
+};
+
+type TeamColorTabProps = {
+  color: string;
+  isHome: boolean;
+  selectionOccurrences: number;
+};
+const TeamColorTab = ({
+  color,
+  isHome,
+  selectionOccurrences,
+}: TeamColorTabProps) => {
+  return (
+    <div
+      style={{
+        backgroundColor: color,
+      }}
+      className={classNames("h-3 w-3 place-self-start rounded-full p-1")}
+    ></div>
   );
 };
 
