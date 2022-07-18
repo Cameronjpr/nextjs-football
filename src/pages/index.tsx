@@ -10,6 +10,7 @@ import Head from "next/head";
 import superjson from "superjson";
 import { appRouter } from "@/backend/router";
 import { trpc } from "@/utils/trpc";
+import { formatDistance, parseJSON } from "date-fns";
 
 type User = {
   session: Session | null;
@@ -33,6 +34,24 @@ const Home = () => {
   });
   const [selectedGameweek, setSelectedGameweek] = useState(1);
   const [activeGameweek, setActiveGameweek] = useState(1);
+  const [daysUntilDeadline, setDaysUntilDeadline] = useState("");
+
+  useEffect(() => {
+    const daysUntilDeadline = (activeGameweek: number) => {
+      const now = new Date();
+      const fixtures = fixturesData?.data;
+      // ALERT: What about the last gameweek of the season!!!! Don't want to get the 39th week
+      const firstGameOfNextGameweek = fixtures?.find(
+        (f) => f.event === selectedGameweek + 1
+      );
+      if (now === undefined || firstGameOfNextGameweek === undefined) return "";
+      return formatDistance(
+        now,
+        parseJSON(firstGameOfNextGameweek?.kickoff_time ?? "")
+      );
+    };
+    setDaysUntilDeadline(daysUntilDeadline(selectedGameweek));
+  }, [selectedGameweek, fixturesData]);
 
   useEffect(() => {
     setUser({
@@ -97,12 +116,12 @@ const Home = () => {
                     Gameweek {selectedGameweek}
                   </h2>
                   {activeGameweek === selectedGameweek ? (
-                    <h3 className="w-full text-center text-sm italic text-red-700">
-                      Current gameweek
+                    <h3 className="w-full px-8 text-center text-sm italic text-red-700">
+                      Active gameweek. Changes are locked.
                     </h3>
                   ) : (
                     <h3 className="w-full text-center text-sm italic text-red-700">
-                      Deadline in {5} days
+                      Deadline in {daysUntilDeadline}
                     </h3>
                   )}
                 </div>
@@ -121,6 +140,7 @@ const Home = () => {
               {fixturesData?.isSuccess && (
                 <FixtureList
                   fixtures={fixturesData?.data}
+                  activeGameeweek={activeGameweek}
                   selectedGameweek={selectedGameweek}
                 />
               )}

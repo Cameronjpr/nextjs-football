@@ -24,8 +24,9 @@ export type Participant = {
   selectedBy: number;
 };
 
-export type FixtureProps = {
+export type FixtureCardProps = {
   fixture: Fixture;
+  isPartOfActiveGameweek: boolean;
   selectedTeam?: string;
   isLoading: boolean;
   handleSelection: (id: number, deselect: boolean) => void;

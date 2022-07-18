@@ -25,7 +25,7 @@ const Header = () => {
   );
 
   return (
-    <nav className="z-10 grid w-full grid-cols-3 place-content-between place-items-center rounded-xl border border-emerald-800 bg-green-700/10 p-3 text-emerald-900">
+    <nav className="z-10 grid w-full grid-cols-4 place-content-around place-items-center rounded-xl border border-emerald-800 bg-green-700/10 p-3 text-sm text-emerald-900">
       <>
         <Link href="/">
           <a className="bold" data-active={isActive("/")}>
@@ -37,11 +37,11 @@ const Header = () => {
             Leaderboard
           </a>
         </Link>
-        {/* {session && (
-            <Link href="/profile">
-            <a data-active={isActive('/profile')}>Account</a>
-            </Link>
-          )} */}
+        {session && (
+          <Link href="/profile">
+            <a data-active={isActive("/profile")}>Profile</a>
+          </Link>
+        )}
         <div>{status !== "loading" && <>{Login}</>}</div>
       </>
     </nav>
