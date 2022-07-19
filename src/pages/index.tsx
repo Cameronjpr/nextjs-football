@@ -11,6 +11,7 @@ import superjson from "superjson";
 import { appRouter } from "@/backend/router";
 import { trpc } from "@/utils/trpc";
 import { formatDistance, parseJSON } from "date-fns";
+import classNames from "classnames";
 
 type User = {
   session: Session | null;
@@ -60,7 +61,7 @@ const Home = () => {
     });
   }, [session, status]);
 
-  const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1);
+  // const gameweeks = Array.from({ length: 38 }, (v, k) => k + 1);
 
   return (
     <UserContext.Provider value={user}>
@@ -75,20 +76,20 @@ const Home = () => {
           />
         </Head>
         <Layout>
-          <h1 className="mb-2 text-4xl italic text-emerald-900 underline">
+          <h1 className="mt-10 w-full rounded-md bg-orange-100 p-2 text-center font-rubik text-5xl italic text-orange-600 underline underline-offset-2">
             Soccer Survivor
           </h1>
-          <h2 className="mb-10 text-sm italic text-slate-500">
-            Premier League 2022/2023 season
-          </h2>
           <div className="sm:w-xl flex w-full flex-col place-content-center">
             <section className="flex w-full place-content-between pb-2">
               <ul className="text-md flex w-full flex-row place-content-between justify-between">
                 <button
                   disabled={selectedGameweek <= 1}
-                  className={
-                    selectedGameweek <= 1 ? "w-20 text-slate-500" : "w-20 "
-                  }
+                  className={classNames(
+                    "rounded-md p-3",
+                    selectedGameweek <= 1
+                      ? "w-20 bg-slate-100 text-slate-500"
+                      : "w-20 "
+                  )}
                   onClick={() => setSelectedGameweek(selectedGameweek - 1)}
                 >
                   Previous
@@ -117,7 +118,7 @@ const Home = () => {
                   </h2>
                   {activeGameweek === selectedGameweek ? (
                     <h3 className="w-full px-8 text-center text-sm italic text-red-700">
-                      Active gameweek. Changes are locked.
+                      Active gameweek.
                     </h3>
                   ) : (
                     <h3 className="w-full text-center text-sm italic text-red-700">
@@ -156,10 +157,9 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const ssg = await createSSGHelpers({
     router: appRouter,
     ctx: {},
-    transformer: superjson, // optional - adds superjson serialization
+    transformer: superjson,
   });
 
-  // prefetch `post.byId`
   await ssg.fetchQuery("getFixtures");
 
   return {

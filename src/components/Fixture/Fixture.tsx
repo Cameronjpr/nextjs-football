@@ -44,10 +44,11 @@ const FixtureCard = ({
                 handleSelection(t.basic_id, selectionOccurrences.length >= 2)
               }
               className={classNames(
-                "my-2 flex w-40 items-center justify-between rounded-md border sm:w-60",
+                "my-2 flex w-40 items-center justify-between rounded-md border sm:w-64",
                 !isLoading &&
                   !started &&
                   !finished &&
+                  !isPartOfActiveGameweek &&
                   selectionOccurrences.length < 2
                   ? "click:scale-95 hover:scale-105 hover:bg-blue-100"
                   : "",

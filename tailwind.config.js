@@ -16,7 +16,11 @@ module.exports = {
         primaryColor: "#EF0107",
       },
     },
-    extends: {},
+    extend: {
+      fontFamily: {
+        rubik: ["Rubik", "ui-serif", "ui-sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

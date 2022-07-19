@@ -1,9 +1,10 @@
+import classNames from "classnames";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
-const Header = () => {
+const Navigation = () => {
   const router = useRouter();
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
@@ -23,9 +24,8 @@ const Header = () => {
       </Link>
     </div>
   );
-
   return (
-    <nav className="z-10 grid w-full grid-cols-4 place-content-around place-items-center rounded-xl border border-emerald-800 bg-green-700/10 p-3 text-sm text-emerald-900">
+    <nav className="grid-cols-auto text-md z-10 grid h-16 w-full grid-flow-col place-content-around place-items-center  border-t-2 bg-emerald-700 py-3 text-white antialiased">
       <>
         <Link href="/">
           <a className="bold" data-active={isActive("/")}>
@@ -48,4 +48,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Navigation;
