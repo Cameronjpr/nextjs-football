@@ -64,7 +64,7 @@ const Leaderboard = () => {
                       <td className="w-10 pl-3">{idx + 1}</td>
                       <td className="font-semibold">{username ?? name}</td>
                       <td>
-                        {richTeams[Number(selections[0])].shortName ?? ""}
+                        {richTeams[Number(selections[0])]?.shortName ?? ""}
                       </td>
                       <td>{score}</td>
                     </tr>

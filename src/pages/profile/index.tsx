@@ -46,11 +46,11 @@ const Profile = ({ user }: { user: User }) => {
           )}
           <div className="flex w-full flex-col gap-1">
             <section className="">
-              {userInfo?.data?.user?.selections.length && (
+              {userInfo?.data?.user?.selections?.length && (
                 <p>
                   This week, you have selected{" "}
                   <strong className="font-semibold">
-                    {richTeams[userInfo?.data?.user?.selections[1]].shortName}
+                    {richTeams[userInfo?.data?.user?.selections[1]]?.shortName}
                   </strong>
                   .
                 </p>
