@@ -80,7 +80,7 @@ const FixtureList = ({
 
   return (
     <SelectionContext.Provider value={selections}>
-      <div className="flex flex-col gap-4 border-y-2 border-slate-100 p-2 py-4">
+      <div className="flex flex-col gap-4 border-y-2 border-slate-100 py-4">
         {groupFixturesByDate(
           fixtures.filter((f: Fixture) => f.event === selectedGameweek)
         ).map((m: Matchday, idx: number) => (

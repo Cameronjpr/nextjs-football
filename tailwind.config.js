@@ -18,7 +18,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        rubik: ["Rubik", "ui-serif", "ui-sans-serif"],
+        rubik: ["Rubik", "ui-sans-serif"],
       },
     },
   },

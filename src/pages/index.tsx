@@ -76,67 +76,16 @@ const Home = () => {
           />
         </Head>
         <Layout>
-          <h1 className="mt-10 w-full rounded-md bg-orange-100 p-2 text-center font-rubik text-5xl italic text-orange-600 underline underline-offset-2">
+          <h1 className="w-full rounded-md bg-orange-100 p-2 text-center font-rubik text-3xl italic text-orange-600 underline underline-offset-2 sm:text-5xl">
             Soccer Survivor
           </h1>
           <div className="sm:w-xl flex w-full flex-col place-content-center">
-            <section className="flex w-full place-content-between pb-2">
-              <ul className="text-md flex w-full flex-row place-content-between justify-between">
-                <button
-                  disabled={selectedGameweek <= 1}
-                  className={classNames(
-                    "rounded-md p-3",
-                    selectedGameweek <= 1
-                      ? "w-20 bg-slate-100 text-slate-500"
-                      : "w-20 "
-                  )}
-                  onClick={() => setSelectedGameweek(selectedGameweek - 1)}
-                >
-                  Previous
-                </button>
-                <label className="hidden" htmlFor="gameweek-select">
-                  Select a gameweek
-                </label>
-                {/* <select
-                  name="gameweek"
-                  id="gameweek-select"
-                  className=""
-                  value={selectedGameweek}
-                  onChange={(event) => {
-                    setSelectedGameweek(parseInt(event.target.value));
-                  }}
-                >
-                  {gameweeks.map((gw, idx) => (
-                    <option key={idx} value={gw}>
-                      Gameweek {gw}
-                    </option>
-                  ))}
-                </select> */}
-                <div>
-                  <h2 className="text-center text-xl font-bold text-emerald-800">
-                    Gameweek {selectedGameweek}
-                  </h2>
-                  {activeGameweek === selectedGameweek ? (
-                    <h3 className="w-full px-8 text-center text-sm italic text-red-700">
-                      Active gameweek.
-                    </h3>
-                  ) : (
-                    <h3 className="w-full text-center text-sm italic text-red-700">
-                      Deadline in {daysUntilDeadline}
-                    </h3>
-                  )}
-                </div>
-                <button
-                  disabled={selectedGameweek > 37}
-                  className={
-                    selectedGameweek > 37 ? "w-20 text-slate-500" : "w-20 "
-                  }
-                  onClick={() => setSelectedGameweek(selectedGameweek + 1)}
-                >
-                  Next
-                </button>
-              </ul>
-            </section>
+            <GameweekNavigation
+              activeGameweek={activeGameweek}
+              selectedGameweek={selectedGameweek}
+              daysUntilDeadline={daysUntilDeadline}
+              setSelectedGameweek={setSelectedGameweek}
+            />
             <main className="">
               {fixturesData?.isSuccess && (
                 <FixtureList
@@ -169,5 +118,64 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     revalidate: 60,
   };
 }
+
+type GameweekNavigationProps = {
+  activeGameweek: number;
+  selectedGameweek: number;
+  daysUntilDeadline: string;
+  setSelectedGameweek: (gw: number) => void;
+};
+
+const GameweekNavigation = ({
+  activeGameweek,
+  selectedGameweek,
+  daysUntilDeadline,
+  setSelectedGameweek,
+}: GameweekNavigationProps) => {
+  return (
+    <section className="flex w-full place-content-between py-2">
+      <ul className="text-md flex w-full flex-row justify-between">
+        <button
+          disabled={selectedGameweek <= 1}
+          className={classNames(
+            "h-10 w-20 rounded-md p-2 text-center text-sm",
+            selectedGameweek <= 1
+              ? "cursor-not-allowed bg-slate-100 text-slate-500"
+              : "bg-slate-100 hover:bg-orange-100"
+          )}
+          onClick={() => setSelectedGameweek(selectedGameweek - 1)}
+        >
+          Prev.
+        </button>
+        <div>
+          <h2 className="text-center text-lg font-bold text-emerald-800">
+            Gameweek {selectedGameweek}
+          </h2>
+          {/* {activeGameweek === selectedGameweek ? (
+            <span className="w-full px-2 text-center text-sm italic text-red-700">
+              Active gameweek.
+            </span>
+          ) : (
+            <span className="w-full px-2 text-center text-sm italic text-red-700">
+              Deadline in {daysUntilDeadline}
+            </span>
+          )} */}
+        </div>
+        <button
+          disabled={selectedGameweek > 37}
+          className={classNames(
+            "h-10 w-20 rounded-md p-3 text-sm",
+            selectedGameweek > 37
+              ? "cursor-not-allowed bg-slate-200 text-slate-600 "
+              : "bg-slate-100 hover:bg-orange-100"
+          )}
+          onClick={() => setSelectedGameweek(selectedGameweek + 1)}
+        >
+          Next
+        </button>
+      </ul>
+    </section>
+  );
+};
 
 export default Home;
