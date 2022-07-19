@@ -23,13 +23,13 @@ const Leaderboard = () => {
           href="/images/favicon-16x16.png"
         />
       </Head>
-      <main className="mx-4 flex w-full flex-col place-content-start rounded-lg bg-teal-800/5 p-5 bg-white drop-shadow-md sm:max-w-3xl">
+      <main className="my-4 flex w-full flex-col place-content-start rounded-lg sm:max-w-3xl">
         <table>
-          <caption className="w-full rounded-md p-2 font-rubik text-3xl italic text-orange-600 sm:text-5xl">
+          <caption className="w-full mb-4 rounded-md font-rubik text-3xl italic text-orange-600 sm:text-5xl">
             Current leaderboard
           </caption>
           <thead>
-            <tr className="h-10 border-b-2 text-left italic text-slate-600 underline">
+            <tr className="h-10 border-b-2 text-left italic text-orange-900">
               <th className="pl-2 font-normal" colSpan={1}>
                 #
               </th>

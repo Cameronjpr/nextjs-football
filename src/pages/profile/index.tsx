@@ -38,9 +38,9 @@ const Profile = ({ user }: { user: User }) => {
         />
       </Head>
       <div className="flex w-full flex-col place-content-center">
-        <main className="my-10">
+        <main className="my-4">
           {userInfo?.data?.user?.name && (
-            <h1 className="w-full rounded-md p-2 font-rubik text-3xl italic text-orange-600 sm:text-5xl">
+            <h1 className="w-full rounded-md p-2 text-center font-rubik text-3xl italic text-orange-600 sm:text-5xl">
               Hi, {userInfo?.data?.user?.name}!
             </h1>
           )}
