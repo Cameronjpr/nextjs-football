@@ -6,11 +6,19 @@ import { richTeams, teams } from '../../data/teams'
 import { Player } from '@/backend/router'
 import { User } from '@prisma/client'
 import Head from 'next/head'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 
 const Leaderboard = () => {
   const [gameweek, setGameweek] = useState(1)
+  const { data: session, status } = useSession()
 
   const { isLoading, data } = trpc.useQuery(['getUsers'])
+  const userInfo = trpc.useQuery([
+    'getUser',
+    { email: session?.user?.email ?? '' },
+  ])
+  const [isLeagueMode, setIsLeagueMode] = useState(false)
 
   return (
     <Layout>
@@ -24,10 +32,28 @@ const Leaderboard = () => {
         />
       </Head>
       <main className="my-4 flex w-full flex-col place-content-start rounded-lg sm:max-w-3xl">
+        <h1 className="w-full text-center mb-4 rounded-md font-rubik text-3xl italic text-orange-600 sm:text-5xl">
+          Current leaderboard
+        </h1>
+        {status === 'authenticated' && (
+          <div className="flex flex-row justify-between border rounded-md p-3">
+            <form className="flex flex-row gap-2 text-lg items-center">
+              <label htmlFor="league-mode-toggle">League only</label>
+              <input
+                className="w-4 h-4"
+                type="checkbox"
+                name="league-mode-toggle"
+                onChange={() => setIsLeagueMode(!isLeagueMode)}
+              />
+            </form>
+            <Link href="/league">
+              <a className="p-3 bg-orange-200 drop-shadow rounded-md">
+                Join a league
+              </a>
+            </Link>
+          </div>
+        )}
         <table>
-          <caption className="w-full mb-4 rounded-md font-rubik text-3xl italic text-orange-600 sm:text-5xl">
-            Current leaderboard
-          </caption>
           <thead>
             <tr className="h-10 border-b-2 text-left italic text-orange-900">
               <th className="pl-2 font-normal" colSpan={1}>
@@ -49,6 +75,13 @@ const Leaderboard = () => {
               data?.success &&
               data.users
                 .sort((a: User, b: User) => (b.score ?? 0) - (a.score ?? 0))
+                .filter((u: User) => {
+                  console.log(u.league, userInfo?.data?.user?.league)
+                  return (
+                    !isLeagueMode ||
+                    (u.league && u.league === userInfo?.data?.user?.league)
+                  )
+                })
                 .map(
                   (
                     { name, username, selection, selections, score }: User,

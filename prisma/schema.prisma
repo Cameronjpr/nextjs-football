@@ -27,6 +27,7 @@ model User {
   score         Int         @default(0)
   emailVerified DateTime?   @map("email_verified")
   image         String?
+  league        String?
   accounts      Account[]
   sessions      Session[]
   Selection     Selection[]

@@ -30,10 +30,17 @@ const Fixtures = () => {
   const fixturesData = trpc.useQuery(['getFixtures'])
 
   const { data: session, status } = useSession()
+  const [leagueBanner, setLeagueBanner] = useState(true)
   const [user, setUser] = useState<User>({
     session,
     status,
   })
+  const userInfo = trpc.useQuery([
+    'getUser',
+    {
+      email: session?.user?.email ?? '',
+    },
+  ])
   const [selectedGameweek, setSelectedGameweek] = useState(1)
   const [activeGameweek, setActiveGameweek] = useState(1)
   const [daysUntilDeadline, setDaysUntilDeadline] = useState('')
@@ -102,6 +109,30 @@ const Fixtures = () => {
               How to play
             </span>
           </Link>
+          {status === 'authenticated' &&
+            leagueBanner &&
+            !userInfo?.data?.user?.league && (
+              <div className="absolute bottom-0 w-full bg-white p-5 flex flex-row justify-between items-center">
+                <p className="text-lg">
+                  Compete against friends and family in your own private league!
+                </p>
+                <div className="flex flex-row gap-2">
+                  <Link href="/league">
+                    <a>
+                      <h3 className="p-3 text-lg font-semibold rounded-md bg-green-200 w-max">
+                        Join a league now!
+                      </h3>
+                    </a>
+                  </Link>
+                  <button
+                    className="p-3 rounded-md bg-red-200 w-max"
+                    onClick={() => setLeagueBanner(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
         </Layout>
       </ActiveGameweekContext.Provider>
     </UserContext.Provider>

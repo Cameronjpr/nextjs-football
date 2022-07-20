@@ -113,6 +113,24 @@ export const appRouter = trpc
       return { success: true, user };
     },
   })
+  .mutation("joinLeague", {
+    input: z.object({
+      email: z.string(),
+      code: z.string()
+    }),
+    async resolve({ input }) {
+      const result = await prisma.user.update({
+        where: {
+          email: input.email
+        },
+        data: {
+          league: input.code
+        }
+      })
+
+      return result
+    }
+  })
   .mutation("makeGameweekSpecificSelection", {
     input: z.object({
       selection: z.number(),
@@ -128,7 +146,7 @@ export const appRouter = trpc
           newSelections[i] = input.selection
         } else {
           console.log(input.selections[i])
-          newSelections[i] = input.selections[i]
+          newSelections[i] = input.selections[i] === undefined ? -1 : input.selections[i]
         }
       }
 

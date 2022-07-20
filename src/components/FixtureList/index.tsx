@@ -48,6 +48,7 @@ const FixtureList = ({
 
   useEffect(() => {
     // this stops the userInfo stuff overwriting the selection but I hate it
+    console.log(userInfo)
     if (!userInfo?.data?.user?.selections.length || selections.length) return
     setSelections(userInfo?.data?.user?.selections)
   }, [userInfo, selections, selectedGameweek])

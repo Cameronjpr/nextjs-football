@@ -20,28 +20,36 @@ const Navigation = () => {
   ) : (
     <div className="text-right">
       <Link href="/auth/signin">
-        <a data-active={isActive('/signup')}>Log in</a>
+        <a data-active={isActive('/signup')}>Sign in</a>
       </Link>
     </div>
   )
   return (
     <nav className="grid-cols-auto text-md z-10 grid h-12 w-full grid-flow-col place-content-around place-items-center  bg-emerald-700 py-3 text-white antialiased">
       <>
-        <Link href="/">
-          <a className="bold" data-active={isActive('/')}>
-            Home
-          </a>
-        </Link>
-        <Link href="/liveboard">
-          <a className="bold" data-active={isActive('/liveboard')}>
-            Leaderboard
-          </a>
-        </Link>
         {session && (
           <Link href="/fixtures">
             <a data-active={isActive('/fixtures')}>Fixtures</a>
           </Link>
         )}
+        {session ? (
+          <Link href="/rules">
+            <a className="bold" data-active={isActive('/')}>
+              Rules
+            </a>
+          </Link>
+        ) : (
+          <Link href="/">
+            <a className="bold" data-active={isActive('/')}>
+              Home
+            </a>
+          </Link>
+        )}
+        <Link href="/liveboard">
+          <a className="bold" data-active={isActive('/liveboard')}>
+            Leaderboard
+          </a>
+        </Link>
         <div>{status !== 'loading' && <>{Login}</>}</div>
       </>
     </nav>

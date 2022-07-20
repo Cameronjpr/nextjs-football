@@ -63,11 +63,14 @@ const Home = () => {
           </span>
           <section className="my-8 sm:my-16 text-center">
             <h2 className="text-xl sm:text-3xl font-rubik mb-8 sm:mb-16 text-emerald-800 px-20">
-              Start playing in three simple steps
+              Start playing in 3 simple steps
+              {/* <span className="inline-flex place-content-center items-center w-8 h-8 text-lg bg-emerald-600 text-white rounded-full">
+                3
+              </span>{' '} */}
             </h2>
             <div className="flex flex-col justify-between gap-10 sm:gap-16">
-              <article className="bg-white drop-shadow-lg p-8 rounded-lg w-full sm:ml-20 sm:w-1/2 flex flex-col justify-between">
-                <span className="fixed -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
+              <article className="bg-white drop-shadow-lg p-4 rounded-lg w-full sm:ml-20 sm:w-1/2 flex flex-col justify-between">
+                <span className="self-center mb-4 sm:mb-0 sm:fixed  -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
                   1
                 </span>
                 <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
@@ -78,8 +81,8 @@ const Home = () => {
                   started.
                 </p>
               </article>
-              <article className="bg-white drop-shadow-lg p-8 rounded-lg w-full self-end sm:mr-20 sm:w-1/2 flex flex-col justify-between">
-                <span className="fixed -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
+              <article className="bg-white drop-shadow-lg p-4 rounded-lg w-full self-end sm:mr-20 sm:w-1/2 flex flex-col justify-between">
+                <span className="self-center mb-4 sm:mb-0 sm:fixed -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
                   2
                 </span>
                 <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
@@ -87,8 +90,8 @@ const Home = () => {
                 </h3>
                 <p>Pick a team you think will win this week</p>
               </article>
-              <article className="bg-white drop-shadow-lg p-8 rounded-lg w-full sm:ml-20 sm:w-1/2 flex flex-col justify-between">
-                <span className="fixed -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
+              <article className="bg-white drop-shadow-lg p-4 rounded-lg w-full sm:ml-20 sm:w-1/2 flex flex-col justify-between">
+                <span className="self-center mb-4 sm:mb-0 sm:fixed -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
                   3
                 </span>
                 <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
@@ -98,7 +101,9 @@ const Home = () => {
               </article>
             </div>
           </section>
-          <Link href="/help">
+          <Link
+            href={status === 'authenticated' ? '/fixtures' : '/auth/signin'}
+          >
             <span className="w-max self-center mb-10 p-5 text-lg cursor-pointer bg-orange-200 text-amber-900 hover:bg-orange-300 rounded-xl drop-shadow-md">
               Get started
             </span>
