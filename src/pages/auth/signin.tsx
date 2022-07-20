@@ -1,6 +1,6 @@
-import Layout from "@/components/Layout/Layout";
-import { richTeams } from "@/data/teams";
-import { getProviders, signIn } from "next-auth/react";
+import Layout from '@/components/Layout/Layout'
+import { richTeams } from '@/data/teams'
+import { getProviders, signIn } from 'next-auth/react'
 
 const SignIn = ({ providers }: never) => {
   return (
@@ -11,12 +11,12 @@ const SignIn = ({ providers }: never) => {
             {Object.values(providers).map((provider: any) => (
               <button
                 key={provider.id}
-                className="h-full w-full rounded-sm bg-slate-200 p-3"
+                className="h-full w-full rounded-md drop-shadow-sm bg-orange-200 p-3"
                 onClick={() =>
                   signIn(provider.id, {
                     callbackUrl: process.env.NEXT_PUBLIC_VERCEL_URL
                       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/`
-                      : "http://localhost:3000/",
+                      : 'http://localhost:3000/',
                   })
                 }
               >
@@ -27,17 +27,17 @@ const SignIn = ({ providers }: never) => {
         </main>
       </div>
     </Layout>
-  );
-};
-
-export async function getServerSideProps(context: any) {
-  const providers = await getProviders();
-  return {
-    props: { providers },
-  };
+  )
 }
 
-export default SignIn;
+export async function getServerSideProps(context: any) {
+  const providers = await getProviders()
+  return {
+    props: { providers },
+  }
+}
+
+export default SignIn
 
 // this is horrible lmao
 

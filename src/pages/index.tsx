@@ -27,33 +27,11 @@ export const UserContext = createContext<User>({
 export const ActiveGameweekContext = createContext<Number>(1)
 
 const Home = () => {
-  const fixturesData = trpc.useQuery(['getFixtures'])
-
   const { data: session, status } = useSession()
   const [user, setUser] = useState<User>({
     session,
     status,
   })
-  const [selectedGameweek, setSelectedGameweek] = useState(1)
-  const [activeGameweek, setActiveGameweek] = useState(1)
-  const [daysUntilDeadline, setDaysUntilDeadline] = useState('')
-
-  useEffect(() => {
-    const daysUntilDeadline = (activeGameweek: number) => {
-      const now = new Date()
-      const fixtures = fixturesData?.data
-      // ALERT: What about the last gameweek of the season!!!! Don't want to get the 39th week
-      const firstGameOfNextGameweek = fixtures?.find(
-        (f) => f.event === selectedGameweek + 1
-      )
-      if (now === undefined || firstGameOfNextGameweek === undefined) return ''
-      return formatDistance(
-        now,
-        parseJSON(firstGameOfNextGameweek?.kickoff_time ?? '')
-      )
-    }
-    setDaysUntilDeadline(daysUntilDeadline(selectedGameweek))
-  }, [selectedGameweek, fixturesData])
 
   useEffect(() => {
     setUser({
@@ -64,70 +42,71 @@ const Home = () => {
 
   return (
     <UserContext.Provider value={user}>
-      <ActiveGameweekContext.Provider value={activeGameweek}>
-        <Head>
-          <title>Fixtures - Soccer Survivor</title>
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href="/images/favicon-16x16.png"
-          />
-        </Head>
-        <Layout>
+      <Head>
+        <title>Soccer Survivor</title>
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/images/favicon-16x16.png"
+        />
+      </Head>
+      <Layout>
+        <main className="flex flex-col p-2">
           <header className="flex flex-row justify-between items-center">
             <h1 className="w-full rounded-md p-2 text-center font-rubik text-3xl italic text-orange-600 sm:text-5xl">
               Soccer Survivor
             </h1>
-            <Link href="/help">
-              <span className="w-12 h-10 p-2 text-center text-lg font-bold rounded-full cursor-pointer bg-orange-100 text-amber-900 hover:bg-orange-200">
-                ?
-              </span>
-            </Link>
           </header>
-          <div className="sm:w-xl flex w-full flex-col place-content-center">
-            <GameweekNavigation
-              activeGameweek={activeGameweek}
-              selectedGameweek={selectedGameweek}
-              daysUntilDeadline={daysUntilDeadline}
-              setSelectedGameweek={setSelectedGameweek}
-            />
-            <main className="">
-              {fixturesData?.isSuccess && (
-                <FixtureList
-                  fixtures={fixturesData?.data}
-                  activeGameeweek={activeGameweek}
-                  selectedGameweek={selectedGameweek}
-                />
-              )}
-            </main>
-          </div>
+          <span className="text-center text-slate-600">
+            A real-world, real-time football guessing game.
+          </span>
+          <section className="my-8 sm:my-16 text-center">
+            <h2 className="text-xl sm:text-3xl font-rubik mb-8 sm:mb-16 text-emerald-800 px-20">
+              Start playing in three simple steps
+            </h2>
+            <div className="flex flex-col justify-between gap-10 sm:gap-16">
+              <article className="bg-white drop-shadow-lg p-8 rounded-lg w-full sm:ml-20 sm:w-1/2 flex flex-col justify-between">
+                <span className="fixed -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
+                  1
+                </span>
+                <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
+                  Make an account 👋
+                </h3>
+                <p>
+                  <Link href="/auth/signin">Sign in with Google</Link> to get
+                  started.
+                </p>
+              </article>
+              <article className="bg-white drop-shadow-lg p-8 rounded-lg w-full self-end sm:mr-20 sm:w-1/2 flex flex-col justify-between">
+                <span className="fixed -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
+                  2
+                </span>
+                <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
+                  Choose your team 🤔
+                </h3>
+                <p>Pick a team you think will win this week</p>
+              </article>
+              <article className="bg-white drop-shadow-lg p-8 rounded-lg w-full sm:ml-20 sm:w-1/2 flex flex-col justify-between">
+                <span className="fixed -top-5 left-3 sm:-left-5 bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
+                  3
+                </span>
+                <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
+                  Climb the leaderboard 🏆
+                </h3>
+                <p>Get points if your team won!</p>
+              </article>
+            </div>
+          </section>
           <Link href="/help">
-            <span className="h-full my-5 p-3 cursor-pointer bg-orange-100 text-amber-900 hover:bg-orange-200 rounded-md">
-              How to play
+            <span className="w-max self-center mb-10 p-5 text-lg cursor-pointer bg-orange-200 text-amber-900 hover:bg-orange-300 rounded-xl drop-shadow-md">
+              Get started
             </span>
           </Link>
-        </Layout>
-      </ActiveGameweekContext.Provider>
+        </main>
+      </Layout>
     </UserContext.Provider>
   )
-}
-
-export async function getStaticProps(context: GetStaticPropsContext) {
-  const ssg = await createSSGHelpers({
-    router: appRouter,
-    ctx: {},
-    transformer: superjson,
-  })
-
-  await ssg.fetchQuery('getFixtures')
-
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-    },
-    revalidate: 60,
-  }
 }
 
 export default Home
