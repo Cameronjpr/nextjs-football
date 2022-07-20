@@ -90,7 +90,7 @@ const League = () => {
             competing against players from around the world.
           </p>
           <p className="my-4 text-slate-700">
-            If the league doesn't yet exist, we'll create it for you and make
+            If the league doesn’t yet exist, we’ll create it for you and make
             you its first member!
           </p>
           <label className="mb-2">Enter league code</label>
