@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
 import classNames from 'classnames'
 import { trpc } from '@/utils/trpc'
@@ -8,9 +8,10 @@ import { User } from '@prisma/client'
 import Head from 'next/head'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
 
 const Leaderboard = () => {
-  const [gameweek, setGameweek] = useState(1)
+  const [gameweek, setGameweek] = useState(0)
   const { data: session, status } = useSession()
 
   const { isLoading, data } = trpc.useQuery(['getUsers'])
@@ -18,6 +19,16 @@ const Leaderboard = () => {
     'getUser',
     { email: session?.user?.email ?? '' },
   ])
+
+  const fixturesData = trpc.useQuery(['getFixtures'])
+
+  useEffect(() => {
+    if (fixturesData.isSuccess) {
+      const activeGameeweek = getActiveGameweekFromFixtures(fixturesData?.data)
+      console.log(activeGameeweek)
+      setGameweek(activeGameeweek)
+    }
+  }, [fixturesData])
   const [isLeagueMode, setIsLeagueMode] = useState(false)
 
   return (
@@ -35,22 +46,26 @@ const Leaderboard = () => {
         <h1 className="w-full text-center mb-4 rounded-md font-rubik text-3xl italic text-orange-600 sm:text-5xl">
           Current leaderboard
         </h1>
+        {gameweek && <h2 className="text-center">Gameweek {gameweek}</h2>}
         {status === 'authenticated' && (
-          <div className="flex flex-row justify-between border rounded-md p-3">
-            <form className="flex flex-row gap-2 text-lg items-center">
-              <label htmlFor="league-mode-toggle">League only</label>
-              <input
-                className="w-4 h-4"
-                type="checkbox"
-                name="league-mode-toggle"
-                onChange={() => setIsLeagueMode(!isLeagueMode)}
-              />
-            </form>
-            <Link href="/league">
-              <a className="p-3 bg-orange-200 drop-shadow rounded-md">
-                Join a league
-              </a>
-            </Link>
+          <div className="flex flex-row-reverse p-3">
+            {userInfo?.data?.user?.league ? (
+              <form className="flex flex-row gap-2 text-lg items-center">
+                <label htmlFor="league-mode-toggle">League only</label>
+                <input
+                  className="w-4 h-4"
+                  type="checkbox"
+                  name="league-mode-toggle"
+                  onChange={() => setIsLeagueMode(!isLeagueMode)}
+                />
+              </form>
+            ) : (
+              <Link href="/league">
+                <a className="p-3 bg-orange-200 drop-shadow rounded-md">
+                  Join a league
+                </a>
+              </Link>
+            )}
           </div>
         )}
         <table>

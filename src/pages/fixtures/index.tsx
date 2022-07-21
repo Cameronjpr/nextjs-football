@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { Status } from '@/account/types'
 import FixtureList from '@/components/FixtureList'
 import Layout from '@/components/Layout/Layout'
+import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
 
 type User = {
   session: Session | null
@@ -30,7 +31,7 @@ const Fixtures = () => {
   const fixturesData = trpc.useQuery(['getFixtures'])
 
   const { data: session, status } = useSession()
-  const [leagueBanner, setLeagueBanner] = useState(true)
+  const [leagueBanner, setLeagueBanner] = useState(false)
   const [user, setUser] = useState<User>({
     session,
     status,
@@ -51,7 +52,7 @@ const Fixtures = () => {
       const fixtures = fixturesData?.data
       // ALERT: What about the last gameweek of the season!!!! Don't want to get the 39th week
       const firstGameOfNextGameweek = fixtures?.find(
-        (f) => f.event === selectedGameweek + 1
+        (f) => f.event === activeGameweek + 1
       )
       if (now === undefined || firstGameOfNextGameweek === undefined) return ''
       return formatDistance(
@@ -61,6 +62,14 @@ const Fixtures = () => {
     }
     setDaysUntilDeadline(daysUntilDeadline(selectedGameweek))
   }, [selectedGameweek, fixturesData])
+
+  useEffect(() => {
+    if (fixturesData.isSuccess) {
+      const activeGameeweek = getActiveGameweekFromFixtures(fixturesData?.data)
+      console.log(activeGameeweek)
+      setActiveGameweek(activeGameeweek)
+    }
+  }, [fixturesData])
 
   useEffect(() => {
     setUser({
@@ -91,9 +100,13 @@ const Fixtures = () => {
             <GameweekNavigation
               activeGameweek={activeGameweek}
               selectedGameweek={selectedGameweek}
-              daysUntilDeadline={daysUntilDeadline}
               setSelectedGameweek={setSelectedGameweek}
             />
+            {daysUntilDeadline !== '' && activeGameweek === selectedGameweek ? (
+              <span className="text-red-600 bg-red-100/50 rounded-md p-2 w-max m-auto">
+                Deadline in {daysUntilDeadline}
+              </span>
+            ) : null}
             <main className="">
               {fixturesData?.isSuccess && (
                 <FixtureList

@@ -3,14 +3,12 @@ import classNames from 'classnames'
 type GameweekNavigationProps = {
   activeGameweek: number
   selectedGameweek: number
-  daysUntilDeadline: string
   setSelectedGameweek: (gw: number) => void
 }
 
 export const GameweekNavigation = ({
   activeGameweek,
   selectedGameweek,
-  daysUntilDeadline,
   setSelectedGameweek,
 }: GameweekNavigationProps) => {
   return (

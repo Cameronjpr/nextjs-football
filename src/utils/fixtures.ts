@@ -1,4 +1,4 @@
-import { Fixture } from "@/backend/router";
+import { Fixture, Fixtures } from "@/backend/router";
 import { format } from "date-fns";
 import {
   Matchday,
@@ -24,16 +24,10 @@ export const groupFixturesByDate = (fixtures: Fixture[]): Matchday[] => {
   return dates;
 };
 
-export const getResultFromFixture = (f: any, selection: number) => {
-  if (f.team_h_score === f.team_a_score) return "draw";
+export const getActiveGameweekFromFixtures = (fixtures: Fixtures): number => {
+  const d = new Date()
+  const gw = 1;
+  const firstUnfinishedGw = fixtures.find(f => !f.finished)?.event
 
-  if (selection === f.team_h) {
-    if (f.team_h_score > f.team_a_score) return "win";
-    else return "loss";
-  }
-
-  if (selection === f.team_a) {
-    if (f.team_a_score > f.team_h_score) return "win";
-    else return "loss";
-  }
-};
+  return firstUnfinishedGw ?? 1
+} 
