@@ -117,7 +117,7 @@ const Fixtures = () => {
               )}
             </main>
           </div>
-          <Link href="/help">
+          <Link href="/rules">
             <span className="h-full my-5 p-3 cursor-pointer bg-orange-100 text-amber-900 hover:bg-orange-200 rounded-md">
               How to play
             </span>
