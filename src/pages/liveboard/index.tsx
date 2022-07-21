@@ -25,7 +25,7 @@ const Leaderboard = () => {
   useEffect(() => {
     if (fixturesData.isSuccess) {
       const activeGameeweek = getActiveGameweekFromFixtures(fixturesData?.data)
-      console.log(activeGameeweek)
+
       setGameweek(activeGameeweek)
     }
   }, [fixturesData])
@@ -46,7 +46,7 @@ const Leaderboard = () => {
         <h1 className="w-full text-center mb-4 rounded-md font-rubik text-3xl italic text-orange-600 sm:text-5xl">
           Current leaderboard
         </h1>
-        {gameweek && <h2 className="text-center">Gameweek {gameweek}</h2>}
+        {gameweek ? <h2 className="text-center">Gameweek {gameweek}</h2> : null}
         {status === 'authenticated' && (
           <div className="flex flex-row-reverse p-3">
             {userInfo?.data?.user?.league ? (
@@ -59,13 +59,7 @@ const Leaderboard = () => {
                   onChange={() => setIsLeagueMode(!isLeagueMode)}
                 />
               </form>
-            ) : (
-              <Link href="/league">
-                <a className="p-3 bg-orange-200 drop-shadow rounded-md">
-                  Join a league
-                </a>
-              </Link>
-            )}
+            ) : null}
           </div>
         )}
         <table>
@@ -91,7 +85,6 @@ const Leaderboard = () => {
               data.users
                 .sort((a: User, b: User) => (b.score ?? 0) - (a.score ?? 0))
                 .filter((u: User) => {
-                  console.log(u.league, userInfo?.data?.user?.league)
                   return (
                     !isLeagueMode ||
                     (u.league && u.league === userInfo?.data?.user?.league)

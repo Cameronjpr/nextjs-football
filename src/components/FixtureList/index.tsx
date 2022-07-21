@@ -28,7 +28,13 @@ const FixtureList = ({
   const [error, setError] = useState('')
   const { data: session, status } = useSession()
 
-  const user = useContext(UserContext)
+  console.log(session?.user?.email)
+
+  const userInfo = trpc.useQuery([
+    'getUser',
+    { email: session?.user?.email ?? '' },
+  ])
+
   const makeGameweekSpecificSelection = trpc.useMutation(
     ['makeGameweekSpecificSelection'],
     {
@@ -41,29 +47,24 @@ const FixtureList = ({
     }
   )
 
-  const userInfo = trpc.useQuery([
-    'getUser',
-    { email: user?.session?.user?.email ?? '' },
-  ])
-
   useEffect(() => {
     // this stops the userInfo stuff overwriting the selection but I hate it
-    console.log(userInfo)
     if (!userInfo?.data?.user?.selections.length || selections.length) return
+    // if (userInfo?.)
     setSelections(userInfo?.data?.user?.selections)
   }, [userInfo, selections, selectedGameweek])
 
   useEffect(() => {
-    console.log(richTeams[selections[selectedGameweek]]?.shortName)
-
     console.log(selections)
   }, [selectedGameweek, selections])
 
   const handleTeamSelect = async (id: number, deselect = false) => {
+    console.log('HANDLE SELECT')
     if (status === Status.Unauthenticated) {
       router.push(encodeURI('/auth/signin'))
       return
     }
+    console.log(session?.user?.email)
 
     if (!session?.user?.email) return
 
@@ -72,9 +73,9 @@ const FixtureList = ({
     }
 
     makeGameweekSpecificSelection.mutate({
-      email: session?.user?.email,
+      email: session?.user?.email ?? '',
       selection: deselect ? -1 : id,
-      selections: selections,
+      selections: selections.length ? selections : Array(38).fill(-1),
       gameweek: selectedGameweek,
     })
   }

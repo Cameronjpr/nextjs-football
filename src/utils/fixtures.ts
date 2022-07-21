@@ -26,6 +26,8 @@ export const groupFixturesByDate = (fixtures: Fixture[]): Matchday[] => {
 
 export const getActiveGameweekFromFixtures = (fixtures: Fixtures): number => {
   const firstUnfinishedGw = fixtures.find(f => !f.finished)?.event
-
-  return firstUnfinishedGw ?? 1
+  
+  if (firstUnfinishedGw === undefined) return 38
+  
+  return firstUnfinishedGw - 1
 } 

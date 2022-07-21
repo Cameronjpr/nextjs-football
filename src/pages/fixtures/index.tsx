@@ -29,19 +29,18 @@ export const ActiveGameweekContext = createContext<Number>(1)
 
 const Fixtures = () => {
   const fixturesData = trpc.useQuery(['getFixtures'])
-
   const { data: session, status } = useSession()
-  const [leagueBanner, setLeagueBanner] = useState(false)
-  const [user, setUser] = useState<User>({
-    session,
-    status,
-  })
   const userInfo = trpc.useQuery([
     'getUser',
     {
       email: session?.user?.email ?? '',
     },
   ])
+  const [leagueBanner, setLeagueBanner] = useState(false)
+  const [user, setUser] = useState<User>({
+    session,
+    status,
+  })
   const [selectedGameweek, setSelectedGameweek] = useState(1)
   const [activeGameweek, setActiveGameweek] = useState(1)
   const [daysUntilDeadline, setDaysUntilDeadline] = useState('')
@@ -102,7 +101,8 @@ const Fixtures = () => {
               selectedGameweek={selectedGameweek}
               setSelectedGameweek={setSelectedGameweek}
             />
-            {daysUntilDeadline !== '' && activeGameweek === selectedGameweek ? (
+            {daysUntilDeadline !== '' &&
+            activeGameweek === selectedGameweek - 1 ? (
               <span className="text-red-600 bg-red-100/50 rounded-md p-2 w-max m-auto">
                 Deadline in {daysUntilDeadline}
               </span>
@@ -160,7 +160,6 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   })
 
   await ssg.fetchQuery('getFixtures')
-
   return {
     props: {
       trpcState: ssg.dehydrate(),

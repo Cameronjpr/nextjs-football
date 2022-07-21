@@ -109,7 +109,7 @@ export const appRouter = trpc
           email: input.email,
         },
       });
-
+      console.log(user?.selections)
       return { success: true, user };
     },
   })
@@ -140,15 +140,17 @@ export const appRouter = trpc
     }),
     async resolve({ input }) {
       let newSelections: number[] = []
+      console.log('making selection')
 
       for (let i = 0; i < 38; i++) {        
         if (i+1 === input.gameweek) {
           newSelections[i] = input.selection
         } else {
-          console.log(input.selections[i])
-          newSelections[i] = input.selections[i] === undefined ? -1 : input.selections[i]
+          newSelections[i] = input.selections[i] === -1 ? -1 : input.selections[i]
         }
       }
+
+      console.log(newSelections)
 
       const selectionSaved = await prisma.user.update({
         where: {
