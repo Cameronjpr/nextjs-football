@@ -51,7 +51,7 @@ const Fixtures = () => {
       const fixtures = fixturesData?.data
       // ALERT: What about the last gameweek of the season!!!! Don't want to get the 39th week
       const firstGameOfNextGameweek = fixtures?.find(
-        (f) => f.event === activeGameweek + 1
+        (f) => f.event === activeGameweek
       )
       if (now === undefined || firstGameOfNextGameweek === undefined) return ''
       return formatDistance(

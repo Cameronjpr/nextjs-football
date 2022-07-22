@@ -3,11 +3,9 @@ import Layout from '../../components/Layout/Layout'
 import classNames from 'classnames'
 import { trpc } from '@/utils/trpc'
 import { richTeams, teams } from '../../data/teams'
-import { Player } from '@/backend/router'
 import { User } from '@prisma/client'
 import Head from 'next/head'
 import { useSession } from 'next-auth/react'
-import Link from 'next/link'
 import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
 
 const Leaderboard = () => {

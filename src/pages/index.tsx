@@ -1,17 +1,9 @@
 import React, { useState, useEffect, createContext } from 'react'
-import { GetStaticPropsContext } from 'next'
-import { createSSGHelpers } from '@trpc/react/ssg'
 import Layout from '../components/Layout/Layout'
 import { useSession } from 'next-auth/react'
 import { Status } from '../account/types'
-import FixtureList from '../components/FixtureList'
 import { Session } from 'next-auth/core/types'
 import Head from 'next/head'
-import superjson from 'superjson'
-import { appRouter } from '@/backend/router'
-import { trpc } from '@/utils/trpc'
-import { formatDistance, parseJSON } from 'date-fns'
-import { GameweekNavigation } from '@/components/GameweekNavigation/GameweekNavigation'
 import Link from 'next/link'
 
 type User = {
@@ -64,9 +56,6 @@ const Home = () => {
           <section className="my-8 sm:my-16 text-center">
             <h2 className="text-xl sm:text-3xl font-rubik mb-8 sm:mb-16 text-emerald-800 px-20">
               Start playing in 3 simple steps
-              {/* <span className="inline-flex place-content-center items-center w-8 h-8 text-lg bg-emerald-600 text-white rounded-full">
-                3
-              </span>{' '} */}
             </h2>
             <div className="flex flex-col justify-between gap-10 sm:gap-16">
               <article className="bg-white drop-shadow-lg p-4 rounded-lg w-full sm:ml-20 sm:w-1/2 flex flex-col justify-between">
