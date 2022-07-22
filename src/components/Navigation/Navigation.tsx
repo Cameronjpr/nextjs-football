@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useIsSmall } from '@/utils/media'
 
 const Navigation = () => {
   const router = useRouter()
@@ -84,6 +83,7 @@ const Navigation = () => {
                 label="Fixtures"
                 order={1}
               />
+
               <MenuItem
                 href={'/liveboard'}
                 isActive={isActive('/liveboard')}
