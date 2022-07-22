@@ -78,14 +78,12 @@ const Navigation = () => {
               onClick={() => setIsOpen(false)}
             ></div>
             <ul className="flex flex-col p-10 pt-14 self-start align-center w-full sm:w-2/5 h-full bg-emerald-700 py-3 text-white antialiased text-2xl font-bold gap-10">
-              {session && (
-                <MenuItem
-                  href={'/fixtures'}
-                  isActive={isActive('/fixtures')}
-                  label="Fixtures"
-                  order={1}
-                />
-              )}
+              <MenuItem
+                href={'/fixtures'}
+                isActive={isActive('/fixtures')}
+                label="Fixtures"
+                order={1}
+              />
               <MenuItem
                 href={'/liveboard'}
                 isActive={isActive('/liveboard')}

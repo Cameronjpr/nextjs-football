@@ -2,23 +2,41 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
 import classNames from 'classnames'
 import { trpc } from '@/utils/trpc'
-import { richTeams, teams } from '../../data/teams'
+import { richTeams } from '../../data/teams'
 import { User } from '@prisma/client'
 import Head from 'next/head'
+import superjson from 'superjson'
 import { useSession } from 'next-auth/react'
 import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
+import { appRouter } from '@/backend/router'
+import { createSSGHelpers } from '@trpc/react/ssg'
+
+export async function getStaticProps() {
+  const ssg = await createSSGHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: superjson,
+  })
+
+  await ssg.fetchQuery('getUsers')
+  await ssg.fetchQuery('getFixtures')
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+    revalidate: 60,
+  }
+}
 
 const Leaderboard = () => {
   const [gameweek, setGameweek] = useState(0)
   const { data: session, status } = useSession()
-
+  const fixturesData = trpc.useQuery(['getFixtures'])
   const { isLoading, data } = trpc.useQuery(['getUsers'])
   const userInfo = trpc.useQuery([
     'getUser',
     { email: session?.user?.email ?? '' },
   ])
-
-  const fixturesData = trpc.useQuery(['getFixtures'])
 
   useEffect(() => {
     if (fixturesData.isSuccess) {
