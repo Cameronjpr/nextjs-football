@@ -79,10 +79,10 @@ const Home = () => {
                   3
                 </span>
                 <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
-                  Climb the leaderboard🏆
+                  Climb the leaderboard 🏆
                 </h3>
                 <p className="p-3">
-                  Keep guessing correctly and you'll soon be on top!
+                  Keep guessing correctly and you’ll soon be on top!
                 </p>
               </article>
             </div>
