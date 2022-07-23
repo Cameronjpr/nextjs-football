@@ -72,16 +72,18 @@ const Home = () => {
                 <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
                   See if they win 👀
                 </h3>
-                <p className="p-3">Pick a team you think will win this week</p>
+                <p className="p-3">Get points if your team won!</p>
               </article>
               <article className="bg-white drop-shadow-lg p-4 rounded-lg w-full sm:w-2/3 flex flex-col justify-between">
                 <span className="self-center mb-4 sm:mb-0 sm:fixed -top-5 left-3  bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
                   3
                 </span>
                 <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
-                  Collect your points 🏆
+                  Climb the leaderboard🏆
                 </h3>
-                <p className="p-3">Get points if your team won!</p>
+                <p className="p-3">
+                  Keep guessing correctly and you'll soon be on top!
+                </p>
               </article>
             </div>
           </section>
