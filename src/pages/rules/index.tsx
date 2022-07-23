@@ -2,6 +2,7 @@ import React from 'react'
 import Layout from '../../components/Layout/Layout'
 import classNames from 'classnames'
 import Head from 'next/head'
+import Heading from '@/components/Heading/Heading'
 
 const Help = () => {
   return (
@@ -16,9 +17,7 @@ const Help = () => {
         />
       </Head>
       <main className="flex flex-col m-auto p-2">
-        <h1 className="w-full rounded-md p-2 text-center font-rubik text-3xl italic text-orange-600 sm:text-5xl">
-          How to play
-        </h1>
+        <Heading level="1">How to play</Heading>
         <ol className="mt-8 flex flex-col gap-8">
           <li>
             Every week, you pick <strong>one team</strong>.

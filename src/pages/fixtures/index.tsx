@@ -9,11 +9,12 @@ import { appRouter } from '@/backend/router'
 import { trpc } from '@/utils/trpc'
 import { formatDistance, parseJSON } from 'date-fns'
 import { GameweekNavigation } from '@/components/GameweekNavigation/GameweekNavigation'
-import Link from 'next/link'
+import Link from '@/components/Link/Link'
 import { Status } from '@/account/types'
 import FixtureList from '@/components/FixtureList'
 import Layout from '@/components/Layout/Layout'
 import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
+import Heading from '@/components/Heading/Heading'
 
 type User = {
   session: Session | null
@@ -36,7 +37,6 @@ const Fixtures = () => {
       email: session?.user?.email ?? '',
     },
   ])
-  const [leagueBanner, setLeagueBanner] = useState(false)
   const [user, setUser] = useState<User>({
     session,
     status,
@@ -91,9 +91,7 @@ const Fixtures = () => {
         </Head>
         <Layout>
           <header className="flex flex-row justify-between items-center">
-            <h1 className="w-full rounded-md p-2 text-center font-rubik text-3xl italic text-orange-600 sm:text-5xl">
-              Fixtures
-            </h1>
+            <Heading level="1">Fixtures</Heading>
           </header>
           <div className="sm:w-xl flex w-full flex-col place-content-center">
             <GameweekNavigation
@@ -117,35 +115,7 @@ const Fixtures = () => {
               )}
             </main>
           </div>
-          <Link href="/rules">
-            <span className="h-full my-5 p-3 cursor-pointer bg-orange-100 text-amber-900 hover:bg-orange-200 rounded-md">
-              How to play
-            </span>
-          </Link>
-          {status === 'authenticated' &&
-            leagueBanner &&
-            !userInfo?.data?.user?.league && (
-              <div className="absolute bottom-0 w-full bg-white p-5 flex flex-row justify-between items-center">
-                <p className="text-lg">
-                  Compete against friends and family in your own private league!
-                </p>
-                <div className="flex flex-row gap-2">
-                  <Link href="/league">
-                    <a>
-                      <h3 className="p-3 text-lg font-semibold rounded-md bg-green-200 w-max">
-                        Join a league now!
-                      </h3>
-                    </a>
-                  </Link>
-                  <button
-                    className="p-3 rounded-md bg-red-200 w-max"
-                    onClick={() => setLeagueBanner(false)}
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            )}
+          <Link href="/rules">How to play</Link>
         </Layout>
       </ActiveGameweekContext.Provider>
     </UserContext.Provider>

@@ -59,12 +59,12 @@ export const appRouter = trpc
       const fixtures = await res.json() as Fixtures
 
       const formattedFixtures = fixtures.map((f: Fixture, idx: number) => {
-      // if (idx === 0) {
-      //   f = {...f, ...finished.data[0]}
-      // }
-      // if (idx === 1) {
-      //   f = {...f, ...active.data[1]};
-      // }
+      if (idx === 0) {
+        f = {...f, ...finished.data[0]}
+      }
+      if (idx === 1) {
+        f = {...f, ...active.data[1]};
+      }
       return {
         ...f,
         teams: [
@@ -109,7 +109,6 @@ export const appRouter = trpc
           email: input.email,
         },
       });
-      console.log(user?.selections)
       return { success: true, user };
     },
   })
@@ -140,7 +139,6 @@ export const appRouter = trpc
     }),
     async resolve({ input }) {
       let newSelections: number[] = []
-      console.log('making selection')
 
       for (let i = 0; i < 38; i++) {        
         if (i+1 === input.gameweek) {
@@ -149,8 +147,6 @@ export const appRouter = trpc
           newSelections[i] = input.selections[i] === -1 ? -1 : input.selections[i]
         }
       }
-
-      console.log(newSelections)
 
       const selectionSaved = await prisma.user.update({
         where: {

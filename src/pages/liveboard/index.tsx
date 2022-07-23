@@ -10,6 +10,8 @@ import { useSession } from 'next-auth/react'
 import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
 import { appRouter } from '@/backend/router'
 import { createSSGHelpers } from '@trpc/react/ssg'
+import Heading from '@/components/Heading/Heading'
+import { getCurrentScores } from '@/utils/scores'
 
 export async function getStaticProps() {
   const ssg = await createSSGHelpers({
@@ -33,6 +35,7 @@ const Leaderboard = () => {
   const { data: session, status } = useSession()
   const fixturesData = trpc.useQuery(['getFixtures'])
   const { isLoading, data } = trpc.useQuery(['getUsers'])
+  const [usersWithScores, setUsersWithScores] = useState<User[]>([])
   const userInfo = trpc.useQuery([
     'getUser',
     { email: session?.user?.email ?? '' },
@@ -45,6 +48,20 @@ const Leaderboard = () => {
       setGameweek(activeGameeweek)
     }
   }, [fixturesData])
+
+  useEffect(() => {
+    console.log('score useffect')
+    if (
+      !isLoading &&
+      data?.users?.length &&
+      fixturesData?.data?.length &&
+      !usersWithScores?.length
+    ) {
+      const scoredPlayers = getCurrentScores(data.users, fixturesData.data)
+      console.log(scoredPlayers)
+      setUsersWithScores(scoredPlayers)
+    }
+  }, [isLoading, data, fixturesData])
   const [isLeagueMode, setIsLeagueMode] = useState(false)
 
   return (
@@ -58,10 +75,8 @@ const Leaderboard = () => {
           href="/images/favicon-16x16.png"
         />
       </Head>
-      <main className="my-4 flex w-full flex-col place-content-start rounded-lg sm:max-w-3xl">
-        <h1 className="w-full text-center mb-4 rounded-md font-rubik text-3xl italic text-orange-600 sm:text-5xl">
-          Current leaderboard
-        </h1>
+      <main className="flex w-full flex-col place-content-start rounded-lg sm:max-w-3xl">
+        <Heading level="1">Current Leaderboard</Heading>
         {gameweek ? <h2 className="text-center">Gameweek {gameweek}</h2> : null}
         {status === 'authenticated' && (
           <div className="flex flex-row-reverse p-3">
@@ -97,8 +112,8 @@ const Leaderboard = () => {
           </thead>
           <tbody>
             {!isLoading &&
-              data?.success &&
-              data.users
+              usersWithScores?.length &&
+              usersWithScores
                 .sort((a: User, b: User) => (b.score ?? 0) - (a.score ?? 0))
                 .filter((u: User) => {
                   return (

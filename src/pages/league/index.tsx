@@ -5,6 +5,7 @@ import Head from 'next/head'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { trpc } from '@/utils/trpc'
+import Heading from '@/components/Heading/Heading'
 
 const League = () => {
   const { data: session, status } = useSession()
@@ -75,9 +76,7 @@ const League = () => {
         />
       </Head>
       <main className="flex flex-col m-auto p-2 items-center gap-10">
-        <h1 className="w-full rounded-md p-2 text-center font-rubik text-3xl italic text-orange-600 sm:text-5xl">
-          Leagues
-        </h1>
+        <Heading level="1">Leagues</Heading>
         <form
           className="flex flex-col w-80"
           onSubmit={(e) => handleJoinSubmit(e, leagueCode)}
