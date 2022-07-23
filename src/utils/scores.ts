@@ -1,6 +1,8 @@
 import { Fixture } from '@/backend/router'
 import { User } from '@prisma/client'
 
+// This file makes me doubt my ability as a software engineer
+
 export const getCurrentScores = (
   players: User[],
   fixtures: Fixture[]
