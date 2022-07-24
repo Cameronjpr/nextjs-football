@@ -10,9 +10,11 @@ import {
   ClientSafeProvider,
 } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 const SignIn = ({ providers }: { providers: ClientSafeProvider[] }) => {
   const { data: session, status } = useSession()
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
   if (status === 'loading') {
@@ -33,14 +35,16 @@ const SignIn = ({ providers }: { providers: ClientSafeProvider[] }) => {
           <div className="my-4 flex flex-col place-content-center">
             {Object.values(providers).map((provider: any) => (
               <Button
+                isLoading={isLoading}
                 key={provider.id}
-                onClick={() =>
+                onClick={() => {
+                  setIsLoading(true)
                   signIn(provider.id, {
                     callbackUrl: process.env.NEXT_PUBLIC_VERCEL_URL
                       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/`
                       : 'http://localhost:3000/',
                   })
-                }
+                }}
               >
                 Sign in with {provider.name}
               </Button>

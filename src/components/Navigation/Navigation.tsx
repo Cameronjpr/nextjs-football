@@ -34,7 +34,7 @@ const Navigation = () => {
       initial={{ x: '10vw', opacity: 0 }}
       animate={{ x: '0vw', opacity: 1 }}
       exit={{ x: '10vw', opacity: 0 }}
-      transition={{ duration: 0.3, delay: 0.05 * 6, type: 'tween' }}
+      transition={{ duration: 0.3, delay: 0.05 * 5, type: 'tween' }}
       className="hover:text-emerald-200 p-1"
     >
       <Link href="/auth/signin">
@@ -113,7 +113,7 @@ const Navigation = () => {
                 label="Join a league"
                 order={4}
               />
-              {status !== 'loading' ? (
+              {status === 'authenticated' ? (
                 <motion.div
                   key="anchor-logout"
                   initial={{ x: '10vw', opacity: 0 }}

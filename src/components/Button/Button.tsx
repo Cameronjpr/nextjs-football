@@ -4,11 +4,18 @@ import { ReactNode } from 'react'
 type ButtonProps = {
   onClick: () => void
   disabled?: boolean
+  isLoading?: boolean
   children: ReactNode
   type?: string
 }
 
-const Button = ({ onClick, disabled = false, children, type }: ButtonProps) => {
+const Button = ({
+  onClick,
+  disabled = false,
+  isLoading = false,
+  children,
+  type,
+}: ButtonProps) => {
   return (
     <button
       disabled={disabled}
@@ -19,7 +26,8 @@ const Button = ({ onClick, disabled = false, children, type }: ButtonProps) => {
           : ' bg-orange-200 text-amber-900 hover:bg-orange-300',
         type === 'warning'
           ? 'bg-red-200 text-red-900 hover:bg-red-300 outline outline-red-700'
-          : ''
+          : '',
+        isLoading ? 'animate-pulse' : ''
       )}
       onClick={onClick}
     >

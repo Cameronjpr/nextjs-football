@@ -33,9 +33,7 @@ const Profile = ({ user }: { user: User }) => {
 
   useEffect(() => {
     if (status === Status.Unauthenticated) {
-      router.push(
-        encodeURI('/login?message=You must be signed in to view this page.')
-      )
+      router.push(encodeURI('/auth/signin'))
     }
   }, [router, status])
 
