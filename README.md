@@ -1,7 +1,7 @@
 # Soccer Survivor
 
-## Overview
+## Overview
 
-## Motivation
+## Motivation
 
-## How to play
+## How to play
