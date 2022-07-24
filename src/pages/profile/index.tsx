@@ -40,7 +40,7 @@ const Profile = ({ user }: { user: User }) => {
   }, [router, status])
 
   const handleDeleteAccount = () => {
-    deleteUser.mutate({ email: session?.user?.email })
+    deleteUser.mutate({ email: session?.user?.email ?? '' })
   }
 
   const handleShowDeleteButton = () => {
