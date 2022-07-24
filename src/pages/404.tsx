@@ -17,7 +17,7 @@ const Custom500 = () => {
         />
       </Head>
       <main className="flex flex-col gap-4">
-        <Heading level="1">Sorry - we couldn't find that page</Heading>
+        <Heading level="1">Sorry - we couldn’t find that page</Heading>
         <Link href="/fixtures">Back to fixtures</Link>
       </main>
     </Layout>
