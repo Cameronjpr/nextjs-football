@@ -14,25 +14,27 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const Login = session ? (
-    <motion.div
-      key="anchor-logout"
-      initial={{ x: '10vw', opacity: 0 }}
-      animate={{ x: '0vw', opacity: 1 }}
-      exit={{ x: '10vw', opacity: 0 }}
-      transition={{ duration: 0.2, delay: 0.05 * 5, type: 'tween' }}
-      className="hover:text-emerald-200 p-1"
-    >
-      <button onClick={() => signOut()}>
-        <a>Log out</a>
-      </button>
-    </motion.div>
+    <>
+      <motion.div
+        key="anchor-logout"
+        initial={{ x: '10vw', opacity: 0 }}
+        animate={{ x: '0vw', opacity: 1 }}
+        exit={{ x: '10vw', opacity: 0 }}
+        transition={{ duration: 0.2, delay: 0.05 * 6, type: 'tween' }}
+        className="hover:text-emerald-200 p-1"
+      >
+        <button onClick={() => signOut()}>
+          <a>Log out</a>
+        </button>
+      </motion.div>
+    </>
   ) : (
     <motion.div
       key="anchor-login"
       initial={{ x: '10vw', opacity: 0 }}
       animate={{ x: '0vw', opacity: 1 }}
       exit={{ x: '10vw', opacity: 0 }}
-      transition={{ duration: 0.3, delay: 0.05 * 5, type: 'tween' }}
+      transition={{ duration: 0.3, delay: 0.05 * 6, type: 'tween' }}
       className="hover:text-emerald-200 p-1"
     >
       <Link href="/auth/signin">
@@ -111,6 +113,24 @@ const Navigation = () => {
                 label="Join a league"
                 order={4}
               />
+              {status !== 'loading' ? (
+                <motion.div
+                  key="anchor-logout"
+                  initial={{ x: '10vw', opacity: 0 }}
+                  animate={{ x: '0vw', opacity: 1 }}
+                  exit={{ x: '10vw', opacity: 0 }}
+                  transition={{
+                    duration: 0.2,
+                    delay: 0.05 * 5,
+                    type: 'tween',
+                  }}
+                  className="hover:text-emerald-200 p-1"
+                >
+                  <Link href="/profile">
+                    <a>Profile</a>
+                  </Link>
+                </motion.div>
+              ) : null}
               <div>{status !== 'loading' && <>{Login}</>}</div>
             </ul>
           </motion.div>

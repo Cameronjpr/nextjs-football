@@ -1,3 +1,4 @@
+import Button from '@/components/Button/Button'
 import Layout from '@/components/Layout/Layout'
 import { richTeams } from '@/data/teams'
 import { router } from '@trpc/server'
@@ -31,9 +32,8 @@ const SignIn = ({ providers }: { providers: ClientSafeProvider[] }) => {
           </h1>
           <div className="my-4 flex flex-col place-content-center">
             {Object.values(providers).map((provider: any) => (
-              <button
+              <Button
                 key={provider.id}
-                className="h-full w-full rounded-md drop-shadow-sm bg-orange-200 text-orange-800 font-semibold p-3"
                 onClick={() =>
                   signIn(provider.id, {
                     callbackUrl: process.env.NEXT_PUBLIC_VERCEL_URL
@@ -43,7 +43,7 @@ const SignIn = ({ providers }: { providers: ClientSafeProvider[] }) => {
                 }
               >
                 Sign in with {provider.name}
-              </button>
+              </Button>
             ))}
           </div>
         </main>
