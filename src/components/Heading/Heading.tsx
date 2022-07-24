@@ -14,7 +14,7 @@ const Heading = ({ level, children }: HeadingProps) => {
       )
     case '2':
       return (
-        <h2 className="text-xl sm:text-3xl font-rubik mb-8 sm:mb-16 text-emerald-600 px-20">
+        <h2 className="text-xl sm:text-3xl text-center font-rubik mb-8 sm:mb-16 text-emerald-600 px-20">
           {children}
         </h2>
       )

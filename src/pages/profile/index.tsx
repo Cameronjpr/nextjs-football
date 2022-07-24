@@ -9,6 +9,7 @@ import Head from 'next/head'
 import { trpc } from '@/utils/trpc'
 import Heading from '@/components/Heading/Heading'
 import Button from '@/components/Button/Button'
+import Link from '@/components/Link/Link'
 
 const Profile = ({ user }: { user: User }) => {
   const { data: session, status } = useSession()
@@ -71,26 +72,39 @@ const Profile = ({ user }: { user: User }) => {
                   </strong>
                   .
                 </Heading>
-              ) : null}
+              ) : (
+                <div className="flex flex-col items-center">
+                  <Heading level="2">You haven’t made any selections.</Heading>
+                  <Link href="/fixtures">Go to fixtures</Link>
+                </div>
+              )}
             </section>
           </div>
-          <div className="flex flex-row justify-center">
+          <div className="flex flex-col justify-center gap-4">
+            <h2 className="text-center font-semibold text-red-800">
+              🚨 Danger Zone 🚨
+            </h2>
             {showRealDeleteButton ? (
-              <div className="flex flex-col gap-2">
-                <span className="">
+              <div className="flex flex-col gap-4">
+                <p className="text-center">
                   Are you sure you want to delete your account?{' '}
                   <strong className="text-red-700">
                     This is IRREVERSIBLE.
                   </strong>
-                </span>
-                <div className="self-center">
+                </p>
+                <div className="self-center flex flex-row gap-4">
+                  <Button onClick={() => setShowRealDeleteButton(false)}>
+                    No, keep my account
+                  </Button>
                   <Button type="warning" onClick={handleDeleteAccount}>
                     Yes, delete my account
                   </Button>
                 </div>
               </div>
             ) : (
-              <Button onClick={handleShowDeleteButton}>Delete account</Button>
+              <div className="self-center w-36">
+                <Button onClick={handleShowDeleteButton}>Delete account</Button>
+              </div>
             )}
           </div>
         </main>
