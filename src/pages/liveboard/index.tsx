@@ -139,7 +139,7 @@ const Leaderboard = () => {
                     >
                       <td className="w-10 pl-3">{idx + 1}</td>
                       <td className="font-semibold">
-                        {username ?? name?.split(' ')[0]}
+                        {username ?? name?.split(' ')[0] ?? name}
                       </td>
                       <td>
                         {richTeams[Number(selections[0])]?.shortName ?? ''}

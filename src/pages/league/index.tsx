@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
 import classNames from 'classnames'
 import Head from 'next/head'
@@ -6,13 +6,18 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { trpc } from '@/utils/trpc'
 import Heading from '@/components/Heading/Heading'
+import Button from '@/components/Button/Button'
 
 const League = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [leagueCode, setLeagueCode] = useState('')
+  const [joinedLeague, setJoinedLeague] = useState('')
   const [leagueRes, setLeagueRes] = useState('')
+  const [textCopied, setTextCopied] = useState(false)
   const [error, setError] = useState('')
+
+  console.log(router.query)
 
   const userInfo = trpc.useQuery([
     'getUser',
@@ -24,12 +29,29 @@ const League = () => {
   const joinLeague = trpc.useMutation(['joinLeague'], {
     onSuccess: (res) => {
       setLeagueRes(res?.league ? 'joined' : 'left')
-      setLeagueCode(res?.league ?? '')
+      setJoinedLeague(res?.league ?? '')
+      console.log('successfully joined league ', res?.league)
     },
     onError: (data) => {
       setError(data.message)
     },
   })
+
+  useEffect(() => {
+    if (
+      router?.query?.code &&
+      userInfo?.data?.user?.email &&
+      userInfo?.data?.user?.league !== router?.query?.code &&
+      !joinLeague.isLoading &&
+      !joinLeague.isSuccess
+    ) {
+      console.log('joining league')
+      joinLeague.mutate({
+        email: userInfo?.data?.user?.email ?? '',
+        code: router.query?.code as string,
+      })
+    }
+  }, [router, userInfo])
 
   if (status === 'loading') {
     return <p>Loading...</p>
@@ -44,6 +66,8 @@ const League = () => {
     code: string
   ) => {
     e.preventDefault()
+
+    if (!code) return
 
     setLeagueRes('')
 
@@ -77,10 +101,7 @@ const League = () => {
       </Head>
       <main className="flex flex-col m-auto p-2 items-center gap-10">
         <Heading level="1">Leagues</Heading>
-        <form
-          className="flex flex-col w-80"
-          onSubmit={(e) => handleJoinSubmit(e, leagueCode)}
-        >
+        <form className="flex flex-col w-80">
           <h2 className="text-xl mb-2 font-semibold">
             Create or join a league
           </h2>
@@ -94,59 +115,59 @@ const League = () => {
           </p>
           <label className="mb-2">Enter league code</label>
           <input
-            className="border p-2 rounded-md font-rubik text-lg text-orange-900"
+            className="border p-2 my-2 rounded-md font-rubik text-lg text-orange-900"
             type="text"
             minLength={5}
             maxLength={10}
             value={leagueCode}
             onChange={(e) => setLeagueCode(e.target.value)}
           />
-          <button className="mt-2 p-2 bg-orange-200 text-orange-800 rounded-md">
+          <Button
+            onClick={(e: any) => handleJoinSubmit(e, leagueCode)}
+            isLoading={joinLeague.isLoading}
+          >
             Join
-          </button>
+          </Button>
         </form>
 
         {leagueRes === 'joined' && (
           <span>
-            Successfully joined <strong>{leagueCode}</strong> 🎉
+            Successfully joined <strong>{joinedLeague}</strong> 🎉
           </span>
         )}
         {status === 'authenticated' &&
           userInfo?.data?.user?.league &&
           leagueRes !== 'left' && (
-            <form
-              className="flex flex-col w-80"
-              onSubmit={(e) => handleLeaveSubmit(e)}
-            >
-              <button className="p-2 bg-red-200 text-orange-800 rounded-md">
-                Leave current league
-              </button>
-            </form>
+            <>
+              <form
+                className="flex flex-col w-80"
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  const inviteLink = `https://www.soccer-survivor.vercel.app/league?code=${userInfo?.data?.user?.league}`
+                  navigator.clipboard.writeText(inviteLink)
+                  setTextCopied(true)
+                }}
+              >
+                <button className="p-2 bg-green-200 text-green-800 rounded-md">
+                  Copy league invite link
+                </button>
+                {textCopied ? (
+                  <span className="p-1 text-center text-green-900">
+                    League invite link copied to clipboard 📋
+                  </span>
+                ) : null}
+              </form>
+              <form
+                className="flex flex-col w-80"
+                onSubmit={(e) => handleLeaveSubmit(e)}
+              >
+                <button className="p-2 bg-red-200 text-orange-800 rounded-md">
+                  Leave current league
+                </button>
+              </form>
+            </>
           )}
         {leagueRes === 'left' && <span>Successfully left league.</span>}
-        {/* <form
-          className="flex flex-col w-80"
-          onSubmit={(e) => handleJoinSubmit(e, leagueCode)}
-        >
-          <h2 className="text-lg mb-2">Create a new league</h2>
-          <label className="mb-2">League name</label>
-          <input
-            className="border p-2 rounded-md font-rubik text-lg text-orange-900"
-            type="text"
-            minLength={5}
-            maxLength={10}
-            value={leagueCode}
-            onChange={(e) => setLeagueCode(e.target.value)}
-          />
-          <button className="mt-2 p-2 bg-orange-200 text-orange-800 rounded-md">
-            Create
-          </button>
-        </form>
-        {createRes === 'success' && (
-          <span>
-            Successfully joined <strong>{leagueCode}</strong> 🎉
-          </span>
-        )} */}
       </main>
     </Layout>
   )
