@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { ReactNode } from 'react'
 
 type ButtonProps = {
-  onClick: () => void
+  onClick: (e: React.MouseEvent<HTMLElement>) => void
   disabled?: boolean
   isLoading?: boolean
   children: ReactNode

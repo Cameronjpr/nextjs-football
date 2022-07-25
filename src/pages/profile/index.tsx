@@ -15,6 +15,8 @@ const Profile = ({ user }: { user: User }) => {
   const { data: session, status } = useSession()
   const [showRealDeleteButton, setShowRealDeleteButton] = useState(false)
   const [error, setError] = useState('')
+  const [username, setUsername] = useState('')
+  const [usernameError, setUsernameError] = useState('')
 
   const router = useRouter()
 
@@ -23,12 +25,28 @@ const Profile = ({ user }: { user: User }) => {
     { email: session?.user?.email ?? '' },
   ])
 
+  useEffect(() => {
+    console.log(userInfo?.data)
+  }, [userInfo])
+
   const deleteUser = trpc.useMutation(['deleteUser'], {
     onSuccess: (res) => {
       signOut()
     },
     onError: (data) => {
       setError(data.message)
+    },
+  })
+
+  const updateUsername = trpc.useMutation(['updateUsername'], {
+    onSuccess: (res) => {
+      if (res?.user?.username) {
+        setUsername(res.user.username)
+        router.reload()
+      }
+    },
+    onError: (data) => {
+      setUsernameError(data.message)
     },
   })
 
@@ -46,6 +64,17 @@ const Profile = ({ user }: { user: User }) => {
     setShowRealDeleteButton(true)
   }
 
+  const handleUpdateUsername = (e: any) => {
+    setUsernameError('')
+    if (!session?.user?.email) return
+
+    e.preventDefault()
+    updateUsername.mutate({
+      email: session?.user?.email,
+      username: username,
+    })
+  }
+
   return (
     <Layout>
       <Head>
@@ -60,15 +89,21 @@ const Profile = ({ user }: { user: User }) => {
       <div className="flex w-full flex-col place-content-center">
         <main className="my-4">
           {userInfo?.data?.user?.name ? (
-            <Heading level="1">Hi, {userInfo?.data?.user?.name}!</Heading>
+            <Heading level="1">
+              Hi,{' '}
+              {userInfo?.data?.user?.username ??
+                userInfo?.data?.user?.name ??
+                'there'}
+              !
+            </Heading>
           ) : null}
           <div className="my-8 flex w-full flex-col gap-1">
             <section className="text-xl">
               {userInfo?.data?.user?.selections?.length ? (
                 <Heading level="2">
-                  This week, you have selected{' '}
+                  Your selection:{' '}
                   <strong className="font-semibold">
-                    {richTeams[userInfo?.data?.user?.selections[1]]?.shortName}
+                    {richTeams[userInfo?.data?.user?.selections[0]]?.shortName}
                   </strong>
                   .
                 </Heading>
@@ -79,8 +114,38 @@ const Profile = ({ user }: { user: User }) => {
                 </div>
               )}
             </section>
+            <form className="self-center flex flex-col w-64">
+              <fieldset className="flex flex-col">
+                <label className="font-semibold" htmlFor="username">
+                  Username
+                </label>
+                {usernameError ? (
+                  <span
+                    aria-live="polite"
+                    className="block text-red-700 w-full"
+                  >
+                    {usernameError}
+                  </span>
+                ) : null}
+                <input
+                  name="username"
+                  className="border border-emerald-900 self-center w-full rounded-md my-2"
+                  onChange={(e) => setUsername(e.target.value)}
+                  minLength={3}
+                  maxLength={16}
+                  type="text"
+                  value={username}
+                />
+                <Button
+                  isLoading={updateUsername.isLoading}
+                  onClick={(e: any) => handleUpdateUsername(e)}
+                >
+                  Update
+                </Button>
+              </fieldset>
+            </form>
           </div>
-          <div className="flex flex-col justify-center gap-4">
+          <div className="flex flex-col justify-center gap-4 mt-20">
             <h2 className="text-center font-semibold text-red-800">
               🚨 Danger Zone 🚨
             </h2>
@@ -96,7 +161,11 @@ const Profile = ({ user }: { user: User }) => {
                   <Button onClick={() => setShowRealDeleteButton(false)}>
                     No, keep my account
                   </Button>
-                  <Button type="warning" onClick={handleDeleteAccount}>
+                  <Button
+                    isLoading={deleteUser.isLoading}
+                    type="warning"
+                    onClick={handleDeleteAccount}
+                  >
                     Yes, delete my account
                   </Button>
                 </div>

@@ -32,7 +32,7 @@ const Help = () => {
             If they <strong>draw</strong>, nothing changes.
           </li>
           <li>
-            You can only pick each team <strong>twice</strong>.
+            You can only pick each team <strong>twice</strong> per season.
           </li>
           <li>
             The season is split into <strong>gameweeks</strong>.

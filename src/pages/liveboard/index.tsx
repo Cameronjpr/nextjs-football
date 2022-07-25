@@ -50,7 +50,7 @@ const Leaderboard = () => {
   }, [fixturesData])
 
   useEffect(() => {
-    console.log('score useffect')
+    const start = performance.now()
     if (
       !isLoading &&
       data?.users?.length &&
@@ -58,8 +58,9 @@ const Leaderboard = () => {
       !usersWithScores?.length
     ) {
       const scoredPlayers = getCurrentScores(data.users, fixturesData.data)
-      console.log(scoredPlayers)
       setUsersWithScores(scoredPlayers)
+      const duration = performance.now() - start
+      console.log(duration)
     }
   }, [isLoading, data, fixturesData])
   const [isLeagueMode, setIsLeagueMode] = useState(false)
@@ -123,18 +124,23 @@ const Leaderboard = () => {
                 })
                 .map(
                   (
-                    { name, username, selection, selections, score }: User,
+                    { name, username, selection, selections, score, id }: User,
                     idx
                   ) => (
                     <tr
                       key={idx}
                       className={classNames(
                         idx ? 'bg-white' : 'bg-yellow-300',
+                        id === userInfo?.data?.user?.id
+                          ? 'bg-blue-300 font-bold'
+                          : '',
                         'h-12 rounded-sm border-b-4 border-teal-800/5'
                       )}
                     >
                       <td className="w-10 pl-3">{idx + 1}</td>
-                      <td className="font-semibold">{username ?? name}</td>
+                      <td className="font-semibold">
+                        {username ?? name?.split(' ')[0]}
+                      </td>
                       <td>
                         {richTeams[Number(selections[0])]?.shortName ?? ''}
                       </td>

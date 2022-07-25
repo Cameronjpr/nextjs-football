@@ -111,6 +111,40 @@ export const appRouter = trpc
       return { success: true, user }
     },
   })
+  .mutation('updateUsername', {
+    input: z.object({
+      email: z.string(),
+      username: z.string(),
+    }),
+    async resolve({ input }) {
+      const isNameAlreadyTaken = await prisma.user.findFirst({
+        where: {
+          username: input.username,
+        },
+      })
+
+      if (isNameAlreadyTaken !== null) {
+        console.log(
+          'username already taken!',
+          input.username,
+          isNameAlreadyTaken
+        )
+        throw new trpc.TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'This username is already taken.',
+        })
+      }
+      const user = await prisma.user.update({
+        where: {
+          email: input.email,
+        },
+        data: {
+          username: input.username,
+        },
+      })
+      return { user }
+    },
+  })
   .mutation('deleteUser', {
     input: z.object({
       email: z.string(),

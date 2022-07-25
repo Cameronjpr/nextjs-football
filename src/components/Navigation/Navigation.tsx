@@ -48,14 +48,14 @@ const Navigation = () => {
   }, [isOpen])
 
   return (
-    <nav className="flex flex-col text-md z-20 h-14 w-full place-content-between place-items-center  bg-emerald-700 py-3 text-white antialiased fixed sm:relative">
+    <nav className="flex flex-col text-md z-20 w-full place-content-between place-items-center  bg-emerald-700 py-3 text-white antialiased fixed sm:relative">
       <div className="px-10 w-full flex flex-row justify-between">
         <Link href="/" passHref>
           <a
             onClick={() => setIsOpen(false)}
             className="font-bold text-xl italic font-rubik w-max text-emerald-100"
           >
-            Soccer Survivor
+            <span>Untitled Soccer Game</span>
           </a>
         </Link>
         <button
@@ -81,7 +81,7 @@ const Navigation = () => {
               className="hidden sm:block sm:h-screen sm:w-full"
               onClick={() => setIsOpen(false)}
             ></div>
-            <ul className="flex flex-col p-10 pt-14 self-start align-center w-full sm:w-2/5 h-full bg-emerald-700 py-3 text-white antialiased text-2xl font-bold gap-10">
+            <ul className="flex flex-col p-10 pt-14 self-start align-center w-full sm:w-96 h-full bg-emerald-700 py-3 text-white antialiased text-2xl font-bold gap-10">
               <MenuItem
                 href={'/fixtures'}
                 onClick={() => setIsOpen(false)}

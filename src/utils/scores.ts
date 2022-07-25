@@ -11,7 +11,7 @@ export const getCurrentScores = (
     let tally = 0
     p.selections.forEach((s, idx) => {
       if (s === -1) return
-      // Potential issue here for a double gameweek – think it would grab the first of X games played by a team in a GW
+      // Potential issue here for a double gameweek – think it would grab the first of 2 games played by a team in a GW
       const fixture = getFixtureFromSelectionAndGameweek(
         fixtures,
         s + 1,
