@@ -62,7 +62,7 @@ const Leaderboard = () => {
       const duration = performance.now() - start
       console.log(duration)
     }
-  }, [isLoading, data, fixturesData])
+  }, [isLoading, data, fixturesData, usersWithScores?.length])
   const [isLeagueMode, setIsLeagueMode] = useState(false)
 
   return (

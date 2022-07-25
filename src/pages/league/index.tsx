@@ -51,7 +51,7 @@ const League = () => {
         code: router.query?.code as string,
       })
     }
-  }, [router, userInfo])
+  }, [router, userInfo, joinLeague])
 
   if (status === 'loading') {
     return <p>Loading...</p>
@@ -101,7 +101,7 @@ const League = () => {
       </Head>
       <main className="flex flex-col m-auto p-2 items-center gap-10">
         <Heading level="1">Leagues</Heading>
-        <form className="flex flex-col w-80">
+        <div className="w-80">
           <h2 className="text-xl mb-2 font-semibold">
             Create or join a league
           </h2>
@@ -113,22 +113,26 @@ const League = () => {
             If the league doesn’t yet exist, we’ll create it for you and make
             you its first member!
           </p>
-          <label className="mb-2">Enter league code</label>
-          <input
-            className="border p-2 my-2 rounded-md font-rubik text-lg text-orange-900"
-            type="text"
-            minLength={5}
-            maxLength={10}
-            value={leagueCode}
-            onChange={(e) => setLeagueCode(e.target.value)}
-          />
-          <Button
-            onClick={(e: any) => handleJoinSubmit(e, leagueCode)}
-            isLoading={joinLeague.isLoading}
-          >
-            Join
-          </Button>
-        </form>
+        </div>
+        {userInfo.isSuccess && !userInfo?.data?.user?.league ? (
+          <form className="flex flex-col w-80">
+            <label className="mb-2">Enter league code</label>
+            <input
+              className="border p-2 my-2 rounded-md font-rubik text-lg text-orange-900"
+              type="text"
+              minLength={5}
+              maxLength={10}
+              value={leagueCode}
+              onChange={(e) => setLeagueCode(e.target.value)}
+            />
+            <Button
+              onClick={(e: any) => handleJoinSubmit(e, leagueCode)}
+              isLoading={joinLeague.isLoading}
+            >
+              Join
+            </Button>
+          </form>
+        ) : null}
 
         {leagueRes === 'joined' && (
           <span>
@@ -148,12 +152,15 @@ const League = () => {
                   setTextCopied(true)
                 }}
               >
+                <span className="text-center font-semibolds p-2">
+                  You’re a member of ”{userInfo?.data?.user?.league}”
+                </span>
                 <button className="p-2 bg-green-200 text-green-800 rounded-md">
                   Copy league invite link
                 </button>
                 {textCopied ? (
                   <span className="p-1 text-center text-green-900">
-                    League invite link copied to clipboard 📋
+                    League invite link copied to clipboard 🎉
                   </span>
                 ) : null}
               </form>
@@ -162,7 +169,7 @@ const League = () => {
                 onSubmit={(e) => handleLeaveSubmit(e)}
               >
                 <button className="p-2 bg-red-200 text-orange-800 rounded-md">
-                  Leave current league
+                  Leave league ”{userInfo?.data?.user?.league}”
                 </button>
               </form>
             </>
