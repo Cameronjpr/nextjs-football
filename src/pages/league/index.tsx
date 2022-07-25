@@ -147,7 +147,7 @@ const League = () => {
                 className="flex flex-col w-80"
                 onSubmit={(e) => {
                   e.preventDefault()
-                  const inviteLink = `https://www.soccer-survivor.vercel.app/league?code=${userInfo?.data?.user?.league}`
+                  const inviteLink = `https://soccer-survivor.vercel.app/league?code=${userInfo?.data?.user?.league}`
                   navigator.clipboard.writeText(inviteLink)
                   setTextCopied(true)
                 }}
