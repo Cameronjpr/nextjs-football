@@ -30,6 +30,7 @@ const League = () => {
     onSuccess: (res) => {
       setLeagueRes(res?.league ? 'joined' : 'left')
       setJoinedLeague(res?.league ?? '')
+      userInfo.refetch()
       console.log('successfully joined league ', res?.league)
     },
     onError: (data) => {
@@ -70,6 +71,7 @@ const League = () => {
     if (!code) return
 
     setLeagueRes('')
+    setTextCopied(false)
 
     joinLeague.mutate({
       email: session?.user?.email ?? '',
@@ -81,6 +83,7 @@ const League = () => {
     e.preventDefault()
 
     setLeagueRes('')
+    setTextCopied(false)
 
     joinLeague.mutate({
       email: session?.user?.email ?? '',
@@ -99,7 +102,7 @@ const League = () => {
           href="/images/favicon-16x16.png"
         />
       </Head>
-      <main className="flex flex-col m-auto p-2 items-center gap-10">
+      <main className="flex flex-col m-auto p-2 items-center gap-8">
         <Heading level="1">Leagues</Heading>
         <div className="w-80">
           <h2 className="text-xl mb-2 font-semibold">
@@ -114,7 +117,9 @@ const League = () => {
             you its first member!
           </p>
         </div>
-        {userInfo.isSuccess && !userInfo?.data?.user?.league ? (
+        {userInfo.isSuccess &&
+        !userInfo?.data?.user?.league &&
+        !joinedLeague ? (
           <form className="flex flex-col w-80">
             <label className="mb-2">Enter league code</label>
             <input
@@ -133,16 +138,10 @@ const League = () => {
             </Button>
           </form>
         ) : null}
-
-        {leagueRes === 'joined' && (
-          <span>
-            Successfully joined <strong>{joinedLeague}</strong> 🎉
-          </span>
-        )}
         {status === 'authenticated' &&
           userInfo?.data?.user?.league &&
           leagueRes !== 'left' && (
-            <>
+            <section className="flex flex-col gap-2">
               <form
                 className="flex flex-col w-80"
                 onSubmit={(e) => {
@@ -152,9 +151,14 @@ const League = () => {
                   setTextCopied(true)
                 }}
               >
-                <span className="text-center font-semibolds p-2">
-                  You’re a member of ”{userInfo?.data?.user?.league}”
-                </span>
+                {!joinLeague.isLoading ? (
+                  <span className="text-center font-semibold p-2 mb-2">
+                    You’re a member of{' '}
+                    <span className="ml-1 p-1 rounded-md bg-blue-200">
+                      {userInfo?.data?.user?.league}
+                    </span>
+                  </span>
+                ) : null}
                 <button className="p-2 bg-green-200 text-green-800 rounded-md">
                   Copy league invite link
                 </button>
@@ -168,11 +172,11 @@ const League = () => {
                 className="flex flex-col w-80"
                 onSubmit={(e) => handleLeaveSubmit(e)}
               >
-                <button className="p-2 bg-red-200 text-orange-800 rounded-md">
-                  Leave league ”{userInfo?.data?.user?.league}”
+                <button className="p-2 bg-red-200 text-red-800 rounded-md">
+                  Leave league
                 </button>
               </form>
-            </>
+            </section>
           )}
         {leagueRes === 'left' && <span>Successfully left league.</span>}
       </main>
