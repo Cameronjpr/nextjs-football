@@ -58,12 +58,6 @@ export const appRouter = trpc
       const fixtures = (await res.json()) as Fixtures
 
       const formattedFixtures = fixtures.map((f: Fixture, idx: number) => {
-        if (idx === 0) {
-          f = { ...f, ...finished.data[0] }
-        }
-        if (idx === 1) {
-          f = { ...f, ...active.data[1] }
-        }
         return {
           ...f,
           teams: [

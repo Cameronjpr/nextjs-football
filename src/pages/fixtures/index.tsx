@@ -15,6 +15,8 @@ import FixtureList from '@/components/FixtureList'
 import Layout from '@/components/Layout/Layout'
 import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
 import Heading from '@/components/Heading/Heading'
+import { getMostPopularPickForGameweek } from '@/utils/selections'
+import { richTeams } from '@/data/teams'
 
 type User = {
   session: Session | null
@@ -30,6 +32,7 @@ export const ActiveGameweekContext = createContext<Number>(1)
 
 const Fixtures = () => {
   const fixturesData = trpc.useQuery(['getFixtures'])
+  const users = trpc.useQuery(['getUsers'])
   const { data: session, status } = useSession()
   const userInfo = trpc.useQuery([
     'getUser',
@@ -43,8 +46,23 @@ const Fixtures = () => {
   })
   const [selectedGameweek, setSelectedGameweek] = useState(1)
   const [activeGameweek, setActiveGameweek] = useState(1)
+  const [mostPopularSelection, setMostPopularSelection] = useState<
+    number | undefined
+  >(undefined)
   const [daysUntilDeadline, setDaysUntilDeadline] = useState('')
 
+  useEffect(() => {
+    if (!users.isLoading && users?.data?.users.length) {
+      const selectionsForGameweek = users.data.users.map(
+        (u) => u.selections[activeGameweek]
+      )
+      setMostPopularSelection(
+        getMostPopularPickForGameweek(selectionsForGameweek)
+      )
+    }
+  }, [users, activeGameweek])
+
+  console.log(richTeams[mostPopularSelection ?? 0].name)
   useEffect(() => {
     const daysUntilDeadline = (activeGameweek: number) => {
       const now = new Date()
@@ -111,6 +129,7 @@ const Fixtures = () => {
                   fixtures={fixturesData?.data}
                   activeGameeweek={activeGameweek}
                   selectedGameweek={selectedGameweek}
+                  mostPopularSelection={mostPopularSelection}
                 />
               )}
             </main>

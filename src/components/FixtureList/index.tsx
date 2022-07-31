@@ -19,10 +19,12 @@ const FixtureList = ({
   fixtures,
   selectedGameweek,
   activeGameeweek,
+  mostPopularSelection,
 }: {
   fixtures: Fixture[]
   selectedGameweek: number
   activeGameeweek: number
+  mostPopularSelection: number | undefined
 }) => {
   const [selections, setSelections] = useState<number[]>([])
   const [error, setError] = useState('')
@@ -97,6 +99,7 @@ const FixtureList = ({
                     fixture={f}
                     isLoading={makeGameweekSpecificSelection.isLoading}
                     isPartOfActiveGameweek={activeGameeweek === f.event}
+                    mostPopularSelection={mostPopularSelection}
                     handleSelection={handleTeamSelect}
                   />
                 </li>

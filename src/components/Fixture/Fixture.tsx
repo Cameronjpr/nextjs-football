@@ -12,6 +12,7 @@ const FixtureCard = ({
   handleSelection,
   isLoading,
   isPartOfActiveGameweek,
+  mostPopularSelection,
 }: FixtureCardProps) => {
   const { id, teams, started, finished, kickoff_time, event } = fixture
   const selections = useContext(SelectionContext)
@@ -66,11 +67,23 @@ const FixtureCard = ({
               //   borderColor: t.primaryColor,
               // }}
             >
-              <SelectionOccurrenceIndicator
-                selectionOccurrences={selectionOccurrences}
-                isHome={t.isHome}
-                color={t.primaryColor}
-              />
+              <div
+                className="w-full flex flex-row justify-between border-t-2"
+                style={{
+                  borderColor: t.primaryColor,
+                }}
+              >
+                <SelectionOccurrenceIndicator
+                  selectionOccurrences={selectionOccurrences}
+                  isHome={t.isHome}
+                  color={t.primaryColor}
+                />
+                {mostPopularSelection === t.basic_id && (
+                  <span className="pt-1 px-2 w-max text-orange-600">
+                    Popular 🔥
+                  </span>
+                )}
+              </div>
               <div
                 className={classNames(
                   'font-medium text-md pb-1',
@@ -127,12 +140,9 @@ const SelectionOccurrenceIndicator = ({
 }: SelectionOccurrenceIndicatorProps) => (
   <div
     className={classNames(
-      'flex space-betweenh-8 gap-2 p-1 w-full border-t-2 h-8',
+      'flex space-betweenh-8 gap-2 p-1 h-8',
       isHome ? 'pl-1 flex-row' : 'flex-row-reverse pr-1'
     )}
-    style={{
-      borderColor: color,
-    }}
   >
     {selectionOccurrences.map((_o, idx) => (
       <div
