@@ -54,13 +54,14 @@ const Fixtures = () => {
   useEffect(() => {
     if (!users.isLoading && users?.data?.users.length) {
       const selectionsForGameweek = users.data.users.map(
-        (u) => u.selections[activeGameweek]
+        (u) => u.selections[selectedGameweek - 1]
       )
+      console.log(selectedGameweek)
       setMostPopularSelection(
         getMostPopularPickForGameweek(selectionsForGameweek)
       )
     }
-  }, [users, activeGameweek])
+  }, [users, activeGameweek, selectedGameweek])
 
   console.log(richTeams[mostPopularSelection ?? 0].name)
   useEffect(() => {
