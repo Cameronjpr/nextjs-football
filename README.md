@@ -1,4 +1,4 @@
-# Soccer Survivor
+# Soccer Predictor
 
 ## Overview
 

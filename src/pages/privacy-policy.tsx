@@ -15,15 +15,15 @@ const PrivacyPolicy = () => {
           href="/images/favicon-16x16.png"
         />
       </Head>
-      <h1 className="text-2xl my-4">Privacy Policy of Soccer Survivor</h1>
+      <h1 className="text-2xl my-4">Privacy Policy of Soccer Predictor</h1>
       <p>
-        Soccer Survivor operates the https://nextjs-football-eight.vercel.app/
+        Soccer Predictor operates the https://nextjs-football-eight.vercel.app/
         website, which provides the SERVICE.
       </p>
       <p>
         This page is used to inform website visitors regarding our policies with
         the collection, use, and disclosure of Personal Information if anyone
-        decided to use our Service, the Soccer Survivor website.
+        decided to use our Service, the Soccer Predictor website.
       </p>
       <p>
         If you choose to use our Service, then you agree to the collection and

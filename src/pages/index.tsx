@@ -35,7 +35,7 @@ const Home = () => {
   return (
     <UserContext.Provider value={user}>
       <Head>
-        <title>Soccer Survivor</title>
+        <title>Soccer Predictor</title>
         <link
           rel="icon"
           type="image/png"
@@ -46,7 +46,7 @@ const Home = () => {
       <Layout>
         <main className="flex flex-col p-2">
           <header className="flex flex-row justify-between items-center">
-            <Heading level="1">Soccer Survivor</Heading>
+            <Heading level="1">Soccer Predictor</Heading>
           </header>
           <span className="text-center text-slate-600">
             A real-world, real-time football guessing game.

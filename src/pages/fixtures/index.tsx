@@ -101,7 +101,7 @@ const Fixtures = () => {
     <UserContext.Provider value={user}>
       <ActiveGameweekContext.Provider value={activeGameweek}>
         <Head>
-          <title>Fixtures - Soccer Survivor</title>
+          <title>Fixtures</title>
           <link
             rel="icon"
             type="image/png"

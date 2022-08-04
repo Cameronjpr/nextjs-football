@@ -8,7 +8,7 @@ const Help = () => {
   return (
     <Layout>
       <Head>
-        <title>Leaderboard - How to play</title>
+        <title>How to play</title>
         <link
           rel="icon"
           type="image/png"

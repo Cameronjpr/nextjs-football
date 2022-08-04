@@ -78,7 +78,7 @@ const Profile = ({ user }: { user: User }) => {
   return (
     <Layout>
       <Head>
-        <title>Profile - Soccer Survivor</title>
+        <title>Profile - Soccer Predictor</title>
         <link
           rel="icon"
           type="image/png"
