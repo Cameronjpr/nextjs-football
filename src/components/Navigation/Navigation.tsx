@@ -55,7 +55,8 @@ const Navigation = () => {
             onClick={() => setIsOpen(false)}
             className="font-bold text-xl italic font-rubik w-max text-emerald-100"
           >
-            <span>Untitled Soccer Game</span>
+            <span>Soccer Predictor</span>
+            <span className="pl-1 text-xs text-orange-200">beta</span>
           </a>
         </Link>
         <button
