@@ -82,7 +82,14 @@ export const appRouter = trpc
   .query('getUsers', {
     async resolve() {
       try {
-        const users = await prisma.user.findMany({})
+        const users = await prisma.user.findMany({
+          select: {
+            id: true,
+            selections: true,
+            name: true,
+            username: true,
+          },
+        })
         return { success: true, users }
       } catch (e) {
         throw new trpc.TRPCError({
