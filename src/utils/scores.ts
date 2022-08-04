@@ -1,12 +1,12 @@
-import { Fixture } from '@/backend/router'
-import { PublicUser, User } from '@prisma/client'
+import { Fixture, Player } from '@/backend/router'
+import { User } from '@prisma/client'
 
 // This file makes me doubt my ability as a software engineer
 
 export const getCurrentScores = (
-  players: PublicUser[],
+  players: Player[],
   fixtures: Fixture[]
-): PublicUser[] => {
+): Player[] => {
   const playersWithScores = players.map((p) => {
     let tally = 0
     if (p?.selections?.length) {

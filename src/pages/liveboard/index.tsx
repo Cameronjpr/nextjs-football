@@ -3,12 +3,12 @@ import Layout from '../../components/Layout/Layout'
 import classNames from 'classnames'
 import { trpc } from '@/utils/trpc'
 import { richTeams } from '../../data/teams'
-import { PublicUser, User } from '@prisma/client'
+import { User } from '@prisma/client'
 import Head from 'next/head'
 import superjson from 'superjson'
 import { useSession } from 'next-auth/react'
 import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
-import { appRouter } from '@/backend/router'
+import { appRouter, Player } from '@/backend/router'
 import { createSSGHelpers } from '@trpc/react/ssg'
 import Heading from '@/components/Heading/Heading'
 import { getCurrentScores } from '@/utils/scores'
@@ -35,7 +35,7 @@ const Leaderboard = () => {
   const { data: session, status } = useSession()
   const fixturesData = trpc.useQuery(['getFixtures'])
   const { isLoading, data } = trpc.useQuery(['getUsers'])
-  const [usersWithScores, setUsersWithScores] = useState<PublicUser[]>([])
+  const [usersWithScores, setUsersWithScores] = useState<Player[]>([])
   const userInfo = trpc.useQuery([
     'getUser',
     { email: session?.user?.email ?? '' },
@@ -115,21 +115,15 @@ const Leaderboard = () => {
             {!isLoading &&
               usersWithScores?.length &&
               usersWithScores
-                .sort(
-                  (a: PublicUser, b: PublicUser) =>
-                    (b.score ?? 0) - (a.score ?? 0)
-                )
-                .filter((u: PublicUser) => {
+                .sort((a: Player, b: Player) => (b.score ?? 0) - (a.score ?? 0))
+                .filter((u: Player) => {
                   return (
                     !isLeagueMode ||
                     (u.league && u.league === userInfo?.data?.user?.league)
                   )
                 })
                 .map(
-                  (
-                    { name, username, selections, score, id }: PublicUser,
-                    idx
-                  ) => (
+                  ({ name, username, selections, score, id }: Player, idx) => (
                     <tr
                       key={idx}
                       className={classNames(

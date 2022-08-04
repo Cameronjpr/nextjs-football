@@ -8,11 +8,11 @@ import * as trpc from '@trpc/server'
 export type Player = z.infer<typeof PlayerSchema>
 const PlayerSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string().nullable(),
   username: z.string().nullable(),
   score: z.number(),
-  selection: z.number().nullable(),
   selections: z.array(z.number()),
+  league: z.string().nullable(),
 })
 
 export type Team = z.infer<typeof TeamSchema>
