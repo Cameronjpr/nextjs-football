@@ -1,28 +1,30 @@
 import { Fixture } from '@/backend/router'
-import { User } from '@prisma/client'
+import { PublicUser, User } from '@prisma/client'
 
 // This file makes me doubt my ability as a software engineer
 
 export const getCurrentScores = (
-  players: User[],
+  players: PublicUser[],
   fixtures: Fixture[]
-): User[] => {
+): PublicUser[] => {
   const playersWithScores = players.map((p) => {
     let tally = 0
-    p.selections.forEach((s, idx) => {
-      if (s === -1) return
-      // Potential issue here for a double gameweek – think it would grab the first of 2 games played by a team in a GW
-      const fixture = getFixtureFromSelectionAndGameweek(
-        fixtures,
-        s + 1,
-        idx + 1
-      )
-      if (fixture === undefined) return
+    if (p?.selections?.length) {
+      p.selections.forEach((s, idx) => {
+        if (s === -1) return
+        // Potential issue here for a double gameweek – think it would grab the first of 2 games played by a team in a GW
+        const fixture = getFixtureFromSelectionAndGameweek(
+          fixtures,
+          s + 1,
+          idx + 1
+        )
+        if (fixture === undefined) return
 
-      const points = getPointsFromFixtureAndSelection(fixture, s + 1)
-      if (points === undefined) return
-      tally += points
-    })
+        const points = getPointsFromFixtureAndSelection(fixture, s + 1)
+        if (points === undefined) return
+        tally += points
+      })
+    }
     return {
       ...p,
       score: tally,

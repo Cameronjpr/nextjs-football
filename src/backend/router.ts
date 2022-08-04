@@ -88,6 +88,8 @@ export const appRouter = trpc
             selections: true,
             name: true,
             username: true,
+            score: true,
+            league: true,
           },
         })
         return { success: true, users }

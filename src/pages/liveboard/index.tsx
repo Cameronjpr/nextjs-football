@@ -3,7 +3,7 @@ import Layout from '../../components/Layout/Layout'
 import classNames from 'classnames'
 import { trpc } from '@/utils/trpc'
 import { richTeams } from '../../data/teams'
-import { User } from '@prisma/client'
+import { PublicUser, User } from '@prisma/client'
 import Head from 'next/head'
 import superjson from 'superjson'
 import { useSession } from 'next-auth/react'
@@ -35,7 +35,7 @@ const Leaderboard = () => {
   const { data: session, status } = useSession()
   const fixturesData = trpc.useQuery(['getFixtures'])
   const { isLoading, data } = trpc.useQuery(['getUsers'])
-  const [usersWithScores, setUsersWithScores] = useState<User[]>([])
+  const [usersWithScores, setUsersWithScores] = useState<PublicUser[]>([])
   const userInfo = trpc.useQuery([
     'getUser',
     { email: session?.user?.email ?? '' },
@@ -115,8 +115,11 @@ const Leaderboard = () => {
             {!isLoading &&
               usersWithScores?.length &&
               usersWithScores
-                .sort((a: User, b: User) => (b.score ?? 0) - (a.score ?? 0))
-                .filter((u: User) => {
+                .sort(
+                  (a: PublicUser, b: PublicUser) =>
+                    (b.score ?? 0) - (a.score ?? 0)
+                )
+                .filter((u: PublicUser) => {
                   return (
                     !isLeagueMode ||
                     (u.league && u.league === userInfo?.data?.user?.league)
@@ -124,7 +127,7 @@ const Leaderboard = () => {
                 })
                 .map(
                   (
-                    { name, username, selection, selections, score, id }: User,
+                    { name, username, selections, score, id }: PublicUser,
                     idx
                   ) => (
                     <tr
