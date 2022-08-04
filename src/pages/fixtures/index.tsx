@@ -7,7 +7,7 @@ import Head from 'next/head'
 import superjson from 'superjson'
 import { appRouter } from '@/backend/router'
 import { trpc } from '@/utils/trpc'
-import { formatDistance, parseJSON } from 'date-fns'
+import { formatDistance, formatDistanceToNowStrict, parseJSON } from 'date-fns'
 import { GameweekNavigation } from '@/components/GameweekNavigation/GameweekNavigation'
 import Link from '@/components/Link/Link'
 import { Status } from '@/account/types'
@@ -49,7 +49,7 @@ const Fixtures = () => {
   const [mostPopularSelection, setMostPopularSelection] = useState<
     number | undefined
   >(undefined)
-  const [daysUntilDeadline, setDaysUntilDeadline] = useState('')
+  const [timeUntilDeadline, setTimeUntilDeadline] = useState('')
 
   useEffect(() => {
     if (!users.isLoading && users?.data?.users.length) {
@@ -65,7 +65,7 @@ const Fixtures = () => {
 
   console.log(richTeams[mostPopularSelection ?? 0].name)
   useEffect(() => {
-    const daysUntilDeadline = (activeGameweek: number) => {
+    const timeUntilDeadline = (activeGameweek: number) => {
       const now = new Date()
       const fixtures = fixturesData?.data
       // ALERT: What about the last gameweek of the season!!!! Don't want to get the 39th week
@@ -73,18 +73,19 @@ const Fixtures = () => {
         (f) => f.event === activeGameweek
       )
       if (now === undefined || firstGameOfNextGameweek === undefined) return ''
-      return formatDistance(
-        now,
-        parseJSON(firstGameOfNextGameweek?.kickoff_time ?? '')
+
+      const d = new Date(firstGameOfNextGameweek?.kickoff_time)
+      return formatDistanceToNowStrict(
+        parseJSON(d.setHours(d.getHours()) ?? '')
       )
     }
-    setDaysUntilDeadline(daysUntilDeadline(selectedGameweek))
+    setTimeUntilDeadline(timeUntilDeadline(selectedGameweek))
   }, [selectedGameweek, fixturesData])
 
   useEffect(() => {
     if (fixturesData.isSuccess) {
       const activeGameeweek = getActiveGameweekFromFixtures(fixturesData?.data)
-      console.log(activeGameeweek)
+      console.log('activeGameeweek ', activeGameeweek)
       setActiveGameweek(activeGameeweek)
     }
   }, [fixturesData])
@@ -118,10 +119,10 @@ const Fixtures = () => {
               selectedGameweek={selectedGameweek}
               setSelectedGameweek={setSelectedGameweek}
             />
-            {daysUntilDeadline !== '' &&
+            {timeUntilDeadline !== '' &&
             activeGameweek === selectedGameweek - 1 ? (
               <span className="text-red-600 bg-red-100/50 rounded-md p-2 w-max m-auto">
-                Deadline in {daysUntilDeadline}
+                Deadline in {timeUntilDeadline}
               </span>
             ) : null}
             <main className="">
