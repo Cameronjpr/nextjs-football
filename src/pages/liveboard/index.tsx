@@ -68,7 +68,7 @@ const Leaderboard = () => {
   return (
     <Layout>
       <Head>
-        <title>Leaderboard - Soccer Predictor</title>
+        <title>Leaderboard</title>
         <link
           rel="icon"
           type="image/png"

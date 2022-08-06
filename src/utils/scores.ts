@@ -41,7 +41,7 @@ const getPointsFromFixtureAndSelection = (
   if (!fixture) return
   console.log(fixture)
   if (selection === -1) return
-  if (!fixture.finished) return
+  if (!fixture.finished_provisional) return
   const { team_a_score, team_h_score, team_a, team_h } = fixture
 
   console.log('team h: ', team_h, ' score: ', team_h_score)
