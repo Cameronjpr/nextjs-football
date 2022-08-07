@@ -54,6 +54,9 @@ const getPointsFromFixtureAndSelection = (
 
   const homeVictory = team_h_score > team_a_score
   const awayVictory = team_h_score < team_a_score
+  const draw = team_h_score === team_a_score
+
+  if (draw) return 0
 
   if (selection === team_h) {
     if (homeVictory) return 1
