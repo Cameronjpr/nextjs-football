@@ -139,7 +139,8 @@ const Leaderboard = () => {
                         {username ?? name?.split(' ')[0] ?? name}
                       </td>
                       <td>
-                        {richTeams[Number(selections[0])]?.shortName ?? ''}
+                        {richTeams[Number(selections[gameweek])]?.shortName ??
+                          ''}
                       </td>
                       <td>{score}</td>
                     </tr>
