@@ -1,26 +1,28 @@
-import { SessionProvider } from "next-auth/react";
-import "@/styles/global.css";
-import { withTRPC } from "@trpc/next";
-import { AppType } from "next/dist/shared/lib/utils";
-import type { AppRouter } from "@/backend/router";
-import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
-import { useState } from "react";
+import { SessionProvider } from 'next-auth/react'
+import '@/styles/global.css'
+import { withTRPC } from '@trpc/next'
+import { AppType } from 'next/dist/shared/lib/utils'
+import type { AppRouter } from '@/backend/router'
+import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { useState } from 'react'
 
-const MyApp: AppType = ({ Component, pageProps }) => {
-  const [queryClient] = useState(() => new QueryClient());
+const MyApp = ({
+  Component,
+  pageProps: { session, dehydratedState, ...pageProps },
+}: any) => {
+  const [queryClient] = useState(() => new QueryClient())
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <SessionProvider session={pageProps.session}>
+      <Hydrate state={dehydratedState}>
+        <SessionProvider session={session}>
           <Component {...pageProps} />
         </SessionProvider>
       </Hydrate>
-      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
-  );
-};
+  )
+}
 
 export default withTRPC<AppRouter>({
   config({ ctx }) {
@@ -30,7 +32,7 @@ export default withTRPC<AppRouter>({
      */
     const url = process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/trpc`
-      : "http://localhost:3000/api/trpc";
+      : 'http://localhost:3000/api/trpc'
 
     return {
       url,
@@ -38,10 +40,10 @@ export default withTRPC<AppRouter>({
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
-    };
+    }
   },
   /**
    * @link https://trpc.io/docs/ssr
    */
   ssr: false,
-})(MyApp);
+})(MyApp)
