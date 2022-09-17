@@ -31,7 +31,11 @@ export const UserContext = createContext<User>({
 export const ActiveGameweekContext = createContext<Number>(1)
 
 const Fixtures = () => {
-  const fixturesData = trpc.useQuery(['getFixtures'])
+  const fixturesData = trpc.useQuery(['getFixtures'], {
+    onSuccess(data) {
+      setSelectedGameweek(getActiveGameweekFromFixtures(data))
+    },
+  })
   const users = trpc.useQuery(['getUsers'])
   const { data: session, status } = useSession()
   const userInfo = trpc.useQuery([
@@ -44,8 +48,8 @@ const Fixtures = () => {
     session,
     status,
   })
-  const [selectedGameweek, setSelectedGameweek] = useState(1)
   const [activeGameweek, setActiveGameweek] = useState(1)
+  const [selectedGameweek, setSelectedGameweek] = useState(1)
   const [mostPopularSelection, setMostPopularSelection] = useState<
     number | undefined
   >(undefined)

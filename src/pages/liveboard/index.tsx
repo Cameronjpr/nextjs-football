@@ -33,21 +33,19 @@ export async function getStaticProps() {
 const Leaderboard = () => {
   const [gameweek, setGameweek] = useState(0)
   const { data: session, status } = useSession()
-  const fixturesData = trpc.useQuery(['getFixtures'])
+  const fixturesData = trpc.useQuery(['getFixtures'], {
+    onSuccess(data) {
+      const activeGameeweek = getActiveGameweekFromFixtures(data)
+
+      setGameweek(activeGameeweek)
+    },
+  })
   const { isLoading, data } = trpc.useQuery(['getUsers'])
   const [usersWithScores, setUsersWithScores] = useState<Player[]>([])
   const userInfo = trpc.useQuery([
     'getUser',
     { email: session?.user?.email ?? '' },
   ])
-
-  useEffect(() => {
-    if (fixturesData.isSuccess) {
-      const activeGameeweek = getActiveGameweekFromFixtures(fixturesData?.data)
-
-      setGameweek(activeGameeweek)
-    }
-  }, [fixturesData])
 
   useEffect(() => {
     const start = performance.now()
@@ -139,8 +137,8 @@ const Leaderboard = () => {
                         {username ?? name?.split(' ')[0] ?? name}
                       </td>
                       <td>
-                        {richTeams[Number(selections[gameweek])]?.shortName ??
-                          ''}
+                        {richTeams[Number(selections[gameweek - 1])]
+                          ?.shortName ?? ''}
                       </td>
                       <td>{score}</td>
                     </tr>
