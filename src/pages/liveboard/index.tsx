@@ -61,7 +61,6 @@ const Leaderboard = () => {
       console.log(duration)
     }
   }, [isLoading, data, fixturesData, usersWithScores?.length])
-  const [isLeagueMode, setIsLeagueMode] = useState(false)
 
   return (
     <Layout>
@@ -77,21 +76,6 @@ const Leaderboard = () => {
       <main className="flex w-full flex-col place-content-start rounded-lg sm:max-w-3xl">
         <Heading level="1">Current Leaderboard</Heading>
         {gameweek ? <h2 className="text-center">Gameweek {gameweek}</h2> : null}
-        {status === 'authenticated' && (
-          <div className="flex flex-row-reverse p-3">
-            {userInfo?.data?.user?.league ? (
-              <form className="flex flex-row gap-2 text-lg items-center">
-                <label htmlFor="league-mode-toggle">League only</label>
-                <input
-                  className="w-4 h-4"
-                  type="checkbox"
-                  name="league-mode-toggle"
-                  onChange={() => setIsLeagueMode(!isLeagueMode)}
-                />
-              </form>
-            ) : null}
-          </div>
-        )}
         <table>
           <thead>
             <tr className="h-10 border-b-2 text-left italic text-orange-900">
@@ -114,12 +98,6 @@ const Leaderboard = () => {
               usersWithScores?.length &&
               usersWithScores
                 .sort((a: Player, b: Player) => (b.score ?? 0) - (a.score ?? 0))
-                .filter((u: Player) => {
-                  return (
-                    !isLeagueMode ||
-                    (u.league && u.league === userInfo?.data?.user?.league)
-                  )
-                })
                 .map(
                   ({ name, username, selections, score, id }: Player, idx) => (
                     <tr

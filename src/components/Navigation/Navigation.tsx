@@ -107,13 +107,6 @@ const Navigation = () => {
                   order={2}
                 />
               ) : null}
-              <MenuItem
-                href={'/league'}
-                onClick={() => setIsOpen(false)}
-                isActive={isActive('/league')}
-                label="🤝  Join a league"
-                order={3}
-              />
               {status === 'authenticated' ? (
                 <MenuItem
                   href="/profile"

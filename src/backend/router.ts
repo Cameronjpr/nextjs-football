@@ -160,24 +160,6 @@ export const appRouter = trpc
       })
     },
   })
-  .mutation('joinLeague', {
-    input: z.object({
-      email: z.string(),
-      code: z.string(),
-    }),
-    async resolve({ input }) {
-      const result = await prisma.user.update({
-        where: {
-          email: input.email,
-        },
-        data: {
-          league: input.code,
-        },
-      })
-
-      return result
-    },
-  })
   .mutation('makeGameweekSpecificSelection', {
     input: z.object({
       selection: z.number(),

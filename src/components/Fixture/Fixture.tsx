@@ -31,6 +31,7 @@ const FixtureCard = ({
           <KickoffTime time={kickoff_time} />
         )}
         {teams.map((t, idx) => {
+          console.log(selections)
           const selectionOccurrences = selections.filter(
             (s) => s === t.basic_id
           )

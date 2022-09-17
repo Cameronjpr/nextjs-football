@@ -50,6 +50,7 @@ const FixtureList = ({
   )
 
   useEffect(() => {
+    console.log(userInfo)
     // this stops the userInfo stuff overwriting the selection but I hate it
     if (!userInfo?.data?.user?.selections.length || selections.length) return
     // if (userInfo?.)

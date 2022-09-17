@@ -67,7 +67,6 @@ const Fixtures = () => {
     }
   }, [users, activeGameweek, selectedGameweek])
 
-  console.log(richTeams[mostPopularSelection ?? 0].name)
   useEffect(() => {
     const timeUntilDeadline = (activeGameweek: number) => {
       const now = new Date()
