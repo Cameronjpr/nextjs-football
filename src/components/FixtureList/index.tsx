@@ -99,7 +99,7 @@ const FixtureList = ({
                   <FixtureCard
                     fixture={f}
                     isLoading={makeGameweekSpecificSelection.isLoading}
-                    isPartOfActiveGameweek={activeGameeweek === f.event}
+                    isPartOfActiveGameweek={activeGameeweek === f.event + 1} // maybe still a mess
                     mostPopularSelection={mostPopularSelection}
                     handleSelection={handleTeamSelect}
                   />
