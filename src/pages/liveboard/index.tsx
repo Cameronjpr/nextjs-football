@@ -55,7 +55,11 @@ const Leaderboard = () => {
       fixturesData?.data?.length &&
       !usersWithScores?.length
     ) {
-      const scoredPlayers = getCurrentScores(data.users, fixturesData.data)
+      const scoredPlayers = getCurrentScores(
+        data.users,
+        fixturesData.data,
+        gameweek
+      )
       setUsersWithScores(scoredPlayers)
       const duration = performance.now() - start
       console.log(duration)

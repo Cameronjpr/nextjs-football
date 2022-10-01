@@ -5,19 +5,33 @@ import { User } from '@prisma/client'
 
 export const getCurrentScores = (
   players: Player[],
-  fixtures: Fixture[]
+  fixtures: Fixture[],
+  gameweek: number
 ): Player[] => {
   const playersWithScores = players.map((p) => {
     let tally = 0
     if (p?.selections?.length) {
       p.selections.forEach((s, idx) => {
-        if (s === -1) return
+        // week the queen died
+        if (idx === 6) return
+
         // Potential issue here for a double gameweek – think it would grab the first of 2 games played by a team in a GW
+        if (s === -1 && idx + 1 < gameweek) {
+          console.log(
+            'no selection for gameweek ' +
+              gameweek +
+              ', which has already been played'
+          )
+          tally -= 1
+          return
+        }
+
         const fixture = getFixtureFromSelectionAndGameweek(
           fixtures,
           s + 1,
           idx + 1
         )
+
         if (fixture === undefined) return
 
         const points = getPointsFromFixtureAndSelection(fixture, s + 1)
@@ -40,7 +54,7 @@ const getPointsFromFixtureAndSelection = (
 ): number | undefined => {
   if (!fixture) return
   console.log(fixture)
-  if (selection === -1) return
+
   if (!fixture.finished_provisional) return
   const { team_a_score, team_h_score, team_a, team_h } = fixture
 
