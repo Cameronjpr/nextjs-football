@@ -1,13 +1,13 @@
-import React from "react";
-import Layout from "../../components/Layout/Layout";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import React from 'react'
+import Layout from '../../components/Layout/Layout'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const Login = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
+    router.pathname === pathname
 
   return (
     <Layout>
@@ -16,18 +16,15 @@ const Login = () => {
           <div>
             <h2 className="text-md mb-5">{router.query?.message}</h2>
           </div>
-          <Link href="/api/auth/signin">
-            <a
-              className="max-w-fit rounded-3xl bg-green-300 p-10 text-xl"
-              data-active={isActive("/signup")}
-            >
-              Log in with Google
-            </a>
-          </Link>
+          <Link
+            href="/api/auth/signin"
+            className="max-w-fit rounded-3xl bg-green-300 p-10 text-xl"
+            data-active={isActive('/signup')}
+          ></Link>
         </main>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

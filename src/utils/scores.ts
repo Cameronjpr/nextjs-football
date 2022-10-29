@@ -48,7 +48,7 @@ export const getCurrentScores = (
   return playersWithScores
 }
 
-const getPointsFromFixtureAndSelection = (
+export const getPointsFromFixtureAndSelection = (
   fixture: Fixture,
   selection: number
 ): number | undefined => {
@@ -88,7 +88,7 @@ const getPointsFromFixtureAndSelection = (
 
 */
 
-const getFixtureFromSelectionAndGameweek = (
+export const getFixtureFromSelectionAndGameweek = (
   fixtures: Fixture[],
   selection: number,
   gameweek: number
