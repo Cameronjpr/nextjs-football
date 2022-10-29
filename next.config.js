@@ -8,6 +8,15 @@ const moduleExports = withBundleAnalyzer({
   images: {
     domains: ['lh3.googleusercontent.com'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/fixtures',
+        destination: '/',
+        permanent: true,
+      },
+    ]
+  },
 })
 
 const sentryWebpackPluginOptions = {

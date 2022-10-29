@@ -1,11 +1,23 @@
 import React, { useState, useEffect, createContext } from 'react'
-import Layout from '../components/Layout/Layout'
+import { GetStaticPropsContext } from 'next'
+import { createSSGHelpers } from '@trpc/react/ssg'
 import { useSession } from 'next-auth/react'
-import { Status } from '../account/types'
 import { Session } from 'next-auth/core/types'
 import Head from 'next/head'
+import superjson from 'superjson'
+import { appRouter } from '@/backend/router'
+import { trpc } from '@/utils/trpc'
+import { formatDistance, formatDistanceToNowStrict, parseJSON } from 'date-fns'
+import { GameweekNavigation } from '@/components/GameweekNavigation/GameweekNavigation'
 import Link from '@/components/Link/Link'
+import { Status } from '@/account/types'
+import FixtureList from '@/components/FixtureList'
+import Layout from '@/components/Layout/Layout'
+import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
 import Heading from '@/components/Heading/Heading'
+import { getMostPopularPickForGameweek } from '@/utils/selections'
+import { richTeams } from '@/data/teams'
+
 type User = {
   session: Session | null
   status: string
@@ -18,12 +30,68 @@ export const UserContext = createContext<User>({
 
 export const ActiveGameweekContext = createContext<Number>(1)
 
-const Home = () => {
+const Fixtures = () => {
+  const fixturesData = trpc.useQuery(['getFixtures'], {
+    onSuccess(data) {
+      setSelectedGameweek(getActiveGameweekFromFixtures(data))
+    },
+  })
+  const users = trpc.useQuery(['getUsers'])
   const { data: session, status } = useSession()
+  const userInfo = trpc.useQuery([
+    'getUser',
+    {
+      email: session?.user?.email ?? '',
+    },
+  ])
   const [user, setUser] = useState<User>({
     session,
     status,
   })
+  const [activeGameweek, setActiveGameweek] = useState(1)
+  const [selectedGameweek, setSelectedGameweek] = useState(1)
+  const [mostPopularSelection, setMostPopularSelection] = useState<
+    number | undefined
+  >(undefined)
+  const [timeUntilDeadline, setTimeUntilDeadline] = useState('')
+
+  useEffect(() => {
+    if (!users.isLoading && users?.data?.users.length) {
+      const selectionsForGameweek = users.data.users.map(
+        (u) => u.selections[selectedGameweek - 1]
+      )
+      console.log(selectedGameweek)
+      setMostPopularSelection(
+        getMostPopularPickForGameweek(selectionsForGameweek)
+      )
+    }
+  }, [users, activeGameweek, selectedGameweek])
+
+  useEffect(() => {
+    const timeUntilDeadline = (activeGameweek: number) => {
+      const now = new Date()
+      const fixtures = fixturesData?.data
+      // ALERT: What about the last gameweek of the season!!!! Don't want to get the 39th week
+      const firstGameOfNextGameweek = fixtures?.find(
+        (f) => f.event === activeGameweek
+      )
+      if (now === undefined || firstGameOfNextGameweek === undefined) return ''
+
+      const d = new Date(firstGameOfNextGameweek?.kickoff_time)
+      return formatDistanceToNowStrict(
+        parseJSON(d.setHours(d.getHours()) ?? '')
+      )
+    }
+    setTimeUntilDeadline(timeUntilDeadline(selectedGameweek))
+  }, [selectedGameweek, fixturesData])
+
+  useEffect(() => {
+    if (fixturesData.isSuccess) {
+      const activeGameeweek = getActiveGameweekFromFixtures(fixturesData?.data)
+      console.log('activeGameeweek ', activeGameeweek)
+      setActiveGameweek(activeGameeweek)
+    }
+  }, [fixturesData])
 
   useEffect(() => {
     setUser({
@@ -34,68 +102,64 @@ const Home = () => {
 
   return (
     <UserContext.Provider value={user}>
-      <Head>
-        <title>Soccer Predictor</title>
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/images/favicon-16x16.png"
-        />
-      </Head>
-      <Layout>
-        <main className="flex flex-col p-2">
+      <ActiveGameweekContext.Provider value={activeGameweek}>
+        <Head>
+          <title>Fixtures</title>
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/images/favicon-16x16.png"
+          />
+        </Head>
+        <Layout>
           <header className="flex flex-row justify-between items-center">
-            <Heading level="1">Soccer Predictor</Heading>
+            <Heading level="1">Fixtures</Heading>
           </header>
-          <span className="text-center text-slate-600">
-            A real-world, real-time football guessing game.
-          </span>
-          <section className="my-8 sm:my-16 text-center">
-            <Heading level="2">Start playing in 3 simple steps</Heading>
-            <div className="flex flex-col justify-between gap-10 sm:gap-16 items-center">
-              <article className="bg-white drop-shadow-lg p-4 rounded-lg w-full sm:w-2/3 flex flex-col justify-between">
-                <span className="self-center mb-4 sm:mb-0 sm:fixed -top-5 left-3  bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
-                  1
-                </span>
-                <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
-                  Pick your team 🤔
-                </h3>
-                <p className="p-3">
-                  Choose a Premier League team you think will win this week.
-                </p>
-              </article>
-              <article className="bg-white drop-shadow-lg p-4 rounded-lg w-full sm:w-2/3 flex flex-col justify-between">
-                <span className="self-center mb-4 sm:mb-0 sm:fixed -top-5 left-3  bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
-                  2
-                </span>
-                <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
-                  See if they win 👀
-                </h3>
-                <p className="p-3">Get points if your team won!</p>
-              </article>
-              <article className="bg-white drop-shadow-lg p-4 rounded-lg w-full sm:w-2/3 flex flex-col justify-between">
-                <span className="self-center mb-4 sm:mb-0 sm:fixed -top-5 left-3  bg-emerald-600 text-white font-bold font-rubik rounded-full w-10 h-10 flex place-content-center items-center drop-shadow">
-                  3
-                </span>
-                <h3 className="text-lg mb-2 text-emerald-700 font-semibold">
-                  Climb the leaderboard 🏆
-                </h3>
-                <p className="p-3">
-                  Keep guessing correctly and you’ll soon be on top!
-                </p>
-              </article>
-            </div>
-          </section>
-          <Link
-            href={status === 'authenticated' ? '/fixtures' : '/auth/signin'}
-          >
-            Get started
-          </Link>
-        </main>
-      </Layout>
+          <div className="sm:w-xl flex w-full flex-col place-content-center">
+            <GameweekNavigation
+              activeGameweek={activeGameweek}
+              selectedGameweek={selectedGameweek}
+              setSelectedGameweek={setSelectedGameweek}
+            />
+            {timeUntilDeadline !== '' &&
+            activeGameweek === selectedGameweek - 1 ? (
+              <span className="text-red-600 bg-red-100/50 rounded-md p-2 w-max m-auto">
+                Deadline in {timeUntilDeadline}
+              </span>
+            ) : null}
+            <main className="">
+              {fixturesData?.isSuccess && (
+                <FixtureList
+                  fixtures={fixturesData?.data}
+                  activeGameeweek={activeGameweek}
+                  selectedGameweek={selectedGameweek}
+                  mostPopularSelection={mostPopularSelection}
+                />
+              )}
+            </main>
+          </div>
+          <Link href="/rules">How to play</Link>
+        </Layout>
+      </ActiveGameweekContext.Provider>
     </UserContext.Provider>
   )
 }
 
-export default Home
+export async function getStaticProps(context: GetStaticPropsContext) {
+  const ssg = await createSSGHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: superjson,
+  })
+
+  await ssg.fetchQuery('getFixtures')
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+    revalidate: 60,
+  }
+}
+
+export default Fixtures
