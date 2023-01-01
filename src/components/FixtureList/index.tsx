@@ -61,7 +61,12 @@ const FixtureList = ({
     console.log(selections)
   }, [selectedGameweek, selections])
 
-  const handleTeamSelect = async (id: number, deselect = false) => {
+  const handleTeamSelect = async (
+    id: number,
+    code: number,
+    deselect = false
+  ) => {
+    console.log('code', code)
     console.log('HANDLE SELECT')
     if (status === Status.Unauthenticated) {
       router.push(encodeURI('/auth/signin'))
@@ -75,12 +80,21 @@ const FixtureList = ({
       console.log('deselect!')
     }
 
-    makeGameweekSpecificSelection.mutate({
-      email: session?.user?.email ?? '',
-      selection: deselect ? -1 : id,
-      selections: selections.length ? selections : Array(38).fill(-1),
-      gameweek: selectedGameweek,
-    })
+    makeGameweekSpecificSelection.mutate(
+      {
+        email: session?.user?.email ?? '',
+        selection: deselect ? -1 : id,
+        code: code,
+        codes: userInfo?.data?.user?.codes ?? Array(38).fill(-1),
+        selections: selections.length ? selections : Array(38).fill(-1),
+        gameweek: selectedGameweek,
+      },
+      {
+        onSuccess: (res) => {
+          userInfo.refetch()
+        },
+      }
+    )
   }
 
   return (
@@ -100,6 +114,7 @@ const FixtureList = ({
                     fixture={f}
                     isLoading={makeGameweekSpecificSelection.isLoading}
                     isPartOfActiveGameweek={activeGameeweek === f.event + 1} // maybe still a mess
+                    activeGameweek={activeGameeweek}
                     mostPopularSelection={mostPopularSelection}
                     handleSelection={handleTeamSelect}
                   />

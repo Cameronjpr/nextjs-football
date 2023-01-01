@@ -24,6 +24,7 @@ model User {
   updatedAt     DateTime    @updatedAt @map("updated_at")
   selection     Int?
   selections    Int[]
+  codes         Int[]
   score         Int         @default(0)
   emailVerified DateTime?   @map("email_verified")
   image         String?

@@ -10,6 +10,11 @@ export const getCurrentScores = (
 ): Player[] => {
   const playersWithScores = players.map((p) => {
     let tally = 0
+
+    console.log(p)
+    if (p?.selectionsWithCodes?.length) {
+      console.log(p?.selectionsWithCodes)
+    }
     if (p?.selections?.length) {
       p.selections.forEach((s, idx) => {
         // week the queen died
@@ -25,12 +30,18 @@ export const getCurrentScores = (
           tally -= 1
           return
         }
+        let fixture
 
-        const fixture = getFixtureFromSelectionAndGameweek(
-          fixtures,
-          s + 1,
-          idx + 1
-        )
+        // If a selection has a corresponding code, use that to get the fixture
+        if (p?.codes?.length && p?.codes[idx] !== -1) {
+          fixture = getFixtureFromSelectionAndCode(
+            fixtures,
+            s + 1,
+            p?.codes[idx]
+          )
+        } else {
+          fixture = getFixtureFromSelectionAndGameweek(fixtures, s + 1, idx + 1)
+        }
 
         if (fixture === undefined) return
 
@@ -53,14 +64,13 @@ export const getPointsFromFixtureAndSelection = (
   selection: number
 ): number | undefined => {
   if (!fixture) return
-  console.log(fixture)
 
   if (!fixture.finished_provisional) return
   const { team_a_score, team_h_score, team_a, team_h } = fixture
 
-  console.log('team h: ', team_h, ' score: ', team_h_score)
-  console.log('team a: ', team_a, ' score: ', team_a_score)
-  console.log('selection: ', selection)
+  // console.log('team h: ', team_h, ' score: ', team_h_score)
+  // console.log('team a: ', team_a, ' score: ', team_a_score)
+  // console.log('selection: ', selection)
 
   if (team_a_score === null || team_h_score === null) {
     return
@@ -95,6 +105,21 @@ export const getFixtureFromSelectionAndGameweek = (
 ): Fixture | undefined => {
   const fixture = fixtures.find((f) => {
     const isCorrectGameweek = f.event === gameweek
+    const containsSelectedTeam =
+      f.team_a === selection || f.team_h === selection
+    return isCorrectGameweek && containsSelectedTeam
+  })
+  return fixture
+}
+
+export const getFixtureFromSelectionAndCode = (
+  fixtures: Fixture[],
+  selection: number,
+  code?: number
+): Fixture | undefined => {
+  if (code === undefined) return
+  const fixture = fixtures.find((f) => {
+    const isCorrectGameweek = f.code === code
     const containsSelectedTeam =
       f.team_a === selection || f.team_h === selection
     return isCorrectGameweek && containsSelectedTeam

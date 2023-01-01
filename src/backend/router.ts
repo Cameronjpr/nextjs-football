@@ -12,6 +12,9 @@ const PlayerSchema = z.object({
   username: z.string().nullable(),
   score: z.number(),
   selections: z.array(z.number()),
+  selectionsWithCodes: z.array(
+    z.object({ code: z.number(), selection: z.number() })
+  ),
   league: z.string().nullable(),
 })
 
@@ -86,6 +89,7 @@ export const appRouter = trpc
           select: {
             id: true,
             selections: true,
+            codes: true,
             name: true,
             username: true,
             score: true,
@@ -111,6 +115,7 @@ export const appRouter = trpc
           email: input.email,
         },
       })
+
       return { success: true, user }
     },
   })
@@ -163,21 +168,29 @@ export const appRouter = trpc
   .mutation('makeGameweekSpecificSelection', {
     input: z.object({
       selection: z.number(),
+      code: z.number(),
+      codes: z.array(z.number()),
       gameweek: z.number(),
       selections: z.array(z.number()),
       email: z.string(),
     }),
     async resolve({ input }) {
       let newSelections: number[] = []
+      let codes: number[] = []
 
       for (let i = 0; i < 38; i++) {
         if (i + 1 === input.gameweek) {
           newSelections[i] = input.selection
+          codes[i] = input.code
         } else {
           newSelections[i] =
             input.selections[i] === -1 ? -1 : input.selections[i]
+          codes[i] = input.codes[i] === undefined ? -1 : input.codes[i]
         }
       }
+
+      console.log('GAME CODES')
+      console.log(codes)
 
       const selectionSaved = await prisma.user.update({
         where: {
@@ -187,6 +200,7 @@ export const appRouter = trpc
           selections: {
             set: newSelections,
           },
+          codes: codes,
         },
       })
       return selectionSaved

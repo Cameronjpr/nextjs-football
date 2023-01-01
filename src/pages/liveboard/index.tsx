@@ -8,10 +8,13 @@ import Head from 'next/head'
 import superjson from 'superjson'
 import { useSession } from 'next-auth/react'
 import { getActiveGameweekFromFixtures } from '@/utils/fixtures'
-import { appRouter, Player } from '@/backend/router'
+import { appRouter, Fixture, Player } from '@/backend/router'
 import { createSSGHelpers } from '@trpc/react/ssg'
 import Heading from '@/components/Heading/Heading'
-import { getCurrentScores } from '@/utils/scores'
+import {
+  getCurrentScores,
+  getFixtureFromSelectionAndCode,
+} from '@/utils/scores'
 
 export async function getStaticProps() {
   const ssg = await createSSGHelpers({
@@ -32,9 +35,11 @@ export async function getStaticProps() {
 
 const Leaderboard = () => {
   const [gameweek, setGameweek] = useState(0)
+  const [fixtures, setFixtures] = useState<Fixture[]>([])
   const { data: session, status } = useSession()
   const fixturesData = trpc.useQuery(['getFixtures'], {
     onSuccess(data) {
+      setFixtures(data)
       const activeGameeweek = getActiveGameweekFromFixtures(data)
 
       setGameweek(activeGameeweek)
@@ -103,7 +108,10 @@ const Leaderboard = () => {
               usersWithScores
                 .sort((a: Player, b: Player) => (b.score ?? 0) - (a.score ?? 0))
                 .map(
-                  ({ name, username, selections, score, id }: Player, idx) => (
+                  (
+                    { name, username, selections, codes, score, id }: Player,
+                    idx
+                  ) => (
                     <tr
                       key={idx}
                       className={classNames(

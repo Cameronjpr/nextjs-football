@@ -60,7 +60,7 @@ const Fixtures = () => {
       const selectionsForGameweek = users.data.users.map(
         (u) => u.selections[selectedGameweek - 1]
       )
-      console.log(selectedGameweek)
+
       setMostPopularSelection(
         getMostPopularPickForGameweek(selectionsForGameweek)
       )

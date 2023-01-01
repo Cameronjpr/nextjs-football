@@ -6,16 +6,29 @@ import { Team } from '@/backend/router'
 
 import { SelectionContext } from '../FixtureList'
 import { FixtureCardProps } from './Fixture.types'
+import { trpc } from '@/utils/trpc'
+import { useSession } from 'next-auth/react'
 
 const FixtureCard = ({
   fixture,
   handleSelection,
   isLoading,
   isPartOfActiveGameweek,
+  activeGameweek,
   mostPopularSelection,
 }: FixtureCardProps) => {
   const { id, teams, started, finished, kickoff_time, event } = fixture
   const selections = useContext(SelectionContext)
+
+  const { data: session, status } = useSession()
+  const userInfo = trpc.useQuery([
+    'getUser',
+    { email: session?.user?.email ?? '' },
+  ])
+
+  const { codes } = userInfo?.data?.user ?? []
+
+  console.log(codes[activeGameweek])
 
   return (
     <div
@@ -31,7 +44,6 @@ const FixtureCard = ({
           <KickoffTime time={kickoff_time} />
         )}
         {teams.map((t, idx) => {
-          console.log(selections)
           const selectionOccurrences = selections.filter(
             (s) => s === t.basic_id
           )
@@ -43,7 +55,11 @@ const FixtureCard = ({
                 !started &&
                 !finished &&
                 !isLoading &&
-                handleSelection(t.basic_id, selectionOccurrences.length >= 2)
+                handleSelection(
+                  t.basic_id,
+                  fixture?.code,
+                  selectionOccurrences.length >= 2
+                )
               }
               className={classNames(
                 'my-2 flex flex-col w-full items-center justify-between rounded-b-md sm:w-64 drop-shadow-lg font-rubik antialiased',
@@ -54,7 +70,9 @@ const FixtureCard = ({
                   selectionOccurrences.length < 2
                   ? 'sm:hover:bg-orange-100 sm:hover:text-black'
                   : '',
-                selections?.length && t.basic_id === selections[event - 1]
+                selections?.length &&
+                  t.basic_id === selections[event - 1] &&
+                  fixture.code === codes?.[event - 1]
                   ? 'text-white bg-slate-900'
                   : 'bg-white',
                 t.isHome

@@ -27,6 +27,7 @@ export type Participant = {
 export type FixtureCardProps = {
   fixture: Fixture
   isPartOfActiveGameweek: boolean
+  activeGameweek: number
   selectedTeam?: string
   isLoading: boolean
   mostPopularSelection: number | undefined
