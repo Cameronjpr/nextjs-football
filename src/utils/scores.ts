@@ -12,9 +12,7 @@ export const getCurrentScores = (
     let tally = 0
 
     console.log(p)
-    if (p?.selectionsWithCodes?.length) {
-      console.log(p?.selectionsWithCodes)
-    }
+
     if (p?.selections?.length) {
       p.selections.forEach((s, idx) => {
         // week the queen died

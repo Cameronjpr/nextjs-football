@@ -31,7 +31,7 @@ export type FixtureCardProps = {
   selectedTeam?: string
   isLoading: boolean
   mostPopularSelection: number | undefined
-  handleSelection: (id: number, deselect: boolean) => void
+  handleSelection: (id: number, code: number, deselect: boolean) => void
 }
 
 export type FixtureParticipantProps = {

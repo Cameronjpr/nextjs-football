@@ -11,10 +11,9 @@ const PlayerSchema = z.object({
   name: z.string().nullable(),
   username: z.string().nullable(),
   score: z.number(),
+  codes: z.array(z.number()),
   selections: z.array(z.number()),
-  selectionsWithCodes: z.array(
-    z.object({ code: z.number(), selection: z.number() })
-  ),
+
   league: z.string().nullable(),
 })
 

@@ -26,9 +26,9 @@ const FixtureCard = ({
     { email: session?.user?.email ?? '' },
   ])
 
-  const { codes } = userInfo?.data?.user ?? []
-
-  console.log(codes[activeGameweek])
+  if (userInfo?.data?.user) {
+    userInfo.data.user.codes
+  }
 
   return (
     <div
@@ -72,7 +72,7 @@ const FixtureCard = ({
                   : '',
                 selections?.length &&
                   t.basic_id === selections[event - 1] &&
-                  fixture.code === codes?.[event - 1]
+                  fixture.code === userInfo?.data?.user?.codes?.[event - 1]
                   ? 'text-white bg-slate-900'
                   : 'bg-white',
                 t.isHome
