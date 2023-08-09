@@ -38,12 +38,7 @@ const Fixtures = () => {
   })
   const users = trpc.useQuery(['getUsers'])
   const { data: session, status } = useSession()
-  const userInfo = trpc.useQuery([
-    'getUser',
-    {
-      email: session?.user?.email ?? '',
-    },
-  ])
+  
   const [user, setUser] = useState<User>({
     session,
     status,

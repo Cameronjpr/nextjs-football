@@ -1,4 +1,4 @@
-import Button from '../Button/Button'
+import { Button } from '@/components/ui/button'
 
 type GameweekNavigationProps = {
   activeGameweek: number
