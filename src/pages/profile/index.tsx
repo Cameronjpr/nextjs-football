@@ -8,7 +8,7 @@ import { richTeams, teams } from '../../data/teams'
 import Head from 'next/head'
 import { trpc } from '@/utils/trpc'
 import Heading from '@/components/Heading/Heading'
-import Button from '@/components/Button/Button'
+import { Button } from '@/components/ui/button'
 import Link from '@/components/Link/Link'
 import { Session } from 'next-auth'
 import {
@@ -110,8 +110,6 @@ const UsernameField = (props: UsernameFieldProps) => {
     },
   })
 
-  console.log(updateUsername.isLoading)
-
   return (
     <div className="my-8 flex w-full flex-col gap-1">
       <form className="self-center flex flex-col w-64">
@@ -135,7 +133,7 @@ const UsernameField = (props: UsernameFieldProps) => {
           />
 
           <Button
-            isLoading={updateUsername.isLoading}
+            loading={updateUsername.isLoading}
             onClick={(e: any) => handleUpdateUsername(e)}
           >
             Update
@@ -188,8 +186,8 @@ const DangerZone = (props: DangerZoneProps) => {
               No, keep my account
             </Button>
             <Button
-              isLoading={deleteUser.isLoading}
-              type="warning"
+              loading={deleteUser.isLoading}
+              variant="destructive"
               onClick={handleDeleteAccount}
             >
               Yes, delete my account
@@ -198,7 +196,7 @@ const DangerZone = (props: DangerZoneProps) => {
         </div>
       ) : (
         <div className="self-center w-36">
-          <Button type="warning" onClick={handleShowDeleteButton}>
+          <Button variant="destructive" onClick={handleShowDeleteButton}>
             Delete account
           </Button>
         </div>

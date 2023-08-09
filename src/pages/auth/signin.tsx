@@ -1,7 +1,6 @@
-import Button from '@/components/Button/Button'
+import { Button } from '@/components/ui/button'
 import Layout from '@/components/Layout/Layout'
-import { richTeams } from '@/data/teams'
-import { router } from '@trpc/server'
+
 import {
   getProviders,
   signIn,
@@ -35,7 +34,6 @@ const SignIn = ({ providers }: { providers: ClientSafeProvider[] }) => {
           <div className="my-4 flex flex-col place-content-center">
             {Object.values(providers).map((provider: any) => (
               <Button
-                isLoading={isLoading}
                 key={provider.id}
                 onClick={() => {
                   setIsLoading(true)
